@@ -35,7 +35,7 @@
             border-radius: 20px;
             padding: 25px;
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
         .reloj {
             font-size: 3.2em;
@@ -44,6 +44,13 @@
             font-family: 'Courier New', monospace;
         }
         .fecha { font-size: 1.1em; color: #a8b2d1; margin-top: 10px; }
+        .reloj-utc {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(10, 25, 47, 0.8));
+            border: 2px solid #9b59b6;
+            margin-top: 15px;
+        }
+        .reloj-utc .reloj { color: #9b59b6; font-size: 2em; }
+        .reloj-utc .nota { font-size: 0.85em; color: #a8b2d1; margin-top: 8px; }
         .control-panel {
             background: linear-gradient(135deg, #1e3a5f, #0f2540);
             border-radius: 25px;
@@ -88,6 +95,10 @@
             padding: 20px;
             margin-top: 20px;
         }
+        .programacion-activa {
+            border-left: 4px solid #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
+        }
         .programacion h3 {
             text-align: center;
             color: #64ffda;
@@ -128,10 +139,6 @@
             width: 100%;
         }
         .btn-eliminar:hover { transform: scale(1.05); }
-        .programacion-activa {
-            border-left: 4px solid #9b59b6;
-            background: rgba(155, 89, 182, 0.1);
-        }
         .schedule-info {
             text-align: center;
             margin-top: 10px;
@@ -193,6 +200,15 @@
             border-radius: 10px;
             font-size: 0.9em;
         }
+        .timezone-hint {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -200,9 +216,17 @@
         <h1>🥥 COCOS LOCOS 🥥</h1>
         <h2>Control ESP32</h2>
 
+        <!-- Reloj Local -->
         <div class="reloj-container">
             <div class="reloj" id="reloj">--:--:--</div>
             <div class="fecha" id="fecha">Cargando...</div>
+        </div>
+
+        <!-- Reloj UTC del Servidor -->
+        <div class="reloj-container reloj-utc">
+            <div style="font-size: 1.2em; color: #9b59b6;">🌐 Servidor (UTC):</div>
+            <div class="reloj" id="server-time">--:--:--</div>
+            <div class="nota" id="timezone-hint">Calculando diferencia...</div>
         </div>
 
         <div class="mensaje" id="mensaje"></div>
@@ -216,15 +240,18 @@
                 <button class="btn btn-off" onclick="controlLED('off')">APAGAR</button>
             </div>
 
-            <!-- Programación automática MEJORADA -->
+            <!-- Programación automática -->
             <div class="programacion" id="panel-programacion">
                 <h3>⏰ PROGRAMACIÓN AUTOMÁTICA</h3>
+                <p style="text-align:center; font-size:0.85em; color:#a8b2d1; margin-bottom:10px;">
+                    ⚠️ Programa en TU hora local (la ESP32 ajustará automáticamente)
+                </p>
                 <div class="time-controls">
-                    <input type="time" class="time-input" id="hora-on" title="Hora de encendido">
-                    <input type="time" class="time-input" id="hora-off" title="Hora de apagado">
+                    <input type="time" class="time-input" id="hora-on" placeholder="Hora ON">
+                    <input type="time" class="time-input" id="hora-off" placeholder="Hora OFF">
                     <button class="btn-programar" onclick="programarLED()">💾 GUARDAR</button>
                 </div>
-                <!-- Info de programación activa (oculta por defecto) -->
+                <!-- Info de programación activa -->
                 <div class="schedule-info" id="schedule-info" style="display:none;">
                     🔄 Activo: <span id="schedule-times"></span>
                     <br>
@@ -247,7 +274,7 @@
         // ============================================
         // ⚙️ CONFIGURACIÓN
         // ============================================
-        const SERVER_URL = "https://esp32-yxto.onrender.com";  // ✅ Sin espacios al final
+        const SERVER_URL = "https://esp32-yxto.onrender.com";  // ✅ Sin espacios
         const API_ENDPOINT = "/api/estado";
         const POLLING_INTERVAL = 5000;
         // ============================================
@@ -256,19 +283,20 @@
         let programacion = null;
         let servidorConectado = false;
         let peticionEnCurso = false;
-        let ultimoComando = null;  // Para evitar comandos duplicados
+        let ultimoComando = null;
 
         // ============================================
         // 🚀 INICIALIZACIÓN
         // ============================================
         window.addEventListener('load', () => {
-            console.log('🚀 COCOS LOCOS - Iniciando con programación automática');
+            console.log('🚀 COCOS LOCOS - Iniciando');
             document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://', '');
             actualizarReloj();
             setInterval(actualizarReloj, 1000);
+            actualizarHoraServidor();
+            setInterval(actualizarHoraServidor, 60000);
             consultarEstado();
             setInterval(consultarEstado, POLLING_INTERVAL);
-            // Verificar programación cada minuto
             setInterval(verificarProgramacion, 60000);
         });
 
@@ -284,6 +312,26 @@
             document.getElementById('fecha').textContent = 
                 ahora.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             window.horaActual = `${h}:${m}`;
+        }
+
+        async function actualizarHoraServidor() {
+            try {
+                const r = await fetch(`${SERVER_URL}/api/time`);
+                const datos = await r.json();
+                document.getElementById('server-time').textContent = datos.utc_time;
+                
+                // Calcular offset de zona horaria local
+                const offsetMinutos = new Date().getTimezoneOffset();
+                const offsetHoras = Math.round(offsetMinutos / -60);
+                const signo = offsetHoras >= 0 ? '+' : '';
+                const accion = offsetHoras >= 0 ? 'RESTA' : 'SUMA';
+                
+                document.getElementById('timezone-hint').textContent = 
+                    `Tu zona: UTC${signo}${offsetHoras} | La ESP32 usará tu hora local automáticamente`;
+            } catch (e) {
+                console.error('Error obteniendo hora del servidor:', e);
+                document.getElementById('timezone-hint').textContent = 'No se pudo obtener hora UTC';
+            }
         }
 
         // ============================================
@@ -304,21 +352,17 @@
                 
                 const datos = await respuesta.json();
                 
-                // Actualizar estado
                 ledEstado = datos.led || 'off';
                 programacion = datos.programacion || null;
                 
-                // Actualizar interfaz
                 actualizarInterfazLED();
                 actualizarInfoProgramacion();
                 
-                // Conexión OK
                 if (!servidorConectado) {
                     servidorConectado = true;
                     actualizarEstadoConexion(true);
                 }
                 
-                // Verificar programación automática (lado cliente como respaldo)
                 if (programacion) {
                     verificarProgramacion();
                 }
@@ -333,7 +377,6 @@
         }
 
         async function controlLED(estado) {
-            // Feedback visual inmediato
             actualizarInterfazLED(estado);
             mostrarMensaje(`📤 Enviando: ${estado === 'on' ? 'ENCENDER' : 'APAGAR'}...`, 'info');
             
@@ -347,16 +390,15 @@
                 if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
                 
                 ledEstado = estado;
-                ultimoComando = estado;  // Registrar último comando
+                ultimoComando = estado;
                 actualizarInterfazLED();
                 
                 const accion = estado === 'on' ? 'ENCENDIDO' : 'APAGADO';
                 mostrarMensaje(`✅ LED ${accion}`, 'exito');
-                console.log('📤 Comando enviado:', estado);
                 
             } catch (error) {
                 console.error('❌ Error enviando comando:', error);
-                actualizarInterfazLED();  // Revertir si falla
+                actualizarInterfazLED();
                 mostrarMensaje('❌ Error al enviar comando', 'error');
             }
         }
@@ -365,7 +407,6 @@
             const on = document.getElementById('hora-on').value;
             const off = document.getElementById('hora-off').value;
             
-            // Validaciones
             if (!on || !off) {
                 mostrarMensaje('⚠️ Selecciona ambas horas', 'error');
                 return;
@@ -389,12 +430,10 @@
                 const datos = await respuesta.json();
                 programacion = datos.programacion;
                 
-                // Actualizar interfaz
                 actualizarInfoProgramacion();
                 document.getElementById('panel-programacion').classList.add('programacion-activa');
                 
                 mostrarMensaje(`⏰ Programado: ${on} → ${off}`, 'exito');
-                console.log('⏰ Programación guardada:', programacion);
                 
             } catch (error) {
                 console.error('❌ Error programando:', error);
@@ -419,7 +458,6 @@
                 document.getElementById('hora-off').value = '';
                 
                 mostrarMensaje('🗑️ Programación eliminada', 'exito');
-                console.log('🗑️ Programación eliminada');
                 
             } catch (error) {
                 console.error('❌ Error eliminando programación:', error);
@@ -428,7 +466,7 @@
         }
 
         // ============================================
-        // ⏰ LÓGICA DE PROGRAMACIÓN AUTOMÁTICA (MEJORADA)
+        // ⏰ LÓGICA DE PROGRAMACIÓN
         // ============================================
         function verificarProgramacion() {
             if (!programacion || !window.horaActual) return;
@@ -436,42 +474,28 @@
             const { on, off } = programacion;
             const horaActual = window.horaActual;
             
-            console.log(`⏰ Verificando: Actual=${horaActual}, ON=${on}, OFF=${off}, Estado=${ledEstado}`);
-            
-            // === CASO 1: Horario normal (ON antes que OFF, ej: 08:00 → 20:00) ===
             if (on < off) {
-                // Encender si es la hora ON y no está encendido
                 if (horaActual === on && ledEstado !== 'on' && ultimoComando !== 'on') {
                     console.log(`⏰ AUTO-ON: ${horaActual}`);
                     controlLED('on');
                     ultimoComando = 'on';
                     return;
                 }
-                // Apagar si es la hora OFF y no está apagado
                 if (horaActual === off && ledEstado !== 'off' && ultimoComando !== 'off') {
                     console.log(`⏰ AUTO-OFF: ${horaActual}`);
                     controlLED('off');
                     ultimoComando = 'off';
                     return;
                 }
-            }
-            
-            // === CASO 2: Cruza medianoche (ON después que OFF, ej: 22:00 → 06:00) ===
-            else {
-                // Rango nocturno: desde ON hasta medianoche, y desde medianoche hasta OFF
+            } else {
                 const esNoche = (horaActual >= on) || (horaActual < off);
-                
                 if (esNoche && ledEstado !== 'on' && ultimoComando !== 'on') {
-                    if (horaActual === on || (horaActual > on) || (horaActual < off)) {
-                        // Solo encender exactamente en la hora ON para evitar múltiples comandos
-                        if (horaActual === on) {
-                            console.log(`⏰ AUTO-ON (nocturno): ${horaActual}`);
-                            controlLED('on');
-                            ultimoComando = 'on';
-                        }
+                    if (horaActual === on) {
+                        console.log(`⏰ AUTO-ON (nocturno): ${horaActual}`);
+                        controlLED('on');
+                        ultimoComando = 'on';
                     }
                 }
-                
                 if (!esNoche && ledEstado !== 'off' && ultimoComando !== 'off') {
                     if (horaActual === off) {
                         console.log(`⏰ AUTO-OFF (nocturno): ${horaActual}`);
