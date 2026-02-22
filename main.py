@@ -1,7 +1,7 @@
-# main.py - Servidor Flask para Render (CON CORS)
+# main.py - Servidor Flask para Render (CON CORS y hora UTC)
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 
 app = Flask(__name__)
@@ -33,7 +33,7 @@ def set_estado():
         
         if nuevo_estado in ['on', 'off']:
             estado_led['led'] = nuevo_estado
-            estado_led['ultima_actualizacion'] = datetime.now().isoformat()
+            estado_led['ultima_actualizacion'] = datetime.now(timezone.utc).isoformat()
             print(f"✅ Comando recibido: LED {nuevo_estado.upper()}")
             return jsonify({"status": "ok", "led": nuevo_estado}), 200
         else:
@@ -50,20 +50,30 @@ def programar():
             "on": datos.get('on'),
             "off": datos.get('off')
         }
-        estado_led['ultima_actualizacion'] = datetime.now().isoformat()
+        estado_led['ultima_actualizacion'] = datetime.now(timezone.utc).isoformat()
         print(f"⏰ Programación: ON {datos.get('on')} - OFF {datos.get('off')}")
         return jsonify({"status": "ok", "programacion": estado_led['programacion']}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-# ✅ API: Eliminar programación (DELETE) - FUNCIÓN SEPARADA
+# API: Eliminar programación (DELETE)
 @app.route('/api/programar', methods=['DELETE'])
 def eliminar_programacion():
     """Elimina la programación automática"""
     estado_led['programacion'] = None
-    estado_led['ultima_actualizacion'] = datetime.now().isoformat()
+    estado_led['ultima_actualizacion'] = datetime.now(timezone.utc).isoformat()
     print("🗑️ Programación eliminada")
     return jsonify({"status": "ok", "mensaje": "Programación eliminada"}), 200
+
+# API: Obtener hora del servidor (para diagnóstico de timezone)
+@app.route('/api/time', methods=['GET'])
+def get_server_time():
+    now_utc = datetime.now(timezone.utc)
+    return jsonify({
+        "utc": now_utc.isoformat(),
+        "utc_time": now_utc.strftime("%H:%M:%S"),
+        "note": "Render usa UTC. Ajusta tu programación según tu zona horaria."
+    }), 200
 
 # Iniciar servidor
 if __name__ == '__main__':
