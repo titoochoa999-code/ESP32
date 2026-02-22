@@ -1,9 +1,11 @@
-# main.py - Servidor Flask para Render
+# main.py - Servidor Flask para Render (CON CORS)
 from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS  # ← IMPORTANTE para navegador
 from datetime import datetime
 import os
 
 app = Flask(__name__)
+CORS(app)  # ← Permite peticiones desde cualquier origen
 
 # Memoria temporal del estado del LED
 estado_led = {
