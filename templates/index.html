@@ -98,6 +98,7 @@
             gap: 12px;
             justify-content: center;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         .time-input {
             padding: 12px;
@@ -114,6 +115,29 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
+        }
+        .btn-programar:hover { transform: scale(1.05); }
+        .btn-eliminar {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn-eliminar:hover { transform: scale(1.05); }
+        .programacion-activa {
+            border-left: 4px solid #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
+        }
+        .schedule-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.95em;
+            color: #9b59b6;
+            font-weight: 500;
         }
         .estado {
             text-align: center;
@@ -145,6 +169,12 @@
             background: rgba(231, 76, 60, 0.2);
             border-left: 5px solid #e74c3c;
             color: #e74c3c;
+            display: block;
+        }
+        .mensaje.info {
+            background: rgba(52, 152, 219, 0.2);
+            border-left: 5px solid #3498db;
+            color: #3498db;
             display: block;
         }
         .conexion {
@@ -186,37 +216,65 @@
                 <button class="btn btn-off" onclick="controlLED('off')">APAGAR</button>
             </div>
 
-            <div class="programacion">
-                <h3>⏰ PROGRAMAR</h3>
+            <!-- Programación automática MEJORADA -->
+            <div class="programacion" id="panel-programacion">
+                <h3>⏰ PROGRAMACIÓN AUTOMÁTICA</h3>
                 <div class="time-controls">
-                    <input type="time" class="time-input" id="hora-on">
-                    <input type="time" class="time-input" id="hora-off">
-                    <button class="btn-programar" onclick="programarLED()">GUARDAR</button>
+                    <input type="time" class="time-input" id="hora-on" title="Hora de encendido">
+                    <input type="time" class="time-input" id="hora-off" title="Hora de apagado">
+                    <button class="btn-programar" onclick="programarLED()">💾 GUARDAR</button>
+                </div>
+                <!-- Info de programación activa (oculta por defecto) -->
+                <div class="schedule-info" id="schedule-info" style="display:none;">
+                    🔄 Activo: <span id="schedule-times"></span>
+                    <br>
+                    <button class="btn-eliminar" onclick="eliminarProgramacion()">🗑️ Eliminar programación</button>
                 </div>
             </div>
 
             <div class="estado">
-                <h3>ESTADO:</h3>
+                <h3>ESTADO ACTUAL:</h3>
                 <div class="estado-texto off" id="estado-led">APAGADO</div>
             </div>
         </div>
 
         <div class="server-info">
-            🌐 Servidor: led-on.onrender.com
+            🌐 Servidor: <span id="server-url-display">esp32-yxto.onrender.com</span>
         </div>
     </div>
 
     <script>
-        const SERVER_URL = "https://esp32-yxto.onrender.com";
-        let ledEstado = 'off';
+        // ============================================
+        // ⚙️ CONFIGURACIÓN
+        // ============================================
+        const SERVER_URL = "https://esp32-yxto.onrender.com";  // ✅ Sin espacios al final
+        const API_ENDPOINT = "/api/estado";
+        const POLLING_INTERVAL = 5000;
+        // ============================================
 
-        window.onload = function() {
+        let ledEstado = 'off';
+        let programacion = null;
+        let servidorConectado = false;
+        let peticionEnCurso = false;
+        let ultimoComando = null;  // Para evitar comandos duplicados
+
+        // ============================================
+        // 🚀 INICIALIZACIÓN
+        // ============================================
+        window.addEventListener('load', () => {
+            console.log('🚀 COCOS LOCOS - Iniciando con programación automática');
+            document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://', '');
             actualizarReloj();
             setInterval(actualizarReloj, 1000);
             consultarEstado();
-            setInterval(consultarEstado, 5000);
-        };
+            setInterval(consultarEstado, POLLING_INTERVAL);
+            // Verificar programación cada minuto
+            setInterval(verificarProgramacion, 60000);
+        });
 
+        // ============================================
+        // 🕐 FUNCIONES DE RELOJ
+        // ============================================
         function actualizarReloj() {
             const ahora = new Date();
             const h = String(ahora.getHours()).padStart(2, '0');
@@ -228,68 +286,260 @@
             window.horaActual = `${h}:${m}`;
         }
 
+        // ============================================
+        // 📡 COMUNICACIÓN CON EL SERVIDOR
+        // ============================================
+        
         async function consultarEstado() {
+            if (peticionEnCurso) return;
+            peticionEnCurso = true;
+            
             try {
-                const r = await fetch(`${SERVER_URL}/api/estado`);
-                const datos = await r.json();
-                ledEstado = datos.led;
-                actualizarInterfaz();
-                document.getElementById('conexion').textContent = '✅ Conectado';
-                document.getElementById('conexion').className = 'conexion ok';
-            } catch (e) {
-                document.getElementById('conexion').textContent = '❌ Sin conexión';
-                document.getElementById('conexion').className = 'conexion error';
+                const respuesta = await fetch(`${SERVER_URL}${API_ENDPOINT}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                
+                const datos = await respuesta.json();
+                
+                // Actualizar estado
+                ledEstado = datos.led || 'off';
+                programacion = datos.programacion || null;
+                
+                // Actualizar interfaz
+                actualizarInterfazLED();
+                actualizarInfoProgramacion();
+                
+                // Conexión OK
+                if (!servidorConectado) {
+                    servidorConectado = true;
+                    actualizarEstadoConexion(true);
+                }
+                
+                // Verificar programación automática (lado cliente como respaldo)
+                if (programacion) {
+                    verificarProgramacion();
+                }
+                
+            } catch (error) {
+                console.error('❌ Error consultando estado:', error);
+                servidorConectado = false;
+                actualizarEstadoConexion(false);
+            } finally {
+                peticionEnCurso = false;
             }
         }
 
         async function controlLED(estado) {
+            // Feedback visual inmediato
+            actualizarInterfazLED(estado);
+            mostrarMensaje(`📤 Enviando: ${estado === 'on' ? 'ENCENDER' : 'APAGAR'}...`, 'info');
+            
             try {
-                const r = await fetch(`${SERVER_URL}/api/estado`, {
+                const respuesta = await fetch(`${SERVER_URL}${API_ENDPOINT}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ led: estado })
                 });
+                
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                
                 ledEstado = estado;
-                actualizarInterfaz();
-                mostrarMensaje(`✅ LED ${estado === 'on' ? 'ENCENDIDO' : 'APAGADO'}`, 'exito');
-            } catch (e) {
-                mostrarMensaje('❌ Error', 'error');
+                ultimoComando = estado;  // Registrar último comando
+                actualizarInterfazLED();
+                
+                const accion = estado === 'on' ? 'ENCENDIDO' : 'APAGADO';
+                mostrarMensaje(`✅ LED ${accion}`, 'exito');
+                console.log('📤 Comando enviado:', estado);
+                
+            } catch (error) {
+                console.error('❌ Error enviando comando:', error);
+                actualizarInterfazLED();  // Revertir si falla
+                mostrarMensaje('❌ Error al enviar comando', 'error');
             }
         }
 
         async function programarLED() {
             const on = document.getElementById('hora-on').value;
             const off = document.getElementById('hora-off').value;
+            
+            // Validaciones
             if (!on || !off) {
                 mostrarMensaje('⚠️ Selecciona ambas horas', 'error');
                 return;
             }
+            if (on === off) {
+                mostrarMensaje('⚠️ Las horas deben ser diferentes', 'error');
+                return;
+            }
+            
+            mostrarMensaje('📤 Guardando programación...', 'info');
+            
             try {
-                await fetch(`${SERVER_URL}/api/programar`, {
+                const respuesta = await fetch(`${SERVER_URL}/api/programar`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ on, off })
                 });
-                mostrarMensaje(`⏰ Programado: ${on} - ${off}`, 'exito');
-            } catch (e) {
-                mostrarMensaje('❌ Error', 'error');
+                
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                
+                const datos = await respuesta.json();
+                programacion = datos.programacion;
+                
+                // Actualizar interfaz
+                actualizarInfoProgramacion();
+                document.getElementById('panel-programacion').classList.add('programacion-activa');
+                
+                mostrarMensaje(`⏰ Programado: ${on} → ${off}`, 'exito');
+                console.log('⏰ Programación guardada:', programacion);
+                
+            } catch (error) {
+                console.error('❌ Error programando:', error);
+                mostrarMensaje('❌ Error al guardar programación', 'error');
             }
         }
 
-        function actualizarInterfaz() {
-            const el = document.getElementById('estado-led');
-            el.textContent = ledEstado === 'on' ? 'ENCENDIDO' : 'APAGADO';
-            el.className = `estado-texto ${ledEstado}`;
+        async function eliminarProgramacion() {
+            if (!confirm('¿Eliminar la programación automática?')) return;
+            
+            try {
+                const respuesta = await fetch(`${SERVER_URL}/api/programar`, {
+                    method: 'DELETE'
+                });
+                
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                
+                programacion = null;
+                actualizarInfoProgramacion();
+                document.getElementById('panel-programacion').classList.remove('programacion-activa');
+                document.getElementById('hora-on').value = '';
+                document.getElementById('hora-off').value = '';
+                
+                mostrarMensaje('🗑️ Programación eliminada', 'exito');
+                console.log('🗑️ Programación eliminada');
+                
+            } catch (error) {
+                console.error('❌ Error eliminando programación:', error);
+                mostrarMensaje('❌ Error al eliminar', 'error');
+            }
         }
 
-        function mostrarMensaje(texto, tipo) {
-            const m = document.getElementById('mensaje');
-            m.textContent = texto;
-            m.className = `mensaje ${tipo}`;
-            setTimeout(() => { m.className = 'mensaje'; }, 1000);
+        // ============================================
+        // ⏰ LÓGICA DE PROGRAMACIÓN AUTOMÁTICA (MEJORADA)
+        // ============================================
+        function verificarProgramacion() {
+            if (!programacion || !window.horaActual) return;
+            
+            const { on, off } = programacion;
+            const horaActual = window.horaActual;
+            
+            console.log(`⏰ Verificando: Actual=${horaActual}, ON=${on}, OFF=${off}, Estado=${ledEstado}`);
+            
+            // === CASO 1: Horario normal (ON antes que OFF, ej: 08:00 → 20:00) ===
+            if (on < off) {
+                // Encender si es la hora ON y no está encendido
+                if (horaActual === on && ledEstado !== 'on' && ultimoComando !== 'on') {
+                    console.log(`⏰ AUTO-ON: ${horaActual}`);
+                    controlLED('on');
+                    ultimoComando = 'on';
+                    return;
+                }
+                // Apagar si es la hora OFF y no está apagado
+                if (horaActual === off && ledEstado !== 'off' && ultimoComando !== 'off') {
+                    console.log(`⏰ AUTO-OFF: ${horaActual}`);
+                    controlLED('off');
+                    ultimoComando = 'off';
+                    return;
+                }
+            }
+            
+            // === CASO 2: Cruza medianoche (ON después que OFF, ej: 22:00 → 06:00) ===
+            else {
+                // Rango nocturno: desde ON hasta medianoche, y desde medianoche hasta OFF
+                const esNoche = (horaActual >= on) || (horaActual < off);
+                
+                if (esNoche && ledEstado !== 'on' && ultimoComando !== 'on') {
+                    if (horaActual === on || (horaActual > on) || (horaActual < off)) {
+                        // Solo encender exactamente en la hora ON para evitar múltiples comandos
+                        if (horaActual === on) {
+                            console.log(`⏰ AUTO-ON (nocturno): ${horaActual}`);
+                            controlLED('on');
+                            ultimoComando = 'on';
+                        }
+                    }
+                }
+                
+                if (!esNoche && ledEstado !== 'off' && ultimoComando !== 'off') {
+                    if (horaActual === off) {
+                        console.log(`⏰ AUTO-OFF (nocturno): ${horaActual}`);
+                        controlLED('off');
+                        ultimoComando = 'off';
+                    }
+                }
+            }
         }
+
+        // ============================================
+        // 🎨 ACTUALIZACIÓN DE INTERFAZ
+        // ============================================
+        
+        function actualizarInterfazLED(estadoForzado = null) {
+            const estado = estadoForzado || ledEstado;
+            const elemento = document.getElementById('estado-led');
+            elemento.textContent = estado === 'on' ? '🔵 ENCENDIDO' : '🔴 APAGADO';
+            elemento.className = `estado-texto ${estado}`;
+        }
+        
+        function actualizarInfoProgramacion() {
+            const infoEl = document.getElementById('schedule-info');
+            const timesEl = document.getElementById('schedule-times');
+            
+            if (programacion && programacion.on && programacion.off) {
+                infoEl.style.display = 'block';
+                timesEl.textContent = `${programacion.on} → ${programacion.off}`;
+                document.getElementById('hora-on').value = programacion.on;
+                document.getElementById('hora-off').value = programacion.off;
+            } else {
+                infoEl.style.display = 'none';
+                document.getElementById('panel-programacion').classList.remove('programacion-activa');
+            }
+        }
+        
+        function actualizarEstadoConexion(conectado) {
+            const elemento = document.getElementById('conexion');
+            if (conectado) {
+                elemento.textContent = '✅ Conectado al servidor';
+                elemento.className = 'conexion ok';
+            } else {
+                elemento.textContent = '❌ Sin conexión al servidor';
+                elemento.className = 'conexion error';
+            }
+        }
+
+        // ============================================
+        // 💬 SISTEMA DE MENSAJES
+        // ============================================
+        function mostrarMensaje(texto, tipo) {
+            const mensaje = document.getElementById('mensaje');
+            mensaje.textContent = texto;
+            mensaje.className = `mensaje ${tipo}`;
+            setTimeout(() => {
+                if (mensaje.textContent === texto) {
+                    mensaje.className = 'mensaje';
+                }
+            }, 4000);
+        }
+
+        // ============================================
+        // 🎹 ATAJOS DE TECLADO
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1' || e.key === 'Enter') controlLED('on');
+            else if (e.key === '2' || e.key === ' ') controlLED('off');
+        });
     </script>
 </body>
-
 </html>
-
