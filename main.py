@@ -1,11 +1,11 @@
 # main.py - Servidor Flask para Render (CON CORS)
 from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS  # ← IMPORTANTE para navegador
+from flask_cors import CORS
 from datetime import datetime
 import os
 
 app = Flask(__name__)
-CORS(app)  # ← Permite peticiones desde cualquier origen
+CORS(app)  # Permite peticiones desde cualquier origen
 
 # Memoria temporal del estado del LED
 estado_led = {
@@ -55,8 +55,8 @@ def programar():
         return jsonify({"status": "ok", "programacion": estado_led['programacion']}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-        # Agrega esta función en main.py (después de la función programar())
 
+# ✅ API: Eliminar programación (DELETE) - FUNCIÓN SEPARADA
 @app.route('/api/programar', methods=['DELETE'])
 def eliminar_programacion():
     """Elimina la programación automática"""
@@ -69,4 +69,3 @@ def eliminar_programacion():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
-
