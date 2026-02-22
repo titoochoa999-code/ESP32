@@ -55,8 +55,18 @@ def programar():
         return jsonify({"status": "ok", "programacion": estado_led['programacion']}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+        # Agrega esta función en main.py (después de la función programar())
+
+@app.route('/api/programar', methods=['DELETE'])
+def eliminar_programacion():
+    """Elimina la programación automática"""
+    estado_led['programacion'] = None
+    estado_led['ultima_actualizacion'] = datetime.now().isoformat()
+    print("🗑️ Programación eliminada")
+    return jsonify({"status": "ok", "mensaje": "Programación eliminada"}), 200
 
 # Iniciar servidor
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
+
