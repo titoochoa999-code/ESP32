@@ -1,81 +1,375 @@
-# main.py - Servidor Flask para Render (CON CORS y hora UTC)
-from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS
-from datetime import datetime, timezone
-import os
+# ============================================================================
+# 🌹 HIDROCONTROL - Servidor Flask para Render.com
+# ============================================================================
+# Propósito: Backend API para controlar sistema de riego con 15 válvulas
+# Tecnologías: Flask (Python), CORS, JSON API, Persistencia en archivo
+# Comunicación: HTTPS con frontend web y dispositivo ESP32
+# Estructura: 3 bloques (block1, block2, block3) × 5 válvulas cada uno
+# ============================================================================
 
-app = Flask(__name__)
-CORS(app)  # Permite peticiones desde cualquier origen
+# Importación de módulos necesarios para el funcionamiento del servidor
+from flask import Flask, jsonify, request  # Flask: framework web; jsonify: convertir dict a JSON; request: acceder a datos HTTP
+from flask_cors import CORS  # Permite que el navegador web haga peticiones a esta API desde otro dominio
+from datetime import datetime, timezone  # Para manejar fechas/horas con precisión y zona horaria UTC
+import os  # Para acceder a variables de entorno del sistema (como el puerto que asigna Render)
+import json  # Para guardar/cargar estados en archivo JSON (persistencia)
 
-# Memoria temporal del estado del LED
-estado_led = {
-    "led": "off",
-    "ultima_actualizacion": None,
-    "programacion": None
-}
+# ============================================================================
+# 🚀 INICIALIZACIÓN DE LA APLICACIÓN FLASK
+# ============================================================================
+app = Flask(__name__)  # Crea la instancia principal de la aplicación Flask
+CORS(app)  # Habilita Cross-Origin Resource Sharing: permite fetch() desde tu frontend
 
-# Página principal
-@app.route('/')
-def home():
-    return render_template('index.html')
+# ============================================================================
+# 📁 CONFIGURACIÓN DE PERSISTENCIA
+# ============================================================================
+ARCHIVO_ESTADOS = 'estados.json'  # Nombre del archivo para guardar estados permanentemente
 
-# API: ESP32 consulta el estado (GET)
-@app.route('/api/estado', methods=['GET'])
-def get_estado():
-    return jsonify(estado_led), 200
-
-# API: Web envía comandos (POST)
-@app.route('/api/estado', methods=['POST'])
-def set_estado():
-    try:
-        datos = request.get_json()
-        nuevo_estado = datos.get('led', '').lower()
-        
-        if nuevo_estado in ['on', 'off']:
-            estado_led['led'] = nuevo_estado
-            estado_led['ultima_actualizacion'] = datetime.now(timezone.utc).isoformat()
-            print(f"✅ Comando recibido: LED {nuevo_estado.upper()}")
-            return jsonify({"status": "ok", "led": nuevo_estado}), 200
-        else:
-            return jsonify({"error": "Usa 'on' o 'off'"}), 400
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# API: Programar horarios (POST)
-@app.route('/api/programar', methods=['POST'])
-def programar():
-    try:
-        datos = request.get_json()
-        estado_led['programacion'] = {
-            "on": datos.get('on'),
-            "off": datos.get('off')
+# ============================================================================
+# 💾 FUNCIONES DE GUARDADO/CARGA (Persistencia Real)
+# ============================================================================
+def cargar_estados():
+    """
+    Carga los estados desde el archivo JSON o crea valores por defecto.
+    Esto asegura que los estados NO se pierdan al reiniciar el servidor.
+    """
+    if os.path.exists(ARCHIVO_ESTADOS):  # Si el archivo ya existe
+        try:
+            with open(ARCHIVO_ESTADOS, 'r', encoding='utf-8') as f:  # Abrir para lectura
+                return json.load(f)  # Parsear JSON y devolver diccionario
+        except Exception as e:
+            print(f"⚠️ Error cargando estados: {e}")  # Log de advertencia
+            # Si hay error, continuar con valores por defecto
+    
+    # Estado inicial por defecto (3 bloques × 5 válvulas)
+    estados_defecto = {
+        "block1": {
+            str(v): {"estado": "off", "programacion": None}  # Válvulas 1-5 apagadas, sin programación
+            for v in range(1, 6)
+        },
+        "block2": {
+            str(v): {"estado": "off", "programacion": None}
+            for v in range(1, 6)
+        },
+        "block3": {
+            str(v): {"estado": "off", "programacion": None}
+            for v in range(1, 6)
         }
-        estado_led['ultima_actualizacion'] = datetime.now(timezone.utc).isoformat()
-        print(f"⏰ Programación: ON {datos.get('on')} - OFF {datos.get('off')}")
-        return jsonify({"status": "ok", "programacion": estado_led['programacion']}), 200
+    }
+    guardar_estados(estados_defecto)  # Guardar archivo inicial
+    return estados_defecto
+
+def guardar_estados(estados):
+    """
+    Guarda los estados en el archivo JSON para persistencia.
+    Retorna True si éxito, False si error.
+    """
+    try:
+        with open(ARCHIVO_ESTADOS, 'w', encoding='utf-8') as f:  # Abrir para escritura
+            json.dump(estados, f, indent=2, ensure_ascii=False)  # Guardar con formato legible
+        return True
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        print(f"❌ Error guardando estados: {e}")  # Log de error
+        return False
 
-# API: Eliminar programación (DELETE)
-@app.route('/api/programar', methods=['DELETE'])
-def eliminar_programacion():
-    """Elimina la programación automática"""
-    estado_led['programacion'] = None
-    estado_led['ultima_actualizacion'] = datetime.now(timezone.utc).isoformat()
-    print("🗑️ Programación eliminada")
-    return jsonify({"status": "ok", "mensaje": "Programación eliminada"}), 200
+# ============================================================================
+# 🧠 MEMORIA GLOBAL DEL ESTADO - Se carga desde archivo al iniciar
+# ============================================================================
+# ✅ Con persistencia: los estados sobreviven a reinicios del servidor
+estados_globales = cargar_estados()  # Cargar estados al iniciar la aplicación
 
-# API: Obtener hora del servidor (para diagnóstico de timezone)
-@app.route('/api/time', methods=['GET'])
-def get_server_time():
-    now_utc = datetime.now(timezone.utc)
+# ============================================================================
+# 🌐 RUTAS DE LA APLICACIÓN (ENDPOINTS DE LA API)
+# ============================================================================
+
+# -----------------------------------------------------------------------------
+# RUTA: Health Check - Verificar que el servidor está activo
+# Método: GET
+# URL: /api/health
+# Propósito: Permitir que el frontend verifique conexión con el servidor
+# Respuesta: JSON con estado del servidor y resumen de válvulas
+# -----------------------------------------------------------------------------
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Verifica el estado del servidor y devuelve resumen"""
+    total_valvulas = sum(len(bloque) for bloque in estados_globales.values())
     return jsonify({
-        "utc": now_utc.isoformat(),
-        "utc_time": now_utc.strftime("%H:%M:%S"),
-        "note": "Render usa UTC. Ajusta tu programación según tu zona horaria."
+        "status": "ok",
+        "mensaje": "🌹 Servidor HIDROCONTROL activo - Latina Farms 3",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "bloques_disponibles": list(estados_globales.keys()),
+        "total_valvulas": total_valvulas
     }), 200
 
-# Iniciar servidor
+# -----------------------------------------------------------------------------
+# RUTA: Consultar Estado de un Bloque Completo
+# Método: GET
+# URL: /api/bloque/<block_id>
+# Propósito: Permitir que el frontend obtenga el estado de las 5 válvulas de un bloque
+# Respuesta: JSON con estado de todas las válvulas del bloque
+# -----------------------------------------------------------------------------
+@app.route('/api/bloque/<block_id>', methods=['GET'])
+def get_bloque(block_id):
+    """
+    Devuelve el estado de las 5 válvulas de un bloque específico.
+    block_id: 'block1', 'block2' o 'block3'
+    """
+    if block_id not in estados_globales:  # Validar que el bloque existe
+        return jsonify({
+            "error": f"Bloque '{block_id}' no existe",
+            "bloques_disponibles": list(estados_globales.keys())
+        }), 404  # Código 404: No encontrado
+    
+    # Devolver estado del bloque con timestamp para sincronización
+    return jsonify({
+        "block_id": block_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "valvulas": estados_globales[block_id]  # Diccionario con válvulas 1-5
+    }), 200
+
+# -----------------------------------------------------------------------------
+# RUTA: Consultar Estado de una Válvula Específica
+# Método: GET
+# URL: /api/valvula/<block_id>/<num>
+# Propósito: Permitir consulta individual de una válvula (para diagnóstico)
+# Respuesta: JSON con estado y programación de esa válvula
+# -----------------------------------------------------------------------------
+@app.route('/api/valvula/<block_id>/<int:num>', methods=['GET'])
+def get_valvula(block_id, num):
+    """
+    Devuelve el estado de una válvula específica.
+    num: número de válvula (1-5)
+    """
+    if block_id not in estados_globales:
+        return jsonify({"error": "Bloque no existe"}), 404
+    if str(num) not in estados_globales[block_id]:
+        return jsonify({"error": "Válvula no existe"}), 404
+    
+    valvula = estados_globales[block_id][str(num)]
+    return jsonify({
+        "block_id": block_id,
+        "num": num,
+        "estado": valvula["estado"],
+        "programacion": valvula["programacion"],
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }), 200
+
+# -----------------------------------------------------------------------------
+# RUTA: Cambiar Estado de una Válvula (ENCENDER/APAGAR)
+# Método: POST
+# URL: /api/valvula/<block_id>/<num>
+# Propósito: Permitir que el frontend envíe comandos manuales para válvulas
+# Entrada esperada: JSON {"estado": "on"} o {"estado": "off"} o {"estado": "auto"}
+# Respuesta: Confirmación del cambio o error con detalles
+# -----------------------------------------------------------------------------
+@app.route('/api/valvula/<block_id>/<int:num>', methods=['POST'])
+def set_valvula(block_id, num):
+    """
+    Cambia el estado de una válvula específica.
+    Estados válidos: 'on' (encendida), 'off' (apagada), 'auto' (programada)
+    """
+    # Validar que el bloque y válvula existen
+    if block_id not in estados_globales:
+        return jsonify({"error": "Bloque no existe"}), 404
+    if str(num) not in estados_globales[block_id]:
+        return jsonify({"error": "Válvula no existe"}), 404
+    
+    try:
+        datos = request.get_json()  # Parsear JSON recibido
+        if not datos:
+            return jsonify({"error": "No se recibieron datos JSON"}), 400
+        
+        nuevo_estado = datos.get('estado', '').lower()  # Obtener y normalizar estado
+        
+        # Validar que el estado sea válido
+        if nuevo_estado not in ['on', 'off', 'auto']:
+            return jsonify({
+                "error": "Estado inválido",
+                "estados_validos": ["on", "off", "auto"]
+            }), 400
+        
+        # ✅ Actualizar estado en memoria global
+        estados_globales[block_id][str(num)]["estado"] = nuevo_estado
+        estados_globales[block_id][str(num)]["ultima_actualizacion"] = datetime.now(timezone.utc).isoformat()
+        
+        # ✅ GUARDAR EN ARCHIVO (Persistencia real - los estados NO se pierden)
+        guardar_estados(estados_globales)
+        
+        # 📡 Aquí iría la lógica para enviar orden al ESP32 (si está conectado)
+        # enviar_orden_esp32(block_id, num, nuevo_estado)
+        
+        print(f"✅ Comando: {block_id} válvula {num} → {nuevo_estado.upper()}")  # Log en consola
+        return jsonify({
+            "status": "ok",
+            "mensaje": f"Válvula {num} del {block_id} cambiada a {nuevo_estado}",
+            "block_id": block_id,
+            "num": num,
+            "estado": nuevo_estado,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error en set_valvula: {e}")  # Log de error
+        return jsonify({"error": str(e)}), 500  # Código 500: Error interno del servidor
+
+# -----------------------------------------------------------------------------
+# RUTA: Guardar Programación Automática de una Válvula
+# Método: POST
+# URL: /api/valvula/<block_id>/<num>/programacion
+# Propósito: Permitir que el frontend guarde horarios ON/OFF para riego automático
+# Entrada esperada: JSON {"on": "HH:MM", "off": "HH:MM"}
+# Respuesta: Confirmación con programación guardada o error
+# -----------------------------------------------------------------------------
+@app.route('/api/valvula/<block_id>/<int:num>/programacion', methods=['POST'])
+def set_programacion(block_id, num):
+    """
+    Guarda la programación (horarios ON/OFF) de una válvula específica.
+    Formato de hora: "HH:MM" en hora local del usuario.
+    """
+    if block_id not in estados_globales:
+        return jsonify({"error": "Bloque no existe"}), 404
+    if str(num) not in estados_globales[block_id]:
+        return jsonify({"error": "Válvula no existe"}), 404
+    
+    try:
+        datos = request.get_json()
+        if not datos:
+            return jsonify({"error": "No se recibieron datos JSON"}), 400
+        
+        hora_on = datos.get('on')
+        hora_off = datos.get('off')
+        
+        # Validar que se proporcionaron ambas horas
+        if not hora_on or not hora_off:
+            return jsonify({"error": "Debe proporcionar horas 'on' y 'off'"}), 400
+        
+        # ✅ Actualizar programación en memoria
+        estados_globales[block_id][str(num)]["programacion"] = {
+            "on": hora_on,
+            "off": hora_off
+        }
+        # Cambiar estado a 'auto' para indicar que está programada
+        estados_globales[block_id][str(num)]["estado"] = "auto"
+        estados_globales[block_id][str(num)]["ultima_actualizacion"] = datetime.now(timezone.utc).isoformat()
+        
+        # ✅ GUARDAR EN ARCHIVO (Persistencia)
+        guardar_estados(estados_globales)
+        
+        print(f"⏰ Programación: {block_id} válvula {num} → ON {hora_on} / OFF {hora_off}")
+        return jsonify({
+            "status": "ok",
+            "mensaje": f"Programación actualizada para Válvula {num} del {block_id}",
+            "block_id": block_id,
+            "num": num,
+            "programacion": estados_globales[block_id][str(num)]["programacion"],
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error en set_programacion: {e}")
+        return jsonify({"error": str(e)}), 500
+
+# -----------------------------------------------------------------------------
+# RUTA: Eliminar Programación de una Válvula
+# Método: DELETE
+# URL: /api/valvula/<block_id>/<num>/programacion
+# Propósito: Permitir que el frontend elimine la programación guardada
+# Respuesta: Confirmación de eliminación o error
+# -----------------------------------------------------------------------------
+@app.route('/api/valvula/<block_id>/<int:num>/programacion', methods=['DELETE'])
+def delete_programacion(block_id, num):
+    """
+    Elimina la programación automática de una válvula específica.
+    La válvula vuelve a estado 'off' y sin horarios programados.
+    """
+    if block_id not in estados_globales:
+        return jsonify({"error": "Bloque no existe"}), 404
+    if str(num) not in estados_globales[block_id]:
+        return jsonify({"error": "Válvula no existe"}), 404
+    
+    try:
+        # ✅ Limpiar programación en memoria
+        estados_globales[block_id][str(num)]["programacion"] = None
+        estados_globales[block_id][str(num)]["estado"] = "off"  # Volver a apagada
+        estados_globales[block_id][str(num)]["ultima_actualizacion"] = datetime.now(timezone.utc).isoformat()
+        
+        # ✅ GUARDAR EN ARCHIVO (Persistencia)
+        guardar_estados(estados_globales)
+        
+        print(f"🗑️ Programación eliminada: {block_id} válvula {num}")
+        return jsonify({
+            "status": "ok",
+            "mensaje": f"Programación eliminada para Válvula {num} del {block_id}",
+            "block_id": block_id,
+            "num": num,
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ Error en delete_programacion: {e}")
+        return jsonify({"error": str(e)}), 500
+
+# -----------------------------------------------------------------------------
+# RUTA: Obtener Hora del Servidor (Para diagnóstico de zona horaria)
+# Método: GET
+# URL: /api/time
+# Propósito: Ayudar al frontend a entender diferencia entre UTC y hora local
+# Respuesta: JSON con hora UTC actual y nota explicativa
+# -----------------------------------------------------------------------------
+@app.route('/api/time', methods=['GET'])
+def get_server_time():
+    """
+    Devuelve la hora actual del servidor en UTC.
+    Útil para que el frontend ajuste programaciones según zona horaria local.
+    """
+    now_utc = datetime.now(timezone.utc)  # Hora actual en UTC
+    return jsonify({
+        "utc": now_utc.isoformat(),  # Timestamp completo ISO 8601
+        "utc_time": now_utc.strftime("%H:%M:%S"),  # Solo hora legible "HH:MM:SS"
+        "note": "Render usa UTC. Tu frontend debe ajustar según zona horaria local del usuario."
+    }), 200
+
+# -----------------------------------------------------------------------------
+# RUTA: Página Principal (Opcional - Para verificar que la API carga)
+# Método: GET
+# URL: /
+# Propósito: Mostrar información básica de la API cuando se visita en navegador
+# -----------------------------------------------------------------------------
+@app.route('/', methods=['GET'])
+def index():
+    """Página de bienvenida con documentación básica de la API"""
+    return jsonify({
+        "mensaje": "🌹 Bienvenido a HIDROCONTROL API - Latina Farms 3",
+        "descripcion": "Sistema de control de riego con 15 válvulas (3 bloques × 5 válvulas)",
+        "endpoints": {
+            "GET /api/health": "Verificar estado del servidor",
+            "GET /api/bloque/<block_id>": "Obtener estado de un bloque completo",
+            "GET /api/valvula/<block_id>/<num>": "Obtener estado de una válvula específica",
+            "POST /api/valvula/<block_id>/<num>": "Cambiar estado de una válvula (on/off/auto)",
+            "POST /api/valvula/<block_id>/<num>/programacion": "Guardar programación automática",
+            "DELETE /api/valvula/<block_id>/<num>/programacion": "Eliminar programación",
+            "GET /api/time": "Obtener hora UTC del servidor"
+        },
+        "ejemplo_uso": {
+            "encender_valvula": "POST /api/valvula/block1/1 con {\"estado\": \"on\"}",
+            "programar": "POST /api/valvula/block1/1/programacion con {\"on\": \"08:00\", \"off\": \"18:00\"}"
+        }
+    }), 200
+
+# ============================================================================
+# 🚀 PUNTO DE ENTRADA - Ejecución del Servidor
+# ============================================================================
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port)
+    """
+    Punto de entrada principal: se ejecuta solo si el archivo se corre directamente.
+    En Render.com, esta sección se omite y se usa Gunicorn como servidor de producción.
+    """
+    # Obtener puerto desde variable de entorno (Render asigna puerto dinámico)
+    # Si no existe PORT, usar 5000 como fallback para desarrollo local
+    port = int(os.environ.get('PORT', 5000))
+    
+    # Iniciar servidor Flask en modo desarrollo
+    # host='0.0.0.0' permite conexiones desde cualquier IP (requerido por Render)
+    # debug=True muestra errores detallados (solo para desarrollo, NO en producción)
+    print(f"🚀 Iniciando HIDROCONTROL API en puerto {port}...")
+    app.run(host='0.0.0.0', port=port, debug=True)
