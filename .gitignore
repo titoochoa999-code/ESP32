@@ -1,0 +1,58 @@
+# ============================================
+# 🐍 PYTHON
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ============================================
+# 📁 ESTADOS Y DATOS (¡Importante!)
+# ============================================
+# No subir estados reales de las válvulas al repositorio público
+estados.json
+*.log
+*.db
+*.sqlite3
+
+# ============================================
+# 🔐 VARIABLES DE ENTORNO Y SECRETOS
+# ============================================
+.env
+.env.local
+.env.production
+*.pem
+*.key
+
+# ============================================
+# 💻 IDE Y EDITORES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# 🌐 RENDER Y DESPLIEGUE
+# ============================================
+# El archivo de estados se genera en el servidor, no se sube
+/opt/render/project/src/estados.json
