@@ -1,12 +1,12 @@
 # app.py - Backend Flask para HIDROCONTROL (Latina Farms 3)
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template  # ✅ Agregar render_template
 from flask_cors import CORS
 from datetime import datetime
 import json
 import os
 
 app = Flask(__name__)
-CORS(app)  # ✅ Permite peticiones desde tu frontend
+CORS(app)
 
 # ============================================
 # 📁 CONFIGURACIÓN DE PERSISTENCIA
@@ -59,6 +59,12 @@ estados_globales = cargar_estados()
 # ============================================
 # 🏓 ENDPOINTS DE LA API
 # ============================================
+
+# 🏠 RUTA RAÍZ: Servir la Página Web HTML
+@app.route('/', methods=['GET'])
+def index():
+    """Sirve la interfaz web HTML en lugar de JSON"""
+    return render_template('index.html')
 
 # 📥 GET: Consultar estado de un bloque completo
 @app.route('/api/bloque/<block_id>', methods=['GET'])
@@ -119,9 +125,6 @@ def set_valvula(block_id, num):
     
     # ✅ GUARDAR EN ARCHIVO (Persistencia real)
     guardar_estados(estados_globales)
-    
-    # 📡 Aquí iría la lógica para enviar orden al ESP32
-    # enviar_orden_esp32(block_id, num, nuevo_estado)
     
     return jsonify({
         "mensaje": f"Válvula {num} del {block_id} cambiada a {nuevo_estado}",
@@ -203,27 +206,9 @@ def health():
         "total_valvulas": sum(len(b) for b in estados_globales.values())
     })
 
-# 🏠 Ruta raíz (para verificar que la app carga)
-@app.route('/', methods=['GET'])
-def index():
-    return jsonify({
-        "mensaje": "🌹 Bienvenido a HIDROCONTROL API - Latina Farms 3",
-        "endpoints": {
-            "GET /api/health": "Verificar estado del servidor",
-            "GET /api/bloque/<block_id>": "Obtener estado de un bloque",
-            "GET /api/valvula/<block_id>/<num>": "Obtener estado de una válvula",
-            "POST /api/valvula/<block_id>/<num>": "Cambiar estado de una válvula",
-            "POST /api/valvula/<block_id>/<num>/programacion": "Guardar programación",
-            "DELETE /api/valvula/<block_id>/<num>/programacion": "Eliminar programación"
-        }
-    })
-
 # ============================================
 # 🚀 EJECUCIÓN
 # ============================================
 if __name__ == '__main__':
-    # Obtener puerto del entorno (para Render) o usar 5000 por defecto
     port = int(os.environ.get('PORT', 5000))
-    # debug=False en producción (Render lo maneja)
     app.run(host='0.0.0.0', port=port, debug=False)
-
