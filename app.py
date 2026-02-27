@@ -41,7 +41,7 @@ def cargar_estados():
         }
     }
     guardar_estados(estados_defecto)
-    return estados_defacto
+    return estados_defecto
 
 def guardar_estados(estados):
     """Guarda los estados en el archivo JSON"""
@@ -226,3 +226,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     # debug=False en producción (Render lo maneja)
     app.run(host='0.0.0.0', port=port, debug=False)
+
