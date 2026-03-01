@@ -23,9 +23,8 @@ wheels/
 *.egg
 
 # ============================================
-# 📁 ESTADOS Y DATOS (¡Importante!)
+# 📁 ESTADOS Y DATOS
 # ============================================
-# No subir estados reales de las válvulas al repositorio público
 estados.json
 *.log
 *.db
@@ -52,7 +51,14 @@ estados.json
 Thumbs.db
 
 # ============================================
-# 🌐 RENDER Y DESPLIEGUE
+# 🐍 ENTORNOS VIRTUALES (AGREGAR ESTO)
 # ============================================
-# El archivo de estados se genera en el servidor, no se sube
+venv/
+env/
+ENV/
+.venv/
+
+# ============================================
+# 🌐 RENDER
+# ============================================
 /opt/render/project/src/estados.json
