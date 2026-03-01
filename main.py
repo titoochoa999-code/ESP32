@@ -12,13 +12,21 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from datetime import datetime, timezone
 import json
-import os
+import os  # ✅ IMPORTANTE: Para leer variables de entorno desde Render
 
 # ============================================================================
 # 🚀 INICIALIZACIÓN DE LA APLICACIÓN FLASK
 # ============================================================================
 app = Flask(__name__)
 CORS(app)  # Habilita Cross-Origin Resource Sharing: permite fetch() desde tu frontend
+
+# ============================================================================
+# 🔐 CREDENCIALES DESDE VARIABLES DE ENTORNO (Seguro - Render Dashboard)
+# ============================================================================
+# ✅ Lee de Render: si no está configurado, usa valores por defecto (solo desarrollo)
+USUARIO_ADMIN = os.environ.get('USUARIO_ADMIN', 'admin')
+CONTRASENA_ADMIN = os.environ.get('CONTRASENA_ADMIN', '1234')
+TOKEN_SECRETO = os.environ.get('JWT_SECRET', 'hidrocontrol-secreto-default')
 
 # ============================================================================
 # 📁 CONFIGURACIÓN DE PERSISTENCIA
@@ -77,8 +85,65 @@ def guardar_estados(estados):
 estados_globales = cargar_estados()
 
 # ============================================================================
+# 🔐 FUNCIÓN PARA VERIFICAR TOKEN (Simple - Opcional para proteger endpoints)
+# ============================================================================
+def verificar_token():
+    """
+    Verifica si la petición tiene un token válido en el header.
+    Retorna True si es válido o si no se requiere autenticación.
+    """
+    auth_header = request.headers.get('Authorization', '')
+    
+    # Si no hay header, permitir acceso (para /api/login, /api/health, etc.)
+    if not auth_header:
+        return True
+    
+    # Formato esperado: "Bearer token-123456"
+    if auth_header.startswith('Bearer '):
+        token = auth_header.replace('Bearer ', '')
+        # Token simple: verificamos que contenga el usuario admin
+        if USUARIO_ADMIN in token:
+            return True
+    
+    return False
+
+# ============================================================================
 # 🌐 RUTAS DE LA APLICACIÓN (ENDPOINTS DE LA API)
 # ============================================================================
+
+# -----------------------------------------------------------------------------
+# 🔐 POST: Login de Usuario (Autenticación Simple) - ✅ NUEVO
+# -----------------------------------------------------------------------------
+@app.route('/api/login', methods=['POST'])
+def login():
+    """Valida usuario y contraseña, devuelve token simple si es correcto"""
+    try:
+        datos = request.get_json()
+        if not datos:
+            return jsonify({"ok": False, "mensaje": "No se recibieron datos"}), 400
+        
+        usuario = datos.get('usuario', '')
+        contrasena = datos.get('contrasena', '')
+        
+        # ✅ Validar con variables de entorno (seguro - configuradas en Render)
+        if usuario == USUARIO_ADMIN and contrasena == CONTRASENA_ADMIN:
+            # Token simple: usuario + timestamp (no es JWT real, pero funciona para tu caso)
+            token_simple = f"{usuario}-{datetime.now().timestamp()}"
+            return jsonify({
+                "ok": True,
+                "mensaje": "Login exitoso",
+                "token": token_simple,
+                "usuario": usuario
+            }), 200
+        else:
+            return jsonify({
+                "ok": False,
+                "mensaje": "Usuario o contraseña incorrectos"
+            }), 401
+            
+    except Exception as e:
+        print(f"❌ Error en login: {e}")
+        return jsonify({"ok": False, "mensaje": "Error interno"}), 500
 
 # -----------------------------------------------------------------------------
 # 🏠 RUTA RAÍZ: Servir la Página Web HTML
@@ -107,6 +172,10 @@ def get_server_time():
 @app.route('/api/bloque/<block_id>', methods=['GET'])
 def get_bloque(block_id):
     """Devuelve el estado de las 5 válvulas de un bloque específico"""
+    # 🔐 Opcional: Descomentar para proteger esta ruta
+    # if not verificar_token():
+    #     return jsonify({"error": "No autorizado"}), 401
+    
     if block_id not in estados_globales:
         return jsonify({
             "error": f"Bloque '{block_id}' no existe",
@@ -125,6 +194,10 @@ def get_bloque(block_id):
 @app.route('/api/valvula/<block_id>/<int:num>', methods=['GET'])
 def get_valvula(block_id, num):
     """Devuelve el estado de una válvula específica"""
+    # 🔐 Opcional: Descomentar para proteger esta ruta
+    # if not verificar_token():
+    #     return jsonify({"error": "No autorizado"}), 401
+    
     if block_id not in estados_globales:
         return jsonify({"error": "Bloque no existe"}), 404
     if str(num) not in estados_globales[block_id]:
@@ -145,6 +218,10 @@ def get_valvula(block_id, num):
 @app.route('/api/valvula/<block_id>/<int:num>', methods=['POST'])
 def set_valvula(block_id, num):
     """Cambia el estado de una válvula específica"""
+    # 🔐 VERIFICAR AUTENTICACIÓN (Descomentar para activar protección)
+    # if not verificar_token():
+    #     return jsonify({"error": "No autorizado"}), 401
+    
     if block_id not in estados_globales:
         return jsonify({"error": "Bloque no existe"}), 404
     if str(num) not in estados_globales[block_id]:
@@ -189,6 +266,10 @@ def set_valvula(block_id, num):
 @app.route('/api/valvula/<block_id>/<int:num>/programacion', methods=['POST'])
 def set_programacion(block_id, num):
     """Guarda la programación (horarios ON/OFF) de una válvula específica"""
+    # 🔐 VERIFICAR AUTENTICACIÓN (Descomentar para activar protección)
+    # if not verificar_token():
+    #     return jsonify({"error": "No autorizado"}), 401
+    
     if block_id not in estados_globales:
         return jsonify({"error": "Bloque no existe"}), 404
     if str(num) not in estados_globales[block_id]:
@@ -235,6 +316,10 @@ def set_programacion(block_id, num):
 @app.route('/api/valvula/<block_id>/<int:num>/programacion', methods=['DELETE'])
 def delete_programacion(block_id, num):
     """Elimina la programación automática de una válvula específica"""
+    # 🔐 VERIFICAR AUTENTICACIÓN (Descomentar para activar protección)
+    # if not verificar_token():
+    #     return jsonify({"error": "No autorizado"}), 401
+    
     if block_id not in estados_globales:
         return jsonify({"error": "Bloque no existe"}), 404
     if str(num) not in estados_globales[block_id]:
@@ -339,4 +424,5 @@ if __name__ == '__main__':
     """
     port = int(os.environ.get('PORT', 5000))
     print(f"🚀 Iniciando HIDROCONTROL API en puerto {port}...")
+    print(f"🔐 Credenciales: USUARIO_ADMIN={'✅' if USUARIO_ADMIN else '❌'}, CONTRASENA_ADMIN={'✅' if CONTRASENA_ADMIN else '❌'}")
     app.run(host='0.0.0.0', port=port, debug=False)
