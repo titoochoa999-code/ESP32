@@ -1,0 +1,2588 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8"> <!-- Codificación de caracteres UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive para móviles -->
+    <title>🌹 HIDROCONTROL - Latina Farms 3</title>
+    <style>
+        /* ============================================ */
+        /* 🎨 VARIABLES CSS - COLORES Y ESTILOS GLOBALES */
+        /* ============================================ */
+        :root {
+            /* Colores de fondo */
+            --bg-primary: #0a192f;
+            /* Fondo principal (azul oscuro) */
+            --bg-secondary: #112240;
+            /* Fondo secundario (azul medio) */
+            --bg-card: #1e3a5f;
+            /* Fondo de tarjetas (azul claro) */
+
+            /* Colores de texto */
+            --text-primary: #e6f1ff;
+            /* Texto principal (blanco azulado) */
+            --text-secondary: #a8b2d1;
+            /* Texto secundario (gris azulado) */
+
+            /* Colores de acento */
+            --accent-cyan: #64ffda;
+            /* Cyan brillante (elementos destacados) */
+            --accent-purple: #64ffda;
+            /* Morado (botones programar) */
+            --accent-blue: #3498db;
+            /* Azul (elementos secundarios) */
+
+            /* Colores de estado */
+            --success: #2d8cda;
+            /* Verde/azul (éxito, encendido) */
+            --error: #e74c3c;
+            /* Rojo (error, apagado) */
+            --warning: #f39c12;
+            /* Naranja (advertencias) */
+
+            /* Efectos visuales */
+            --border-radius: 12px;
+            /* Redondez de bordes */
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            /* Sombra base */
+            --transition: all 0.3s ease;
+            /* Animaciones suaves */
+        }
+
+        /* ============================================ */
+        /* 🧱 RESET Y BASE - ESTILOS GENERALES */
+        /* ============================================ */
+        * {
+            margin: 0;
+            /* Eliminar márgenes por defecto */
+            padding: 0;
+            /* Eliminar rellenos por defecto */
+            box-sizing: border-box;
+            /* Incluir borde en tamaño total */
+        }
+
+        body {
+            font-family: 'Varela Round', 'Segoe UI', sans-serif;
+            /* Tipografía redonda */
+            background: var(--bg-primary);
+            /* Fondo azul oscuro */
+            color: var(--text-primary);
+            /* Texto blanco azulado */
+            min-height: 100vh;
+            /* Altura mínima: pantalla completa */
+            line-height: 1.6;
+            /* Espacio entre líneas */
+            overflow-x: hidden;
+            /* Evitar scroll horizontal */
+        }
+
+        /* ============================================ */
+        /* 🔐 PANEL DE LOGIN - PANTALLA DE AUTENTICACIÓN */
+        /* ============================================ */
+        .login-overlay {
+            position: fixed;
+            /* Fijo en pantalla */
+            top: 0;
+            left: 0;
+            /* Esquina superior izquierda */
+            width: 100%;
+            height: 100%;
+            /* Cubre toda la pantalla */
+            background: rgba(10, 25, 47, 0.95);
+            /* Fondo semi-transparente */
+            background-image: url('Hidrocontrol.jpg');
+            /* Imagen de fondo */
+            background-size: cover;
+            /* Imagen cubre todo */
+            background-position: center;
+            /* Imagen centrada */
+            display: flex;
+            /* Diseño flexible */
+            align-items: center;
+            /* Centrado vertical */
+            justify-content: center;
+            /* Centrado horizontal */
+            z-index: 1000;
+            /* Capa superior (sobre todo) */
+            backdrop-filter: blur(5px);
+            /* Efecto borroso detrás */
+        }
+
+        .login-overlay.hidden {
+            display: none;
+            /* Ocultar cuando tiene clase 'hidden' */
+        }
+
+        .login-container {
+            background: var(--bg-secondary);
+            /* Fondo azul medio */
+            padding: 2.5rem;
+            /* Espacio interno */
+            border-radius: var(--border-radius);
+            /* Bordes redondeados */
+            box-shadow: var(--shadow);
+            /* Sombra */
+            width: 90%;
+            /* Ancho 90% en móviles */
+            max-width: 420px;
+            /* Ancho máximo en escritorio */
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            /* Borde cyan sutil */
+            color: #fff;
+            /* Texto blanco */
+        }
+
+        .login-header {
+            text-align: center;
+            /* Centrar contenido */
+            margin-bottom: 2rem;
+            /* Espacio abajo */
+        }
+
+        .login-icon {
+            font-size: 3rem;
+            /* Icono grande (emoji) */
+            display: block;
+            /* En línea nueva */
+            margin-bottom: 0.5rem;
+            /* Espacio abajo */
+        }
+
+        .login-logo {
+            /* Efecto de texto con degradado agua */
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Varela Round', sans-serif;
+            background: linear-gradient(135deg, #00F2FF, #00C9FF, #0084FF);
+            /* Degradado cyan */
+            -webkit-background-clip: text;
+            /* Recortar fondo al texto */
+            background-clip: text;
+            color: transparent;
+            /* Texto transparente para ver degradado */
+            margin-bottom: 0.3rem;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+            /* Resplandor */
+        }
+
+        .login-subtitle {
+            /* Efecto de texto con degradado agua */
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Varela Round', sans-serif;
+            background: linear-gradient(135deg, #00F2FF, #00C9FF, #0084FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 8px rgba(0, 242, 255, 0.4));
+            /* Resplandor suave */
+        }
+
+        .login-error {
+            /* Mensaje de error de login */
+            background: rgba(231, 76, 60, 0.15);
+            /* Fondo rojo transparente */
+            border-left: 4px solid var(--error);
+            /* Borde izquierdo rojo */
+            color: #ffc5c5;
+            /* Texto rojo claro */
+            padding: 0.8rem 1rem;
+            /* Espacio interno */
+            border-radius: 6px;
+            /* Bordes redondeados */
+            margin-bottom: 1.2rem;
+            /* Espacio abajo */
+            display: none;
+            /* Oculto por defecto */
+            font-size: 0.9rem;
+            /* Tamaño pequeño */
+        }
+
+        .login-error.show {
+            display: block;
+            /* Mostrar cuando tiene clase 'show' */
+            animation: shake 0.5s ease;
+            /* Animación de vibración */
+        }
+
+        @keyframes shake {
+
+            /* Animación de vibración para error */
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25%,
+            75% {
+                transform: translateX(-5px);
+            }
+
+            /* Mover izquierda/derecha */
+        }
+
+        .login-form {
+            display: flex;
+            /* Diseño flexible */
+            flex-direction: column;
+            /* Elementos en columna vertical */
+            gap: 1.2rem;
+            /* Espacio entre elementos */
+        }
+
+        .input-group {
+            position: relative;
+            /* Para posicionar iconos absolutamente */
+        }
+
+        .input-group label {
+            display: block;
+            /* En línea nueva */
+            margin-bottom: 0.4rem;
+            /* Espacio abajo */
+            color: var(--text-secondary);
+            /* Color gris azulado */
+            font-size: 0.9rem;
+            /* Tamaño pequeño */
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        .input-group input {
+            width: 100%;
+            /* Ancho completo */
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            /* Espacio interno (izquierda para icono) */
+            background: var(--bg-primary);
+            /* Fondo azul oscuro */
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            /* Borde cyan sutil */
+            border-radius: 8px;
+            /* Bordes redondeados */
+            color: var(--text-primary);
+            /* Texto blanco */
+            font-size: 1rem;
+            /* Tamaño normal */
+            font-family: 'Varela Round', sans-serif;
+            transition: var(--transition);
+            /* Animación suave */
+        }
+
+        .input-group input:focus {
+            outline: none;
+            /* Sin borde azul por defecto */
+            border-color: var(--accent-cyan);
+            /* Borde cyan al enfocar */
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+            /* Resplandor cyan */
+        }
+
+        .input-icon {
+            position: absolute;
+            /* Posición absoluta dentro del input */
+            left: 1rem;
+            /* 16px desde la izquierda */
+            top: 2.4rem;
+            /* 38px desde arriba */
+            color: var(--text-secondary);
+            /* Color gris */
+        }
+
+        .login-btn {
+            /* Botón de ingresar */
+            background: linear-gradient(135deg, var(--accent-cyan), #27ae60);
+            /* Degradado cyan-verde */
+            color: var(--bg-primary);
+            /* Texto azul oscuro */
+            border: none;
+            /* Sin borde */
+            padding: 1rem;
+            /* Espacio interno */
+            border-radius: 8px;
+            /* Bordes redondeados */
+            font-weight: bold;
+            /* Texto en negrita */
+            font-size: 1rem;
+            /* Tamaño normal */
+            font-family: 'Varela Round', sans-serif;
+            cursor: pointer;
+            /* Manito al pasar mouse */
+            transition: var(--transition);
+            margin-top: 0.5rem;
+            /* Espacio arriba */
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            /* Se eleva 2px */
+            box-shadow: 0 6px 20px rgba(100, 255, 218, 0.4);
+            /* Sombra cyan */
+        }
+
+        .login-footer {
+            text-align: center;
+            /* Centrar texto */
+            margin-top: 2rem;
+            /* Espacio arriba */
+            color: var(--text-secondary);
+            /* Color gris */
+            font-size: 0.8rem;
+            /* Tamaño pequeño */
+            opacity: 0.7;
+            /* Semi-transparente */
+            font-family: 'Varela Round', sans-serif;
+        }
+
+        /* ============================================ */
+        /* 🚪 BOTÓN CERRAR SESIÓN - EFECTO AGUA */
+        /* ============================================ */
+        .logout-btn {
+            position: fixed;
+            /* Fijo en pantalla */
+            top: 2rem;
+            /* 32px desde arriba */
+            left: 70rem;
+            /* 1120px desde izquierda (posición específica) */
+            color: white;
+            /* Texto blanco */
+            border: 2px solid rgba(0, 242, 255, 0.5);
+            /* Borde cyan semi-transparente */
+            padding: 0.7rem 1.8rem;
+            /* Espacio interno */
+            border-radius: 50px;
+            /* Bordes muy redondos (píldora) */
+            cursor: pointer;
+            font-weight: 600;
+            /* Semi-negrita */
+            font-family: 'Varela Round', sans-serif;
+            display: none;
+            /* Oculto por defecto (se muestra al login) */
+            z-index: 200;
+            /* Capa alta */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Animación suave premium */
+            letter-spacing: 1px;
+            /* Espacio entre letras */
+            text-transform: uppercase;
+            /* Mayúsculas */
+            font-size: 0.85rem;
+            /* Tamaño pequeño */
+            background: linear-gradient(135deg, #00F2FF, #00C9FF, #0084FF);
+            /* Degradado agua */
+            box-shadow: 0 4px 20px rgba(0, 242, 255, 0.4), 0 0 25px rgba(0, 242, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            /* Contener efectos internos */
+        }
+
+        .logout-btn::before {
+            /* Efecto de brillo que se mueve */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            /* Fuera de la pantalla a la izquierda */
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: transform 0.6s ease;
+        }
+
+        .logout-btn::after {
+            /* Efecto de burbujas interior */
+            content: '';
+            position: absolute;
+            inset: 2px;
+            /* 2px desde todos los lados */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 48px;
+            pointer-events: none;
+            /* No interferir con clicks */
+        }
+
+        .logout-btn:hover {
+            /* Hover - Efecto agua intensa */
+            background: linear-gradient(135deg, #00FFFF, #00D9FF, #0099FF);
+            border-color: rgba(0, 255, 255, 0.9);
+            transform: translateY(-4px) scale(1.03);
+            /* Se eleva y escala */
+            box-shadow: 0 8px 30px rgba(0, 242, 255, 0.6), 0 0 40px rgba(0, 242, 255, 0.4), 0 0 60px rgba(0, 201, 255, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-btn:hover::before {
+            transform: translateX(100%);
+            /* Mover brillo a la derecha */
+        }
+
+        .logout-btn:active {
+            /* Al hacer click */
+            transform: translateY(-1px) scale(0.98);
+            /* Se encoge ligeramente */
+            transition: transform 0.1s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.4), 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .logout-btn span {
+            margin-right: 6px;
+            /* Espacio después del icono */
+        }
+
+        /* ============================================ */
+        /* 📦 CONTENEDOR PRINCIPAL - ESTRUCTURA DE PANELES */
+        /* ============================================ */
+        .panel-container {
+            max-width: 1400px;
+            /* Ancho máximo */
+            margin: 0 auto;
+            /* Centrado horizontal */
+            padding: 1rem;
+            /* Espacio interno */
+        }
+
+        .panel {
+            display: none;
+            /* Oculto por defecto */
+            animation: fadeIn 0.4s ease;
+            /* Animación de aparición */
+        }
+
+        .panel.active {
+            display: block;
+            /* Mostrar cuando tiene clase 'active' */
+        }
+
+        .panel.inactive {
+            display: none;
+            /* Forzar oculto con clase 'inactive' */
+        }
+
+        @keyframes fadeIn {
+
+            /* Animación de aparición suave */
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================ */
+        /* 🧭 HEADER DE PANEL - ENCABEZADO CON RELOJ */
+        /* ============================================ */
+        .panel-header {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('Hidrocontrol.jpg');
+            /* Imagen + overlay oscuro */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(100, 255, 218, 0.15);
+        }
+
+        .subtitle {
+            /* Subtítulo con efecto agua */
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, #00F2FF, #00C9FF, #0084FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+        }
+
+        .panel-title {
+            /* Título principal con efecto agua */
+            font-family: 'Varela Round', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 0.3rem 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00FFFF, #00D9FF, #0099FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 12px rgba(0, 242, 255, 0.6));
+        }
+
+        /* ============================================ */
+        /* ⏰ RELOJ DIGITAL - HORA Y FECHA */
+        /* ============================================ */
+        .reloj-container {
+            margin-top: 1rem;
+            /* Espacio arriba */
+        }
+
+        .reloj {
+            font-family: 'Orbitron', monospace;
+            /* Fuente digital */
+            font-size: 3.2em;
+            /* Tamaño grande */
+            font-weight: 700;
+            /* Negrita */
+            color: #ffffff;
+            /* Blanco puro */
+            letter-spacing: 4px;
+            /* Espacio entre números */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.2);
+            /* Resplandor blanco */
+            transition: text-shadow 0.3s ease;
+        }
+
+        .reloj:hover {
+            text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 60px rgba(255, 255, 255, 0.6), 0 0 90px rgba(255, 255, 255, 0.3);
+            /* Más brillo al hover */
+        }
+
+        .fecha {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.8);
+            /* Blanco semi-transparente */
+            margin-top: 0.5rem;
+            text-transform: capitalize;
+            /* Primera letra mayúscula */
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* ============================================ */
+        /* 🔙 BOTÓN VOLVER - NAVEGACIÓN */
+        /* ============================================ */
+        .back-btn {
+            position: fixed;
+            /* Fijo en pantalla */
+            top: 1.5rem;
+            /* 24px desde arriba */
+            left: 1.5rem;
+            /* 24px desde izquierda */
+            width: 45px;
+            /* Ancho */
+            height: 45px;
+            /* Alto (círculo perfecto) */
+            border-radius: 50%;
+            /* Círculo */
+            cursor: pointer;
+            font-size: 1.3rem;
+            /* Tamaño de flecha */
+            display: none;
+            /* Oculto por defecto (se muestra en bloques) */
+            align-items: center;
+            /* Centrar flecha vertical */
+            justify-content: center;
+            /* Centrar flecha horizontal */
+            transition: all 0.3s ease;
+            z-index: 200;
+            /* Capa alta */
+            background: linear-gradient(135deg, #00F2FF, #0084FF);
+            /* Degradado agua */
+            border: 2px solid rgba(0, 242, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .back-btn::before {
+            content: '←';
+            /* Flecha izquierda */
+            color: white;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #00FFFF, #0099FF);
+            border-color: rgba(0, 255, 255, 0.7);
+            transform: translateY(-3px);
+            /* Se eleva */
+            box-shadow: 0 6px 20px rgba(0, 242, 255, 0.5);
+        }
+
+        .back-btn:hover::before {
+            transform: translateX(-3px);
+            /* Flecha se mueve izquierda */
+        }
+
+        /* ============================================ */
+        /* 🧱 GRID DE BLOQUES - TARJETAS DE ZONAS */
+        /* ============================================ */
+        .bloques-grid {
+            display: grid;
+            /* Diseño de cuadrícula */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* Columnas automáticas responsive */
+            gap: 1.5rem;
+            /* Espacio entre tarjetas */
+            padding: 1rem;
+            /* Espacio interno */
+        }
+
+        .bloque-card {
+            background: var(--bg-card);
+            /* Fondo azul */
+            padding: 2rem;
+            /* Espacio interno */
+            border-radius: var(--border-radius);
+            text-align: center;
+            /* Centrar contenido */
+            cursor: pointer;
+            /* Manito al pasar mouse */
+            transition: var(--transition);
+            border: 2px solid transparent;
+            /* Borde transparente (se activa en hover) */
+            box-shadow: var(--shadow);
+        }
+
+        .bloque-card:hover {
+            transform: translateY(-5px);
+            /* Se eleva 5px */
+            border-color: var(--accent-cyan);
+            /* Borde cyan */
+            box-shadow: 0 15px 40px rgba(12, 204, 238, 0.2);
+            /* Sombra cyan */
+        }
+
+        .bloque-card.bloque-1 {
+            border-top: 4px solid var(--accent-blue);
+            /* Indicador verde (Bloque 10) */
+        }
+
+        .bloque-card.bloque-2 {
+            border-top: 4px solid var(--accent-blue);
+            /* Indicador azul (Bloque 11) */
+        }
+
+        .bloque-card.bloque-3 {
+            border-top: 4px solid var(--accent-blue);
+            /* Indicador azul (Bloque 12) */
+        }
+
+        .bloque-card h2 {
+            font-size: 1.5rem;
+            /* Tamaño del título */
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .bloque-card p {
+            color: var(--text-secondary);
+            /* Descripción gris */
+            font-size: 0.95rem;
+        }
+
+        /* ============================================ */
+        /* 💧 GRID DE VÁLVULAS - TARJETAS DE CONTROL */
+        /* ============================================ */
+        .block-content {
+            display: flex;
+            /* Diseño flexible */
+            flex-direction: column;
+            /* En columna vertical */
+            gap: 1.5rem;
+            /* Espacio entre elementos */
+        }
+
+        .valvulas-grid {
+            display: grid;
+            /* Cuadrícula de válvulas */
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            /* Columnas automáticas */
+            gap: 1rem;
+            /* Espacio entre válvulas */
+        }
+
+        .valvula-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-blue);
+            /* Indicador izquierdo azul */
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .valvula-card:hover {
+            transform: translateY(-3px);
+            /* Se eleva */
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            /* Sombra más fuerte */
+        }
+
+        .valvula-header {
+            display: flex;
+            /* Diseño flexible */
+            justify-content: space-between;
+            /* Título izquierda, indicador derecha */
+            align-items: center;
+            /* Centrar vertical */
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(100, 255, 113, 0.15);
+            /* Línea separadora */
+        }
+
+        .valvula-title {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            /* Título cyan */
+        }
+
+        /* ============================================ */
+        /* 💡 INDICADOR LED - ESTADO DE VÁLVULA */
+        /* ============================================ */
+        .estado-indicator {
+            width: 18px;
+            /* Ancho del LED */
+            height: 18px;
+            /* Alto del LED */
+            border-radius: 50%;
+            /* Círculo */
+            background: var(--bg-card);
+            /* Color apagado */
+            border: 2px solid #ffffff;
+            /* Borde blanco */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            /* Sombra suave */
+            transition: var(--transition);
+        }
+
+        .estado-indicator.on {
+            background: #2ecc71;
+            /* Verde cuando está encendida */
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 10px #2ecc71, 0 2px 5px rgba(0, 0, 0, 0.3);
+            /* Resplandor verde */
+        }
+
+        /* ============================================ */
+        /* 📊 SECCIÓN DE ESTADO - TEXTO DE ESTADO */
+        /* ============================================ */
+        .estado-section {
+            margin: 1rem 0;
+            text-align: center;
+            /* Centrar contenido */
+        }
+
+        .estado-section h3 {
+            font-size: 0.9rem;
+            /* Título pequeño */
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .estado-texto {
+            font-size: 1.4em;
+            /* Texto grande */
+            font-weight: bold;
+            padding: 0.6rem 1rem;
+            /* Espacio interno */
+            border-radius: 8px;
+            /* Bordes redondeados */
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            /* Fondo oscuro semi-transparente */
+            transition: var(--transition);
+        }
+
+        .estado-texto.on {
+            /* Estado ENCENDIDA */
+            color: #2ecc71;
+            /* Texto verde */
+            background: rgba(46, 204, 113, 0.35);
+            /* Fondo verde 35% */
+            border: 1px solid rgba(46, 204, 113, 0.5);
+            /* Borde verde */
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+            /* Resplandor verde */
+        }
+
+        .estado-texto.off {
+            /* Estado APAGADA */
+            color: #ffffff;
+            /* Texto blanco */
+            background: rgba(253, 250, 250, 0.25);
+            /* Fondo blanco 25% */
+            border: 1px solid rgba(226, 216, 215, 0.4);
+            font-weight: 700;
+        }
+
+        .estado-texto.auto {
+            /* Estado PROGRAMADA */
+            color: #3498db;
+            /* Texto azul */
+            background: rgba(52, 152, 219, 0.25);
+            /* Fondo azul 25% */
+            border: 1px solid rgba(52, 152, 219, 0.4);
+            font-weight: 700;
+        }
+
+        /* ============================================ */
+        /* 🔘 BOTONES DE CONTROL - ACCIONES MANUALES */
+        /* ============================================ */
+        .manual-control h3,
+        .programacion-section h3 {
+            font-size: 0.9rem;
+            /* Títulos pequeños */
+            color: var(--text-secondary);
+            margin: 1rem 0 0.8rem;
+        }
+
+        .btn-group {
+            display: flex;
+            /* Botones en fila */
+            gap: 0.6rem;
+            /* Espacio entre botones */
+            flex-wrap: wrap;
+            /* Bajar a siguiente línea si no caben */
+        }
+
+        .btn {
+            flex: 1;
+            /* Ocupar espacio disponible */
+            min-width: 100px;
+            /* Ancho mínimo */
+            padding: 0.7rem;
+            /* Espacio interno */
+            border: none;
+            /* Sin borde */
+            border-radius: 8px;
+            /* Bordes redondeados */
+            font-weight: 500;
+            /* Semi-negrita */
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .btn-on {
+            /* Botón ENCENDER */
+            background: linear-gradient(135deg, var(--success), #27ae60);
+            /* Degradado verde */
+            color: white;
+        }
+
+        .btn-on:hover {
+            transform: translateY(-2px);
+            /* Se eleva */
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.4);
+            /* Sombra verde */
+        }
+
+        .btn-off {
+            /* Botón APAGAR */
+            background: linear-gradient(135deg, var(--error), #b31aab);
+            /* Degradado rojo */
+            color: white;
+        }
+
+        .btn-off:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(231, 76, 60, 0.4);
+            /* Sombra roja */
+        }
+
+        .btn-programar {
+            /* Botón PROGRAMAR - Efecto agua */
+            width: 100%;
+            /* Ancho completo */
+            margin-top: 0.8rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #00F2FF, #00C9FF, #0084FF);
+            /* Degradado cyan */
+            color: #0a192f;
+            /* Texto azul oscuro */
+            border: 2px solid rgba(0, 242, 255, 0.5);
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Animación premium */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-programar::before {
+            /* Efecto de brillo móvil */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-programar:hover {
+            background: linear-gradient(135deg, #00FFFF, #00D9FF, #0099FF);
+            border-color: rgba(0, 255, 255, 0.9);
+            transform: translateY(-3px) scale(1.02);
+            /* Se eleva y escala */
+            box-shadow: 0 8px 25px rgba(0, 242, 255, 0.5), 0 0 30px rgba(0, 242, 255, 0.3);
+        }
+
+        .btn-programar:hover::before {
+            transform: translateX(100%);
+            /* Mover brillo a derecha */
+        }
+
+        .btn-programar:active {
+            transform: translateY(-1px) scale(0.98);
+            /* Se encoge al click */
+            transition: transform 0.1s ease;
+        }
+
+        .btn-desactivar {
+            /* Botón DESACTIVAR programación */
+            width: 100%;
+            margin-top: 0.6rem;
+            padding: 0.5rem;
+            background: transparent;
+            /* Fondo transparente */
+            color: #e74c3c;
+            /* Texto rojo */
+            border: 1px solid #e74c3c;
+            /* Borde rojo */
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .btn-desactivar:hover {
+            background: rgba(231, 76, 60, 0.15);
+            /* Fondo rojo suave */
+            transform: translateY(-2px);
+        }
+
+        /* ============================================ */
+        /* ⏰ PROGRAMACIÓN - INPUTS DE TIEMPO */
+        /* ============================================ */
+        .programacion-form {
+            display: flex;
+            /* Inputs en fila */
+            gap: 0.5rem;
+            /* Espacio entre inputs */
+            margin-bottom: 0.8rem;
+        }
+
+        .time-input {
+            flex: 1;
+            /* Ocupar espacio disponible */
+            padding: 0.6rem;
+            background: var(--bg-primary);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .time-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            /* Borde cyan al enfocar */
+        }
+
+        .programacion-activa {
+            /* Información de programación activa */
+            margin-top: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(30, 50, 80, 0.8);
+            /* Fondo oscuro */
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-blue);
+            /* Indicador azul */
+            display: none;
+            /* Oculto por defecto */
+        }
+
+        .programacion-activa.show {
+            display: block;
+            /* Mostrar cuando tiene clase 'show' */
+            animation: fadeIn 0.3s ease;
+        }
+
+        .programacion-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0.3rem 0;
+        }
+
+        .programacion-info span {
+            color: var(--accent-cyan);
+            /* Horas en cyan */
+            font-weight: 500;
+        }
+
+        /* ============================================ */
+        /* 🎛️ CONTROL GENERAL - BOTONES DE BLOQUE */
+        /* ============================================ */
+        .control-general {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border: 1px solid rgba(100, 255, 218, 0.15);
+        }
+
+        .control-general h2 {
+            margin-bottom: 1rem;
+            color: var(--accent-cyan);
+            font-size: 1.3rem;
+        }
+
+        .btn-group-general {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* Centrar botones */
+        }
+
+        .btn-general {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            min-width: 130px;
+            /* Ancho mínimo */
+        }
+
+        .btn-todas-on {
+            /* Botón ENCENDER TODAS */
+            background: linear-gradient(135deg, var(--success), #27ae60);
+            color: white;
+        }
+
+        .btn-todas-off {
+            /* Botón APAGAR TODAS */
+            background: linear-gradient(135deg, var(--error), #c0392b);
+            color: white;
+        }
+
+        .btn-guardar {
+            /* Botón GUARDAR configuración */
+            background: linear-gradient(135deg, var(--accent-purple), #8e44ad);
+            color: white;
+        }
+
+        .btn-cargar {
+            /* Botón CARGAR configuración */
+            background: var(--bg-primary);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+        }
+
+        .btn-general:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ============================================ */
+        /* 💬 MENSAJES - NOTIFICACIONES */
+        /* ============================================ */
+        .mensaje {
+            padding: 0.9rem 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            /* Oculto por defecto */
+            animation: slideIn 0.3s ease;
+            /* Animación de entrada */
+        }
+
+        .mensaje.show {
+            display: block;
+            /* Mostrar cuando tiene clase 'show' */
+        }
+
+        @keyframes slideIn {
+
+            /* Animación de deslizamiento desde arriba */
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mensaje.exito {
+            /* Mensaje de éxito (verde) */
+            background: rgba(46, 204, 113, 0.15);
+            border-left: 4px solid var(--success);
+            color: #a8f5c6;
+        }
+
+        .mensaje.error {
+            /* Mensaje de error (rojo) */
+            background: rgba(231, 76, 60, 0.15);
+            border-left: 4px solid var(--error);
+            color: #ffc5c5;
+        }
+
+        .mensaje.info {
+            /* Mensaje informativo (azul) */
+            background: rgba(52, 152, 219, 0.15);
+            border-left: 4px solid var(--accent-blue);
+            color: #a8d8ff;
+        }
+
+        /* ============================================ */
+        /* 📡 ESTADO DE CONEXIÓN - SERVIDOR */
+        /* ============================================ */
+        .conexion {
+            text-align: center;
+            padding: 0.6rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            border-radius: 6px;
+        }
+
+        .conexion.ok {
+            /* Conectado (verde) */
+            color: var(--success);
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .conexion.error {
+            /* Error de conexión (rojo) */
+            color: var(--error);
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .conexion.loading {
+            /* Cargando/conectando (naranja) */
+            color: var(--warning);
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        /* ============================================ */
+        /* 🌐 INFO DEL SERVIDOR - DATOS TÉCNICOS */
+        /* ============================================ */
+        .server-info {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: rgba(100, 255, 218, 0.08);
+            /* Fondo cyan muy suave */
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .server-info span {
+            color: var(--accent-cyan);
+            /* URL en cyan */
+            font-weight: 500;
+        }
+
+        .timezone-hint {
+            /* Advertencia de zona horaria */
+            text-align: center;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--warning);
+            /* Naranja */
+            background: rgba(243, 156, 18, 0.1);
+            padding: 0.6rem;
+            border-radius: 6px;
+        }
+
+        /* ============================================ */
+        /* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
+        /* ============================================ */
+        @media (max-width: 768px) {
+
+            /* Tablets y móviles grandes */
+            .panel-title {
+                font-size: 1.6rem;
+            }
+
+            .reloj {
+                font-size: 2.4em;
+            }
+
+            .valvulas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* 1 columna */
+            .btn-group-general {
+                flex-direction: column;
+            }
+
+            /* Botones en columna */
+            .btn-general {
+                width: 100%;
+            }
+
+            /* Ancho completo */
+            .login-container {
+                padding: 1.8rem;
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* Móviles pequeños */
+            .reloj {
+                font-size: 2em;
+            }
+
+            .panel-header {
+                padding: 1rem;
+            }
+
+            .valvula-card {
+                padding: 1.2rem;
+            }
+
+            .btn {
+                min-width: 90px;
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ============================================ */
+        /* ✨ EFECTOS VISUALES ADICIONALES */
+        /* ============================================ */
+        .pulse {
+            animation: pulse 2s infinite;
+            /* Animación de pulso */
+        }
+
+        @keyframes pulse {
+
+            /* Animación de opacidad */
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .glow {
+            text-shadow: 0 0 10px currentColor;
+            /* Resplandor del color del texto */
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+            /* Fondo del scroll */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+            /* Barra morada */
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+            /* Barra cyan al hover */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================ -->
+    <!-- 🔐 PANEL DE LOGIN - AUTENTICACIÓN DE USUARIO -->
+    <!-- ============================================ -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <div class="login-header">
+                <span class="login-icon">🔐</span>
+                <div class="login-logo">Latina Farms 3</div>
+                <div class="login-subtitle">Sistema de Control de Riego</div>
+            </div>
+
+            <!-- Mensaje de error (oculto por defecto) -->
+            <div class="login-error" id="loginError">⚠️ Usuario o contraseña incorrectos</div>
+
+            <!-- Formulario de login -->
+            <form class="login-form" id="loginForm" onsubmit="iniciarSesion(event)">
+                <div class="input-group">
+                    <label for="username">👤 Usuario</label>
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="username" placeholder="Ingresa tu usuario" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <label for="password">🔑 Contraseña</label>
+                    <span class="input-icon">🔑</span>
+                    <input type="password" id="password" placeholder="Ingresa tu contraseña" required
+                        autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">🚀 INGRESAR AL SISTEMA</button>
+            </form>
+
+            <div class="login-footer">
+                <p>© 2025 CocosLokos Technology - Todos los derechos reservados</p>
+                <p style="margin-top: 8px; font-size: 0.75em; opacity: 0.5;">Demo: admin | 1234</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- 🚪 BOTÓN CERRAR SESIÓN -->
+    <!-- ============================================ -->
+    <button class="logout-btn" id="logoutBtn" onclick="cerrarSesion()">🔓 Cerrar Sesión</button>
+
+    <!-- ============================================ -->
+    <!-- 📦 CONTENEDOR PRINCIPAL DE PANELES -->
+    <!-- ============================================ -->
+    <div class="panel-container">
+
+        <!-- ============================================ -->
+        <!-- 🏠 PANEL PRINCIPAL - MENÚ DE BLOQUES -->
+        <!-- ============================================ -->
+        <div class="panel main-panel active">
+            <div class="panel-header">
+                <div class="subtitle">LATINA FARMS 3</div>
+                <h1 class="panel-title">HIDROCONTROL</h1>
+                <h1 class="login-subtitle" style="color: var(--accent-cyan);">💧 Sistema de Control de Riego 💧</h1>
+                <div class="reloj-container">
+                    <div class="reloj">--:--:--</div>
+                    <div class="fecha">Cargando fecha...</div>
+                </div>
+                <div class="conexion" id="conexion">🔄 Conectando al servidor...</div>
+                <div class="server-info">🌐 Servidor: <span id="server-url-display">cargando...</span></div>
+                <div class="timezone-hint" id="timezone-hint">⏳ Sincronizando zona horaria...</div>
+            </div>
+
+            <!-- Grid con los 3 bloques accesibles -->
+            <div class="bloques-grid">
+                <div class="bloque-card bloque-1" onclick="showBlockPanel('block1')">
+                    <h2>BLOQUE 10</h2>
+                    <p>Sistema de riego automatizado</p>
+                    <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
+                </div>
+                <div class="bloque-card bloque-2" onclick="showBlockPanel('block2')">
+                    <h2>BLOQUE 11</h2>
+                    <p>Sistema de riego automatizado</p>
+                    <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
+                </div>
+                <div class="bloque-card bloque-3" onclick="showBlockPanel('block3')">
+                    <h2>BLOQUE 12</h2>
+                    <p>Sistema de riego automatizado</p>
+                    <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
+                </div>
+            </div>
+        </div>
+
+<!-- ============================================ -->
+<!-- 💧 PANEL BLOQUE 1 (5 VÁLVULAS) -->
+<!-- ============================================ -->
+<div class="panel block-panel" id="block1-panel">
+    <!-- Botón único, fuera de los paneles (al inicio del body) -->
+    <button class="back-btn" id="backBtn" onclick="showMainPanel()">
+    </button>
+    <div class="panel-header">
+        <div class="subtitle">LATINA FARMS 3 </div>
+        <h1 class="panel-title">BLOQUE 10</h1>
+        <div class="reloj-container">
+            <div class="reloj">--:--:--</div>
+            <div class="fecha">Cargando fecha...</div>
+        </div>
+    </div>
+    <div class="block-content">
+        <!-- Mensaje de notificación del bloque -->
+        <div class="mensaje" id="mensaje-block1"></div>
+        <div class="valvulas-grid">
+            <!-- Generar 5 válvulas para Block 1 -->
+            <!-- VÁLVULA 1 -->
+            <div class="valvula-card valvula-1">
+                <div class="valvula-header">
+                    <div class="valvula-title">💧 Válvula 1</div>
+                    <div class="estado-indicator" id="b1-estado-ind-1"></div>
+                </div>
+                <div class="estado-section">
+                    <h3>Estado Actual:</h3>
+                    <div class="estado-texto" id="b1-estado-txt-1">🚫 APAGADA</div>
+                </div>
+                <div class="manual-control">
+                    <h3>Control Manual:</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-on" onclick="controlManual('block1', 1, 'on')">💧
+                            Encender</button>
+                        <button class="btn btn-off" onclick="controlManual('block1', 1, 'off')">🚫
+                            Apagar</button>
+                    </div>
+                </div>
+                <div class="programacion-section">
+                    <h3>⏰ Programación:</h3>
+                    <div class="programacion-form">
+                        <input type="time" class="time-input" id="b1-hora-on-1" placeholder="Encendido">
+                        <input type="time" class="time-input" id="b1-hora-off-1" placeholder="Apagado">
+                    </div>
+                    <button class="btn-programar" onclick="programarValvula('block1', 1)">💾 Programar</button>
+                    <div class="programacion-activa" id="b1-prog-1">
+                        <div class="programacion-info"> Encendido: <span id="b1-prog-on-1">--:--</span></div>
+                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-1">--:--</span></div>
+                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 1)">❌
+                            Desactivar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- VÁLVULA 2 -->
+            <div class="valvula-card valvula-2">
+                <div class="valvula-header">
+                    <div class="valvula-title">💧 Válvula 2</div>
+                    <div class="estado-indicator" id="b1-estado-ind-2"></div>
+                </div>
+                <div class="estado-section">
+                    <h3>Estado Actual:</h3>
+                    <div class="estado-texto" id="b1-estado-txt-2">🚫 APAGADA</div>
+                </div>
+                <div class="manual-control">
+                    <h3>Control Manual:</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-on" onclick="controlManual('block1', 2, 'on')">💧
+                            Encender</button>
+                        <button class="btn btn-off" onclick="controlManual('block1', 2, 'off')">🚫
+                            Apagar</button>
+                    </div>
+                </div>
+                <div class="programacion-section">
+                    <h3>⏰ Programación:</h3>
+                    <div class="programacion-form">
+                        <input type="time" class="time-input" id="b1-hora-on-2">
+                        <input type="time" class="time-input" id="b1-hora-off-2">
+                    </div>
+                    <button class="btn-programar" onclick="programarValvula('block1', 2)">💾 Programar</button>
+                    <div class="programacion-activa" id="b1-prog-2">
+                        <div class="programacion-info">Encendido: <span id="b1-prog-on-2">--:--</span></div>
+                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-2">--:--</span></div>
+                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 2)">❌
+                            Desactivar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- VÁLVULA 3 -->
+            <div class="valvula-card valvula-3">
+                <div class="valvula-header">
+                    <div class="valvula-title">💧 Válvula 3</div>
+                    <div class="estado-indicator" id="b1-estado-ind-3"></div>
+                </div>
+                <div class="estado-section">
+                    <h3>Estado Actual:</h3>
+                    <div class="estado-texto" id="b1-estado-txt-3">🚫 APAGADA</div>
+                </div>
+                <div class="manual-control">
+                    <h3>Control Manual:</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-on" onclick="controlManual('block1', 3, 'on')">💧
+                            Encender</button>
+                        <button class="btn btn-off" onclick="controlManual('block1', 3, 'off')">🚫
+                            Apagar</button>
+                    </div>
+                </div>
+                <div class="programacion-section">
+                    <h3>⏰ Programación:</h3>
+                    <div class="programacion-form">
+                        <input type="time" class="time-input" id="b1-hora-on-3">
+                        <input type="time" class="time-input" id="b1-hora-off-3">
+                    </div>
+                    <button class="btn-programar" onclick="programarValvula('block1', 3)">💾 Programar</button>
+                    <div class="programacion-activa" id="b1-prog-3">
+                        <div class="programacion-info"> Encendido: <span id="b1-prog-on-3">--:--</span></div>
+                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-3">--:--</span></div>
+                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 3)">❌
+                            Desactivar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- VÁLVULA 4 -->
+            <div class="valvula-card valvula-4">
+                <div class="valvula-header">
+                    <div class="valvula-title">💧 Válvula 4</div>
+                    <div class="estado-indicator" id="b1-estado-ind-4"></div>
+                </div>
+                <div class="estado-section">
+                    <h3>Estado Actual:</h3>
+                    <div class="estado-texto" id="b1-estado-txt-4">🚫 APAGADA</div>
+                </div>
+                <div class="manual-control">
+                    <h3>Control Manual:</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-on" onclick="controlManual('block1', 4, 'on')">💧
+                            Encender</button>
+                        <button class="btn btn-off" onclick="controlManual('block1', 4, 'off')">🚫
+                            Apagar</button>
+                    </div>
+                </div>
+                <div class="programacion-section">
+                    <h3>⏰ Programación:</h3>
+                    <div class="programacion-form">
+                        <input type="time" class="time-input" id="b1-hora-on-4">
+                        <input type="time" class="time-input" id="b1-hora-off-4">
+                    </div>
+                    <button class="btn-programar" onclick="programarValvula('block1', 4)"> 💾 Programar</button>
+                    <div class="programacion-activa" id="b1-prog-4">
+                        <div class="programacion-info">🕐 Encendido: <span id="b1-prog-on-4">--:--</span></div>
+                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-4">--:--</span></div>
+                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 4)">❌
+                            Desactivar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- VÁLVULA 5 -->
+            <div class="valvula-card valvula-5">
+                <div class="valvula-header">
+                    <div class="valvula-title">💧 Válvula 5</div>
+                    <div class="estado-indicator" id="b1-estado-ind-5"></div>
+                </div>
+                <div class="estado-section">
+                    <h3>Estado Actual:</h3>
+                    <div class="estado-texto" id="b1-estado-txt-5">🚫 APAGADA</div>
+                </div>
+                <div class="manual-control">
+                    <h3>Control Manual:</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-on" onclick="controlManual('block1', 5, 'on')">💧
+                            Encender</button>
+                        <button class="btn btn-off" onclick="controlManual('block1', 5, 'off')">🚫
+                            Apagar</button>
+                    </div>
+                </div>
+                <div class="programacion-section">
+                    <h3>⏰ Programación:</h3>
+                    <div class="programacion-form">
+                        <input type="time" class="time-input" id="b1-hora-on-5">
+                        <input type="time" class="time-input" id="b1-hora-off-5">
+                    </div>
+                    <button class="btn-programar" onclick="programarValvula('block1', 5)">💾 Programar</button>
+                    <div class="programacion-activa" id="b1-prog-5">
+                        <div class="programacion-info"> Encendido: <span id="b1-prog-on-5">--:--</span></div>
+                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-5">--:--</span></div>
+                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 5)">❌
+                            Desactivar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Control general del bloque -->
+        <div class="control-general">
+            <h2>🎛️ Control General Bloque 10</h2>
+            <div class="btn-group-general">
+                <button class="btn-general btn-todas-on" onclick="controlTodas('block1', 'on')">💧 Encender
+                    Todas</button>
+                <button class="btn-general btn-todas-off" onclick="controlTodas('block1', 'off')">🚫 Apagar
+                    Todas</button>
+                <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block1')">💾 Guardar
+                    Config</button>
+                <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block1')">📂 Cargar
+                    Config</button>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- ============================================ -->
+        <!-- 💧 PANEL BLOQUE 2 (5 VÁLVULAS) -->
+        <!-- ============================================ -->
+        <div class="panel block-panel" id="block2-panel">
+            <!-- Botón único, fuera de los paneles (al inicio del body) -->
+            <button class="back-btn" id="backBtn" onclick="showMainPanel()">
+            </button>
+            <div class="panel-header">
+                <div class="subtitle">LATINA FARMS 3 </div>
+                <h1 class="panel-title">BLOQUE 11</h1>
+                <div class="reloj-container">
+                    <div class="reloj">--:--:--</div>
+                    <div class="fecha">Cargando fecha...</div>
+                </div>
+            </div>
+            <div class="block-content">
+                <div class="mensaje" id="mensaje-block2"></div>
+                <div class="valvulas-grid">
+                    <!-- VÁLVULAS 1-5 para Block 2 (IDs con prefijo b2-) -->
+                    <!-- VÁLVULA 1 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 1</div>
+                            <div class="estado-indicator" id="b2-estado-ind-1"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b2-estado-txt-1">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block2', 1, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block2', 1, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b2-hora-on-1">
+                                <input type="time" class="time-input" id="b2-hora-off-1">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block2', 1)">💾 Programar</button>
+                            <div class="programacion-activa" id="b2-prog-1">
+                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-1">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-1">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 1)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 2 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 2</div>
+                            <div class="estado-indicator" id="b2-estado-ind-2"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b2-estado-txt-2">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block2', 2, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block2', 2, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b2-hora-on-2">
+                                <input type="time" class="time-input" id="b2-hora-off-2">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block2', 2)">💾 Programar</button>
+                            <div class="programacion-activa" id="b2-prog-2">
+                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-2">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-2">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 2)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 3 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 3</div>
+                            <div class="estado-indicator" id="b2-estado-ind-3"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b2-estado-txt-3">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block2', 3, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block2', 3, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b2-hora-on-3">
+                                <input type="time" class="time-input" id="b2-hora-off-3">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block2', 3)">💾 Programar</button>
+                            <div class="programacion-activa" id="b2-prog-3">
+                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-3">--:--</span></div>
+                                <div class="programacion-info">💾 Apagado: <span id="b2-prog-off-3">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 3)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 4 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 4</div>
+                            <div class="estado-indicator" id="b2-estado-ind-4"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b2-estado-txt-4">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block2', 4, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block2', 4, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b2-hora-on-4">
+                                <input type="time" class="time-input" id="b2-hora-off-4">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block2', 4)">💾 Programar</button>
+                            <div class="programacion-activa" id="b2-prog-4">
+                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-4">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-4">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 4)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 5 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 5</div>
+                            <div class="estado-indicator" id="b2-estado-ind-5"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b2-estado-txt-5">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block2', 5, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block2', 5, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b2-hora-on-5">
+                                <input type="time" class="time-input" id="b2-hora-off-5">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block2', 5)">💾 Programar</button>
+                            <div class="programacion-activa" id="b2-prog-5">
+                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-5">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-5">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 5)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-general">
+                    <h2>🎛️ Control General Bloque 11</h2>
+                    <div class="btn-group-general">
+                        <button class="btn-general btn-todas-on" onclick="controlTodas('block2', 'on')">💧 Encender
+                            Todas</button>
+                        <button class="btn-general btn-todas-off" onclick="controlTodas('block2', 'off')">🚫 Apagar
+                            Todas</button>
+                        <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block2')">💾 Guardar
+                            Config</button>
+                        <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block2')">📂 Cargar
+                            Config</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- 💧 PANEL BLOQUE 3 (5 VÁLVULAS) -->
+        <!-- ============================================ -->
+        <div class="panel block-panel" id="block3-panel">
+            <!-- Botón único, fuera de los paneles (al inicio del body) -->
+            <button class="back-btn" id="backBtn" onclick="showMainPanel()">
+            </button>
+            <div class="panel-header">
+                <div class="subtitle">LATINA FARMS 3 </div>
+                <h1 class="panel-title">BLOQUE 12</h1>
+                <div class="reloj-container">
+                    <div class="reloj">--:--:--</div>
+                    <div class="fecha">Cargando fecha...</div>
+                </div>
+            </div>
+            <div class="block-content">
+                <div class="mensaje" id="mensaje-block3"></div>
+                <div class="valvulas-grid">
+                    <!-- VÁLVULAS 1-5 para Block 3 (IDs con prefijo b3-) -->
+                    <!-- VÁLVULA 1 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 1</div>
+                            <div class="estado-indicator" id="b3-estado-ind-1"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b3-estado-txt-1">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block3', 1, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block3', 1, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b3-hora-on-1">
+                                <input type="time" class="time-input" id="b3-hora-off-1">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block3', 1)"> Programar</button>
+                            <div class="programacion-activa" id="b3-prog-1">
+                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-1">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-1">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 1)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 2 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 2</div>
+                            <div class="estado-indicator" id="b3-estado-ind-2"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b3-estado-txt-2">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block3', 2, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block3', 2, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b3-hora-on-2">
+                                <input type="time" class="time-input" id="b3-hora-off-2">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block3', 2)">💾 Programar</button>
+                            <div class="programacion-activa" id="b3-prog-2">
+                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-2">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-2">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 2)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 3 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 3</div>
+                            <div class="estado-indicator" id="b3-estado-ind-3"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b3-estado-txt-3">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block3', 3, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block3', 3, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b3-hora-on-3">
+                                <input type="time" class="time-input" id="b3-hora-off-3">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block3', 3)">💾 Programar</button>
+                            <div class="programacion-activa" id="b3-prog-3">
+                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-3">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-3">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 3)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 4 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 4</div>
+                            <div class="estado-indicator" id="b3-estado-ind-4"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b3-estado-txt-4">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block3', 4, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block3', 4, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b3-hora-on-4">
+                                <input type="time" class="time-input" id="b3-hora-off-4">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block3', 4)">💾 Programar</button>
+                            <div class="programacion-activa" id="b3-prog-4">
+                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-4">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-4">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 4)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- VÁLVULA 5 -->
+                    <div class="valvula-card">
+                        <div class="valvula-header">
+                            <div class="valvula-title">💧 Válvula 5</div>
+                            <div class="estado-indicator" id="b3-estado-ind-5"></div>
+                        </div>
+                        <div class="estado-section">
+                            <h3>Estado Actual:</h3>
+                            <div class="estado-texto" id="b3-estado-txt-5">🚫 APAGADA</div>
+                        </div>
+                        <div class="manual-control">
+                            <h3>Control Manual:</h3>
+                            <div class="btn-group">
+                                <button class="btn btn-on" onclick="controlManual('block3', 5, 'on')">💧
+                                    Encender</button>
+                                <button class="btn btn-off" onclick="controlManual('block3', 5, 'off')">🚫
+                                    Apagar</button>
+                            </div>
+                        </div>
+                        <div class="programacion-section">
+                            <h3>⏰ Programación:</h3>
+                            <div class="programacion-form">
+                                <input type="time" class="time-input" id="b3-hora-on-5">
+                                <input type="time" class="time-input" id="b3-hora-off-5">
+                            </div>
+                            <button class="btn-programar" onclick="programarValvula('block3', 5)">💾 Programar</button>
+                            <div class="programacion-activa" id="b3-prog-5">
+                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-5">--:--</span></div>
+                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-5">--:--</span></div>
+                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 5)">❌
+                                    Desactivar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-general">
+                    <h2>🎛️ Control General Bloque 12</h2>
+                    <div class="btn-group-general">
+                        <button class="btn-general btn-todas-on" onclick="controlTodas('block3', 'on')">💧 Encender
+                            Todas</button>
+                        <button class="btn-general btn-todas-off" onclick="controlTodas('block3', 'off')">🚫 Apagar
+                            Todas</button>
+                        <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block3')">💾 Guardar
+                            Config</button>
+                        <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block3')">📂 Cargar
+                            Config</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div> <!-- Fin panel-container -->
+
+    <!-- ============================================ -->
+    <!-- 📡 JAVASCRIPT - LÓGICA DEL SISTEMA -->
+    <!-- ============================================ -->
+    <script>
+        // ============================================
+        // ⚙️ CONFIGURACIÓN GLOBAL - VARIABLES PRINCIPALES
+        // ============================================
+        const SERVER_URL = "https://esp32-yxto.onrender.com".trim();  // URL del servidor ESP32 (.trim() elimina espacios)
+        const API_BASE = "/api";  // Ruta base para todos los endpoints de la API
+        const POLLING_INTERVAL = 5000;  // Consulta al servidor cada 5 segundos
+
+        // Variables de control de peticiones (por bloque para evitar conflictos)
+        let peticionEnCurso = { block1: false, block2: false, block3: false };  // Evitar peticiones duplicadas
+        let servidorConectado = false;  // Estado de conexión global
+        let ultimoComando = {};  // { "block1-1": "on", "block2-3": "off", ... } para debounce
+
+        // ============================================
+        // 🧠 ESTADO DEL SISTEMA - MEMORIA LOCAL
+        // ============================================
+        let sistema = {
+            block1: {
+                1: { estado: 'off', programacion: null },
+                2: { estado: 'off', programacion: null },
+                3: { estado: 'off', programacion: null },
+                4: { estado: 'off', programacion: null },
+                5: { estado: 'off', programacion: null }
+            },
+            block2: {
+                1: { estado: 'off', programacion: null },
+                2: { estado: 'off', programacion: null },
+                3: { estado: 'off', programacion: null },
+                4: { estado: 'off', programacion: null },
+                5: { estado: 'off', programacion: null }
+            },
+            block3: {
+                1: { estado: 'off', programacion: null },
+                2: { estado: 'off', programacion: null },
+                3: { estado: 'off', programacion: null },
+                4: { estado: 'off', programacion: null },
+                5: { estado: 'off', programacion: null }
+            }
+        };
+
+        // ============================================
+        // 🔐 AUTENTICACIÓN - ESTADO DE SESIÓN
+        // ============================================
+        let usuarioAutenticado = false;  // Estado de sesión del usuario
+          // Credenciales demo
+
+        // ============================================
+        // 🚀 INICIALIZACIÓN - AL CARGAR LA PÁGINA
+        // ============================================
+        window.onload = function () {
+            console.log('🚀 HIDROCONTROL - Iniciando con API REST');
+
+            // Mostrar URL del servidor (sin https://)
+            const serverDisplay = document.getElementById('server-url-display');
+            if (serverDisplay) serverDisplay.textContent = SERVER_URL.replace('https://', '');
+
+            // Verificar sesión guardada en localStorage
+            const sesionGuardada = localStorage.getItem('hidrocontrol-sesion');
+            if (sesionGuardada === 'activa') {
+                usuarioAutenticado = true;
+                ocultarLogin();
+            }
+
+            // Iniciar reloj local
+            actualizarReloj();
+            setInterval(actualizarReloj, 1000);  // Actualizar cada segundo
+
+            // 🔄 Primera consulta al servidor + polling automático
+            consultarEstadoTodosLosBloques();
+            setInterval(consultarEstadoTodosLosBloques, POLLING_INTERVAL);  // Cada 5 segundos
+
+            // Verificar programaciones automáticas cada minuto
+            setInterval(verificarProgramaciones, 60000);
+            verificarProgramaciones();  // Verificación inicial
+
+            // Cargar configuraciones guardadas de cada bloque
+            ['block1', 'block2', 'block3'].forEach(blockId => {
+                cargarConfiguracionGuardada(blockId);
+            });
+        };
+
+        // ============================================
+        // 🕐 FUNCIONES DE RELOJ - HORA Y FECHA
+        // ============================================
+        function actualizarReloj() {
+            const ahora = new Date();
+            const horas = String(ahora.getHours()).padStart(2, '0'),
+                minutos = String(ahora.getMinutes()).padStart(2, '0'),
+                segundos = String(ahora.getSeconds()).padStart(2, '0');
+
+            // Actualizar todos los relojes en pantalla
+            document.querySelectorAll('.reloj').forEach(el => {
+                el.textContent = `${horas}:${minutos}:${segundos}`;
+            });
+
+            // Formato de fecha en español
+            const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+            document.querySelectorAll('.fecha').forEach(el => {
+                el.textContent = fechaStr;
+            });
+
+            window.horaActual = `${horas}:${minutos}`;  // Guardar hora para programaciones
+        }
+
+        // ============================================
+        // 📡 COMUNICACIÓN CON SERVIDOR - API REST
+        // ============================================
+
+        // 🔄 Consulta estado de TODAS las válvulas de un bloque
+        async function consultarEstadoBloque(blockId) {
+            if (peticionEnCurso[blockId]) return;  // Evitar peticiones duplicadas
+            peticionEnCurso[blockId] = true;
+
+            try {
+                // GET /api/bloque/block1 → devuelve estado de las 5 válvulas
+                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/bloque/${blockId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: AbortSignal.timeout(8000)  // ⏱️ Timeout de 8 segundos
+                });
+
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                const datos = await respuesta.json();
+
+                // Actualizar estado local de cada válvula del bloque
+                for (let num = 1; num <= 5; num++) {
+                    if (datos.valvulas && datos.valvulas[num]) {
+                        sistema[blockId][num].estado = datos.valvulas[num].estado || 'off';
+                        sistema[blockId][num].programacion = datos.valvulas[num].programacion || null;
+                        actualizarEstadoValvula(blockId, num);
+                        actualizarInfoProgramacion(blockId, num);
+                    }
+                }
+
+                // Primera conexión exitosa: actualizar indicador global
+                if (!servidorConectado) {
+                    servidorConectado = true;
+                    console.log('✅ Conectado al servidor');
+                }
+            } catch (error) {
+                console.error(`❌ Error consultando ${blockId}:`, error);
+                servidorConectado = false;
+                // No revertir UI: mantenemos último estado conocido
+            } finally {
+                peticionEnCurso[blockId] = false;  // Liberar bloqueo
+            }
+        }
+
+        // 🔄 Consulta todos los bloques (para polling general)
+        async function consultarEstadoTodosLosBloques() {
+            for (const blockId of ['block1', 'block2', 'block3']) {
+                await consultarEstadoBloque(blockId);
+            }
+        }
+
+        // 📤 Envía comando manual para UNA válvula específica
+        async function controlManual(blockId, num, accion) {
+            const clave = `${blockId}-${num}`;
+            const valvula = sistema[blockId][num];
+            const estadoAnterior = valvula.estado;  // Para revertir si falla
+
+            // 🎨 Actualización optimista: UI responde inmediatamente
+            valvula.estado = accion;
+            actualizarEstadoValvula(blockId, num);
+            mostrarMensaje(blockId, `📤 Enviando: ${accion === 'on' ? 'ENCENDER' : 'APAGAR'} Válvula ${num}...`, 'info');
+
+            try {
+                // POST /api/valvula/block1/1 { estado: "on" }
+                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: accion, timestamp: new Date().toISOString() }),
+                    signal: AbortSignal.timeout(8000)
+                });
+
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+
+                // ✅ Confirmado por servidor: actualizar variables
+                valvula.estado = accion;
+                ultimoComando[clave] = accion;
+                actualizarEstadoValvula(blockId, num);
+                const accionTexto = accion === 'on' ? 'ENCENDIDA' : 'APAGADA';
+                mostrarMensaje(blockId, `✅ Válvula ${num} ${accionTexto}`, 'exito');
+            } catch (error) {
+                console.error(`❌ Error con ${blockId}-${num}:`, error);
+                // 🔙 Revertir al estado anterior confirmado
+                valvula.estado = estadoAnterior;
+                actualizarEstadoValvula(blockId, num);
+                mostrarMensaje(blockId, `❌ Error: Válvula ${num} no cambiada`, 'error');
+            }
+        }
+
+        // ⏰ Guarda programación automática para UNA válvula
+        async function programarValvula(blockId, num) {
+            const prefix = blockId[0] + blockId[5];  // 'b1', 'b2', 'b3'
+            const horaOn = document.getElementById(`${prefix}-hora-on-${num}`).value,
+                horaOff = document.getElementById(`${prefix}-hora-off-${num}`).value;
+
+            if (!horaOn || !horaOff) {
+                mostrarMensaje(blockId, '⚠️ Selecciona ambas horas', 'error');
+                return;
+            }
+            if (horaOn === horaOff) {
+                mostrarMensaje(blockId, '⚠️ Horas deben ser diferentes', 'error');
+                return;
+            }
+
+            mostrarMensaje(blockId, '📤 Guardando programación...', 'info');
+
+            try {
+                // POST /api/valvula/block1/1/programacion { on: "08:00", off: "18:00" }
+                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}/programacion`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ on: horaOn, off: horaOff }),
+                    signal: AbortSignal.timeout(8000)
+                });
+
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+
+                // Actualizar estado local
+                sistema[blockId][num].programacion = { on: horaOn, off: horaOff };
+                sistema[blockId][num].estado = 'auto';
+
+                // Actualizar UI
+                document.getElementById(`${prefix}-prog-${num}`).classList.add('show');
+                document.getElementById(`${prefix}-prog-on-${num}`).textContent = horaOn;
+                document.getElementById(`${prefix}-prog-off-${num}`).textContent = horaOff;
+                actualizarEstadoValvula(blockId, num);
+                mostrarMensaje(blockId, `⏰ Válvula ${num} programada: ${horaOn} → ${horaOff}`, 'exito');
+            } catch (error) {
+                console.error(`❌ Error programando ${blockId}-${num}:`, error);
+                mostrarMensaje(blockId, '❌ Error al guardar programación', 'error');
+            }
+        }
+
+        // ❌ Elimina programación de una válvula
+        async function desactivarProgramacion(blockId, num) {
+            if (!confirm(`¿Desactivar programación de Válvula ${num}?`)) return;
+
+            try {
+                // DELETE /api/valvula/block1/1/programacion
+                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}/programacion`, {
+                    method: 'DELETE',
+                    signal: AbortSignal.timeout(8000)
+                });
+
+                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+
+                // Limpiar estado local
+                sistema[blockId][num].programacion = null;
+                sistema[blockId][num].estado = 'off';
+                const prefix = blockId[0] + blockId[5];
+                document.getElementById(`${prefix}-prog-${num}`).classList.remove('show');
+                actualizarEstadoValvula(blockId, num);
+                mostrarMensaje(blockId, `❌ Programación Válvula ${num} desactivada`, 'exito');
+            } catch (error) {
+                console.error(`❌ Error desactivando programación:`, error);
+                mostrarMensaje(blockId, '❌ Error al desactivar', 'error');
+            }
+        }
+
+        // 🎛️ Controlar TODAS las válvulas de un bloque
+        async function controlTodas(blockId, accion) {
+            mostrarMensaje(blockId, `📤 Enviando comando a todas las válvulas...`, 'info');
+            const resultados = [];
+
+            for (let num = 1; num <= 5; num++) {
+                try {
+                    await controlManual(blockId, num, accion);  // Reusa función individual
+                    resultados.push(true);
+                } catch (e) {
+                    resultados.push(false);
+                    console.warn(`⚠️ Falló válvula ${num}`);
+                }
+            }
+
+            const exitosas = resultados.filter(r => r).length;
+            if (exitosas === 5) {
+                mostrarMensaje(blockId, `✅ Todas las válvulas ${accion === 'on' ? 'ENCENDIDAS' : 'APAGADAS'}`, 'exito');
+            } else {
+                mostrarMensaje(blockId, `⚠️ ${exitosas}/5 válvulas actualizadas`, 'error');
+            }
+        }
+
+        // ============================================
+        // ⏰ LÓGICA DE PROGRAMACIÓN AUTOMÁTICA
+        // ============================================
+        function verificarProgramaciones() {
+            if (!window.horaActual) return;
+
+            ['block1', 'block2', 'block3'].forEach(blockId => {
+                for (let num = 1; num <= 5; num++) {  // ✅ Revisa las 5 válvulas
+                    const valvula = sistema[blockId][num],
+                        clave = `${blockId}-${num}`;
+
+                    if (valvula.programacion && valvula.estado === 'auto') {
+                        const { on, off } = valvula.programacion,
+                            horaActual = window.horaActual;
+
+                        // Caso normal: on < off (ej: 08:00 → 18:00)
+                        if (on < off) {
+                            if (horaActual === on && ultimoComando[clave] !== 'on') {
+                                console.log(`⏰ AUTO-ON: ${blockId}-${num} a las ${horaActual}`);
+                                controlManual(blockId, num, 'on');
+                                continue;  // ✅ Seguir con otras válvulas
+                            }
+                            if (horaActual === off && ultimoComando[clave] !== 'off') {
+                                console.log(`⏰ AUTO-OFF: ${blockId}-${num} a las ${horaActual}`);
+                                controlManual(blockId, num, 'off');
+                                continue;
+                            }
+                        }
+                        // Caso nocturno: on > off (ej: 20:00 → 06:00)
+                        else {
+                            const esNoche = (horaActual >= on) || (horaActual < off);
+                            if (esNoche && horaActual === on && ultimoComando[clave] !== 'on') {
+                                console.log(`⏰ AUTO-ON (nocturno): ${blockId}-${num}`);
+                                controlManual(blockId, num, 'on');
+                            }
+                            if (!esNoche && horaActual === off && ultimoComando[clave] !== 'off') {
+                                console.log(`⏰ AUTO-OFF (nocturno): ${blockId}-${num}`);
+                                controlManual(blockId, num, 'off');
+                            }
+                        }
+                    }
+                }  // ✅ Fin del bucle for
+            });
+        }
+
+        // ============================================
+        // 🎨 ACTUALIZACIÓN DE INTERFAZ - UI
+        // ============================================
+        function actualizarEstadoValvula(blockId, num) {
+            const prefix = blockId[0] + blockId[5],
+                valvula = sistema[blockId][num];
+            const estadoTxt = document.getElementById(`${prefix}-estado-txt-${num}`),
+                estadoInd = document.getElementById(`${prefix}-estado-ind-${num}`);
+
+            if (!estadoTxt) return;  // Seguridad por si el elemento no existe
+
+            if (valvula.estado === 'on') {
+                estadoTxt.textContent = '💧 ENCENDIDA';
+                estadoTxt.className = 'estado-texto on';
+                if (estadoInd) estadoInd.className = 'estado-indicator on';
+            } else if (valvula.estado === 'off') {
+                estadoTxt.textContent = '🚫 APAGADA';
+                estadoTxt.className = 'estado-texto off';
+                if (estadoInd) estadoInd.className = 'estado-indicator';
+            } else if (valvula.estado === 'auto') {
+                estadoTxt.textContent = '⏰ PROGRAMADA';
+                estadoTxt.className = 'estado-texto auto';
+                if (estadoInd) estadoInd.className = 'estado-indicator';
+            }
+        }
+
+        function actualizarInfoProgramacion(blockId, num) {
+            const prefix = blockId[0] + blockId[5],
+                valvula = sistema[blockId][num],
+                progEl = document.getElementById(`${prefix}-prog-${num}`);
+
+            if (!progEl) return;
+
+            if (valvula.programacion && valvula.programacion.on && valvula.programacion.off) {
+                progEl.classList.add('show');
+                document.getElementById(`${prefix}-prog-on-${num}`).textContent = valvula.programacion.on;
+                document.getElementById(`${prefix}-prog-off-${num}`).textContent = valvula.programacion.off;
+            } else {
+                progEl.classList.remove('show');
+            }
+        }
+
+        function mostrarMensaje(blockId, texto, tipo) {
+            const mensaje = document.getElementById(`mensaje-${blockId}`);
+            if (!mensaje) return;
+
+            mensaje.textContent = texto;
+            mensaje.className = `mensaje ${tipo}`;
+            setTimeout(() => {
+                if (mensaje.textContent === texto) {
+                    mensaje.className = 'mensaje';  // Ocultar si no fue reemplazado
+                }
+            }, 5000);  // 5 segundos visible
+        }
+
+        // ============================================
+        // 💾 LOCALSTORAGE - PERSISTENCIA LOCAL
+        // ============================================
+        function guardarConfiguracion(blockId) {
+            localStorage.setItem(`hidrocontrol-${blockId}`, JSON.stringify(sistema[blockId]));
+            mostrarMensaje(blockId, '💾 Configuración guardada (local + servidor)', 'exito');
+        }
+
+        function cargarConfiguracion(blockId) {
+            if (confirm(`¿Cargar configuración guardada para ${blockId.toUpperCase()}?`)) {
+                cargarConfiguracionGuardada(blockId);
+                mostrarMensaje(blockId, '📂 Configuración cargada', 'exito');
+            }
+        }
+
+        function cargarConfiguracionGuardada(blockId) {
+            const guardado = localStorage.getItem(`hidrocontrol-${blockId}`);
+            if (!guardado) return;
+
+            sistema[blockId] = JSON.parse(guardado);
+            const prefix = blockId[0] + blockId[5];
+
+            for (let num = 1; num <= 5; num++) {
+                const valvula = sistema[blockId][num];
+                if (valvula.programacion) {
+                    const onEl = document.getElementById(`${prefix}-hora-on-${num}`),
+                        offEl = document.getElementById(`${prefix}-hora-off-${num}`);
+                    if (onEl) onEl.value = valvula.programacion.on;
+                    if (offEl) offEl.value = valvula.programacion.off;
+                    document.getElementById(`${prefix}-prog-${num}`).classList.add('show');
+                    document.getElementById(`${prefix}-prog-on-${num}`).textContent = valvula.programacion.on;
+                    document.getElementById(`${prefix}-prog-off-${num}`).textContent = valvula.programacion.off;
+                }
+                actualizarEstadoValvula(blockId, num);
+            }
+        }
+
+        // ============================================
+        // 🔐 SISTEMA DE AUTENTICACIÓN
+        // ============================================
+        async function iniciarSesion(event) {
+                event.preventDefault();
+                const usuario = document.getElementById('username').value.trim();
+                const contrasena = document.getElementById('password').value.trim();
+                const errorDiv = document.getElementById('loginError');
+
+                try {
+                    // 📡 Enviar credenciales al servidor
+                    const respuesta = await fetch(`${SERVER_URL}${API_BASE}/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ usuario, contrasena })
+                    });
+
+                    const datos = await respuesta.json();
+
+                    // ✅ Login correcto
+                    if (respuesta.ok && datos.ok) {
+                        usuarioAutenticado = true;
+                        localStorage.setItem('hidrocontrol-sesion', 'activa');
+                        localStorage.setItem('hidrocontrol-token', datos.token); // Guardar token
+                        ocultarLogin();
+                        mostrarNotificacion('✅ ¡Bienvenido al sistema HIDROCONTROL!', 'exito');
+                    }
+                    // ❌ Login incorrecto
+                    else {
+                        errorDiv.textContent = '⚠️ ' + (datos.mensaje || 'Usuario o contraseña incorrectos');
+                        errorDiv.classList.add('show');
+                        document.getElementById('password').value = '';
+                        setTimeout(() => errorDiv.classList.remove('show'), 3000);
+                    }
+                } catch (error) {
+                    // 🔴 Error de conexión con el servidor
+                    console.error('❌ Error de conexión:', error);
+                    errorDiv.textContent = '❌ Error de conexión con el servidor';
+                    errorDiv.classList.add('show');
+                    setTimeout(() => errorDiv.classList.remove('show'), 3000);
+                }
+            }
+        function ocultarLogin() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('logoutBtn').style.display = 'block';
+        }
+
+        function cerrarSesion() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                usuarioAutenticado = false;
+                localStorage.removeItem('hidrocontrol-sesion');
+                document.getElementById('loginOverlay').classList.remove('hidden');
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                showMainPanel();
+            }
+        }
+
+        function mostrarNotificacion(texto, tipo) {
+            const loginError = document.getElementById('loginError');
+            loginError.textContent = texto;
+            loginError.className = `login-error show ${tipo}`;
+            loginError.style.background = tipo === 'exito' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(231, 76, 60, 0.15)';
+            loginError.style.borderLeftColor = tipo === 'exito' ? '#2ecc71' : '#e74c3c';
+            loginError.style.color = tipo === 'exito' ? '#a8f5c6' : '#ffc5c5';
+            setTimeout(() => loginError.classList.remove('show'), 3000);
+        }
+
+        // ============================================
+        // 🧭 NAVEGACIÓN ENTRE PANELES
+        // ============================================
+        function showMainPanel() {
+            document.querySelectorAll('.block-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.classList.add('inactive');
+            });
+            document.querySelector('.main-panel').classList.add('active');
+            document.querySelector('.main-panel').classList.remove('inactive');
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });  // ✅ Ocultar todos los botones volver
+        }
+
+        function showBlockPanel(blockId) {
+            document.querySelector('.main-panel').classList.remove('active');
+            document.querySelector('.main-panel').classList.add('inactive');
+            document.querySelectorAll('.block-panel').forEach(panel => {
+                panel.classList.remove('active');
+                panel.classList.add('inactive');
+            });
+            document.getElementById(`${blockId}-panel`).classList.add('active');
+            document.getElementById(`${blockId}-panel`).classList.remove('inactive');
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                btn.style.display = 'flex';
+            });  // ✅ Mostrar todos los botones volver
+            consultarEstadoBloque(blockId);
+        }
+
+        // ============================================
+        // ⌨️ ATAJOS DE TECLADO
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            const tag = e.target.tagName.toLowerCase();
+            if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;  // Ignorar inputs
+
+            if (typeof usuarioAutenticado !== 'undefined' && !usuarioAutenticado) return;  // Validar sesión
+            if (!servidorConectado) {
+                console.warn('⚠️ Sin conexión');
+                return;
+            }  // Validar conexión
+
+            const panelActivo = document.querySelector('.panel.active');
+            if (!panelActivo) return;  // Panel activo
+
+            const blockId = panelActivo.id.replace('-panel', '');
+            if (!['block1', 'block2', 'block3'].includes(blockId)) return;  // Validar blockId
+
+            // Ctrl+1-5 = Encender válvula 1-5
+            if (e.ctrlKey && e.key >= '1' && e.key <= '5') {
+                const num = parseInt(e.key);
+                e.preventDefault();
+                controlManual(blockId, num, 'on');
+            }
+            // Ctrl+6-0 = Apagar válvula 1-5
+            else if (e.ctrlKey && e.key >= '6' && e.key <= '0') {
+                const num = e.key === '0' ? 5 : parseInt(e.key) - 5;
+                if (num >= 1 && num <= 5) {
+                    e.preventDefault();
+                    controlManual(blockId, num, 'off');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
