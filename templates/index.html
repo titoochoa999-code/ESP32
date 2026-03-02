@@ -1210,7 +1210,7 @@
             padding: 0.6rem;
             border-radius: 6px;
         }
-         /* ============================================ */
+        /* ============================================ */
 /* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
 /* ============================================ */
 @media (max-width: 768px) {
@@ -1222,9 +1222,9 @@
         font-size: 2.4em;
     }
     
-    /* 🆕 BLOQUES - 1 COLUMNA (uno encima del otro) */
+    /* ✅ BLOQUES - 1 COLUMNA (uno encima del otro) - SIN CAMBIOS */
     .bloques-grid {
-        grid-template-columns: 1fr;  /* 1 sola columna */
+        grid-template-columns: 1fr;
         gap: 1rem;
     }
     
@@ -1233,42 +1233,52 @@
         min-width: 0;
     }
     
-    /* 🆕 VÁLVULAS - 2 POR FILA (contenido más pequeño para forma cuadrada) */
+    /* 🆕 VÁLVULAS - 1 POR FILA CON MÁRGENES LATERALES */
     .valvulas-grid {
-        grid-template-columns: repeat(2, 1fr);  /* 2 columnas */
-        gap: 0.6rem;
+        grid-template-columns: 1fr;        /* 1 sola columna */
+        gap: 1rem;
+        padding: 0 1rem;                   /* 🆕 Espacio lateral izquierdo y derecho */
     }
     
     .valvula-card {
-        padding: 0.6rem;           /* Relleno reducido */
+        padding: 1rem;
         min-width: 0;
-        aspect-ratio: 1 / 1;       /* 🆕 Fuerza forma cuadrada */
+        width: 100%;                       /* Ocupa el disponible dentro del padding */
+        max-width: 90%;                    /* 🆕 No ocupa todo el ancho, deja margen */
+        margin: 0 auto;                    /* 🆕 Centra la tarjeta horizontalmente */
+        aspect-ratio: 1 / 1;               /* Mantiene forma cuadrada */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 🆕 Sombra suave para estética */
+        border-radius: 12px;               /* 🆕 Bordes redondeados */
     }
     
-    /* 🆕 CONTENIDO DE VÁLVULAS MÁS PEQUEÑO */
+    /* 🆕 CONTENIDO DE VÁLVULAS - TAMAÑO BALANCEADO */
     .valvula-card .icono {
-        font-size: 1.8rem;         /* Icono más pequeño */
-        margin-bottom: 0.3rem;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
     }
     
     .valvula-card .nombre {
-        font-size: 0.75rem;        /* Texto más pequeño */
+        font-size: 1rem;
         font-weight: 600;
+        margin-bottom: 0.3rem;
     }
     
     .valvula-card .estado {
-        font-size: 0.65rem;        /* Estado más pequeño */
-        padding: 0.2rem 0.4rem;
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 20px;
+        margin-bottom: 0.5rem;
     }
     
     .valvula-card .btn {
-        min-width: 60px;           /* Botón más pequeño */
-        padding: 0.4rem;
-        font-size: 0.7rem;
+        min-width: 80px;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        border-radius: 8px;
     }
     
     /* ✅ BOTONES GENERALES - SIN CAMBIOS */
@@ -1280,13 +1290,13 @@
         width: 100%;
     }
     
-    /* ✅ LOGIN - SIN CAMBIOS (igual que antes) */
+    /* ✅ LOGIN - SIN CAMBIOS */
     .login-container {
         padding: 1.8rem;
         width: 95%;
     }
     
-    /* ✅ BOTÓN CERRAR SESIÓN - SIN CAMBIOS (está bien) */
+    /* ✅ BOTÓN CERRAR SESIÓN - SIN CAMBIOS (perfecto) */
     .logout-btn {
         left: 50% !important;
         transform: translateX(-50%);
@@ -1306,7 +1316,7 @@
         padding: 1rem;
     }
     
-    /* 🆕 BLOQUES - MANTIENE 1 COLUMNA */
+    /* ✅ BLOQUES - MANTIENE 1 COLUMNA */
     .bloques-grid {
         gap: 0.8rem;
     }
@@ -1315,34 +1325,37 @@
         padding: 1rem;
     }
     
-    /* 🆕 VÁLVULAS - 2 POR FILA (aún más compacto) */
+    /* 🆕 VÁLVULAS - 1 POR FILA (más compacto pero con márgenes) */
     .valvulas-grid {
-        gap: 0.4rem;               /* Espacio mínimo entre tarjetas */
+        gap: 0.8rem;
+        padding: 0 0.8rem;              /* 🆕 Espacio lateral reducido pero visible */
     }
     
     .valvula-card {
-        padding: 0.4rem;           /* Relleno mínimo */
-        aspect-ratio: 1 / 1;       /* Mantiene forma cuadrada */
+        padding: 0.8rem;
+        max-width: 92%;                 /* 🆕 Ligero ajuste para móviles muy pequeños */
+        aspect-ratio: 1 / 1;
+        border-radius: 10px;
     }
     
-    /* 🆕 CONTENIDO AÚN MÁS PEQUEÑO EN MÓVILES */
+    /* 🆕 CONTENIDO AJUSTADO PARA MÓVILES PEQUEÑOS */
     .valvula-card .icono {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
     
     .valvula-card .nombre {
-        font-size: 0.65rem;
+        font-size: 0.9rem;
     }
     
     .valvula-card .estado {
-        font-size: 0.55rem;
-        padding: 0.15rem 0.3rem;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
     }
     
     .valvula-card .btn {
-        min-width: 50px;
-        padding: 0.3rem;
-        font-size: 0.6rem;
+        min-width: 70px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
     }
     
     /* ✅ BOTONES GENÉRICOS - SIN CAMBIOS */
@@ -1351,7 +1364,7 @@
         padding: 0.6rem;
         font-size: 0.85rem;
     }
-} 
+}
         /* ============================================ */
         /* ✨ EFECTOS VISUALES ADICIONALES */
         /* ============================================ */
@@ -2671,6 +2684,7 @@
 
 
 </html>
+
 
 
 
