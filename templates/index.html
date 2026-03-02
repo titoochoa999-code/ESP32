@@ -1233,52 +1233,52 @@
         min-width: 0;
     }
     
-    /* 🆕 VÁLVULAS - 1 POR FILA CON MÁRGENES LATERALES */
+    /* 🆕 VÁLVULAS - 1 POR FILA (TARJETAS MÁS GRANDES) */
     .valvulas-grid {
         grid-template-columns: 1fr;        /* 1 sola columna */
-        gap: 1rem;
-        padding: 0 1rem;                   /* 🆕 Espacio lateral izquierdo y derecho */
+        gap: 1.2rem;
+        padding: 0 0.5rem;                 /* 🆕 Espacio lateral mínimo */
     }
     
     .valvula-card {
-        padding: 1rem;
+        padding: 1.5rem;                   /* 🆕 Más espacio interior */
         min-width: 0;
-        width: 100%;                       /* Ocupa el disponible dentro del padding */
-        max-width: 90%;                    /* 🆕 No ocupa todo el ancho, deja margen */
-        margin: 0 auto;                    /* 🆕 Centra la tarjeta horizontalmente */
+        width: 100%;
+        max-width: 98%;                    /* 🆕 Casi todo el ancho (antes 90%) */
+        margin: 0 auto;                    /* Centra la tarjeta */
         aspect-ratio: 1 / 1;               /* Mantiene forma cuadrada */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 🆕 Sombra suave para estética */
-        border-radius: 12px;               /* 🆕 Bordes redondeados */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 🆕 Sombra más notable */
+        border-radius: 15px;               /* 🆕 Bordes más redondeados */
     }
     
-    /* 🆕 CONTENIDO DE VÁLVULAS - TAMAÑO BALANCEADO */
+    /* 🆕 CONTENIDO DE VÁLVULAS - MÁS GRANDE */
     .valvula-card .icono {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
+        font-size: 3.5rem;                 /* 🆕 Icono más grande */
+        margin-bottom: 0.8rem;
     }
     
     .valvula-card .nombre {
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 0.3rem;
-    }
-    
-    .valvula-card .estado {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
-        border-radius: 20px;
+        font-size: 1.3rem;                 /* 🆕 Texto más grande */
+        font-weight: 700;
         margin-bottom: 0.5rem;
     }
     
-    .valvula-card .btn {
-        min-width: 80px;
+    .valvula-card .estado {
+        font-size: 1rem;                   /* 🆕 Estado más grande */
         padding: 0.5rem 1rem;
-        font-size: 0.8rem;
-        border-radius: 8px;
+        border-radius: 25px;
+        margin-bottom: 0.8rem;
+    }
+    
+    .valvula-card .btn {
+        min-width: 120px;                  /* 🆕 Botón más ancho */
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 10px;
     }
     
     /* ✅ BOTONES GENERALES - SIN CAMBIOS */
@@ -1325,37 +1325,37 @@
         padding: 1rem;
     }
     
-    /* 🆕 VÁLVULAS - 1 POR FILA (más compacto pero con márgenes) */
+    /* 🆕 VÁLVULAS - 1 POR FILA (GRANDE PERO SIN SOBREPASAR) */
     .valvulas-grid {
-        gap: 0.8rem;
-        padding: 0 0.8rem;              /* 🆕 Espacio lateral reducido pero visible */
+        gap: 1rem;
+        padding: 0 0.4rem;              /* 🆕 Espacio lateral mínimo */
     }
     
     .valvula-card {
-        padding: 0.8rem;
-        max-width: 92%;                 /* 🆕 Ligero ajuste para móviles muy pequeños */
+        padding: 1.2rem;
+        max-width: 97%;                 /* 🆕 Casi todo el ancho */
         aspect-ratio: 1 / 1;
-        border-radius: 10px;
+        border-radius: 12px;
     }
     
     /* 🆕 CONTENIDO AJUSTADO PARA MÓVILES PEQUEÑOS */
     .valvula-card .icono {
-        font-size: 2rem;
+        font-size: 3rem;                /* 🆕 Icono grande */
     }
     
     .valvula-card .nombre {
-        font-size: 0.9rem;
+        font-size: 1.15rem;             /* 🆕 Texto legible */
     }
     
     .valvula-card .estado {
-        font-size: 0.7rem;
-        padding: 0.25rem 0.5rem;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
     }
     
     .valvula-card .btn {
-        min-width: 70px;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.75rem;
+        min-width: 100px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
     
     /* ✅ BOTONES GENÉRICOS - SIN CAMBIOS */
@@ -2684,6 +2684,7 @@
 
 
 </html>
+
 
 
 
