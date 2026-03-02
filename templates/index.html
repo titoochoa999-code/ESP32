@@ -1210,64 +1210,90 @@
             padding: 0.6rem;
             border-radius: 6px;
         }
+/* ============================================ */
+/* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
+/* ============================================ */
+@media (max-width: 768px) {
+    /* Tablets y móviles grandes */
+    .panel-title {
+        font-size: 1.6rem;
+    }
+    .reloj {
+        font-size: 2.4em;
+    }
+    
+    /* 🆕 GRID - 2 TARJETAS POR FILA */
+    .bloques-grid {
+        grid-template-columns: repeat(2, 1fr);  /* 2 columnas */
+        gap: 0.8rem;
+    }
+    
+    .valvulas-grid {
+        grid-template-columns: repeat(2, 1fr);  /* 2 columnas (era 1fr) */
+        gap: 0.8rem;
+    }
+    
+    /* 🆕 TARJETAS MÁS PEQUEÑAS */
+    .valvula-card {
+        padding: 1rem;
+        min-width: 0;
+    }
+    
+    .bloque-card {
+        padding: 1rem;
+        min-width: 0;
+    }
+    
+    .btn-group-general {
+        flex-direction: column;
+    }
+    
+    .btn-general {
+        width: 100%;
+    }
+    
+    .login-container {
+        padding: 1.8rem;
+        width: 95%;
+    }
+    
+    /* 🆕 BOTÓN CERRAR SESIÓN CENTRADO */
+    .logout-btn {
+        left: 50% !important;
+        transform: translateX(-50%);
+        top: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+        min-width: 150px;
+    }
+}
 
-        /* ============================================ */
-        /* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
-        /* ============================================ */
-        @media (max-width: 768px) {
-
-            /* Tablets y móviles grandes */
-            .panel-title {
-                font-size: 1.9rem;
-            }
-
-            .reloj {
-                font-size: 2.9em;
-            }
-
-            .valvulas-grid {
-                grid-template-columns: 2fr;
-            }
-
-            /* 1 columna */
-            .btn-group-general {
-                flex-direction: column;
-            }
-
-            /* Botones en columna */
-            .btn-general {
-                width: 20%;
-            }
-
-            /* Ancho completo */
-            .login-container {
-                padding: 1.8rem;
-                width: 55%;
-            }
-        }
-
-        @media (max-width: 480px) {
-
-            /* Móviles pequeños */
-            .reloj {
-                font-size: 2em;
-            }
-
-            .panel-header {
-                padding: 1rem;
-            }
-
-            .valvula-card {
-                padding: 1.2rem;
-            }
-
-            .btn {
-                min-width: 90px;
-                padding: 0.6rem;
-                font-size: 0.85rem;
-            }
-        }
-
+@media (max-width: 480px) {
+    /* Móviles pequeños */
+    .reloj {
+        font-size: 2em;
+    }
+    .panel-header {
+        padding: 1rem;
+    }
+    .valvula-card {
+        padding: 0.8rem;      /* Aún más pequeño en móviles pequeños */
+    }
+    .btn {
+        min-width: 90px;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    /* 🆕 En móviles muy pequeños, mantener 2 columnas pero más compacto */
+    .bloques-grid {
+        gap: 0.5rem;
+    }
+    
+    .valvulas-grid {
+        gap: 0.5rem;
+    }
+}
         /* ============================================ */
         /* ✨ EFECTOS VISUALES ADICIONALES */
         /* ============================================ */
@@ -2587,6 +2613,7 @@
 
 
 </html>
+
 
 
 
