@@ -1233,53 +1233,110 @@
         min-width: 0;
     }
     
-    /* 🆕 VÁLVULAS - 1 POR FILA (TARJETAS MÁS GRANDES) */
+    /* ✅ VÁLVULAS - 1 POR FILA (TARJETAS) - TAMAÑO SIN CAMBIOS */
     .valvulas-grid {
         grid-template-columns: 1fr;        /* 1 sola columna */
         gap: 1.2rem;
-        padding: 0 0.5rem;                 /* 🆕 Espacio lateral mínimo */
+        padding: 0 0.5rem;                 /* Espacio lateral mínimo */
     }
     
     .valvula-card {
-        padding: 1.5rem;                   /* 🆕 Más espacio interior */
+        padding: 1.5rem;
         min-width: 0;
         width: 100%;
-        max-width: 100%;                    /* 🆕 Casi todo el ancho (antes 90%) */
-        margin: 0 auto;                    /* Centra la tarjeta */
-        aspect-ratio: 1 / 1;               /* Mantiene forma cuadrada */
+        max-width: 100%;                   /* ✅ Tamaño de tarjeta SIN CAMBIOS */
+        margin: 0 auto;
+        aspect-ratio: 1 / 1;               /* ✅ Forma cuadrada SIN CAMBIOS */
         display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;      /* ← CAMBIO: texto a la izquierda */
-    padding-left: 1.5rem;         /* ← Opcional: margen izquierdo */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 🆕 Sombra más notable */
-        border-radius: 15px;               /* 🆕 Bordes más redondeados */
+        flex-direction: column;
+        justify-content: space-between;    /* 🆕 Distribuye el contenido verticalmente */
+        align-items: center;               /* 🆕 TODO centrado horizontalmente */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 15px;
     }
     
-    /* 🆕 CONTENIDO DE VÁLVULAS - MÁS GRANDE */
-    .valvula-card .icono {
-        font-size: 3.5rem;                 /* 🆕 Icono más grande */
-        margin-bottom: 0.8rem;
-    }
-    
-    .valvula-card .nombre {
-        font-size: 1.3rem;                 /* 🆕 Texto más grande */
-        font-weight: 700;
+    /* 🆕 CONTENEDOR SUPERIOR (NOMBRE + INDICADOR SEPARADOS) */
+    .valvula-header {
+        display: flex;
+        justify-content: space-between;    /* 🆕 Nombre a la izquierda, indicador a la derecha */
+        align-items: center;
+        width: 100%;
         margin-bottom: 0.5rem;
     }
     
-    .valvula-card .estado {
-        font-size: 1rem;                   /* 🆕 Estado más grande */
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        margin-bottom: 0.8rem;
+    /* ✅ NOMBRE DE VÁLVULA - SIN CAMBIOS */
+    .valvula-card .nombre {
+        font-size: 1.3rem;
+        font-weight: 700;
     }
     
-    .valvula-card .btn {
-        min-width: 120px;                  /* 🆕 Botón más ancho */
-        padding: 1.5rem 1.5rem;
+    /* 🆕 INDICADOR/LUZ - SEPARADO DEL NOMBRE (lado derecho) */
+    .valvula-card .indicador,
+    .valvula-card .foco {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-left: auto;                 /* 🆕 Empuja el indicador a la derecha */
+    }
+    
+    /* 🆕 ESTADO ACTUAL - CENTRADO */
+    .valvula-card .estado {
+        font-size: 1rem;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        margin: 0.5rem auto;               /* 🆕 Centrado con margin auto */
+        text-align: center;
+    }
+    
+    /* 🆕 ICONO - CENTRADO */
+    .valvula-card .icono {
+        font-size: 3.5rem;
+        margin: 0.5rem auto;               /* 🆕 Centrado */
+        display: block;
+    }
+    
+    /* 🆕 BOTONES ENCENDER/APAGAR - MÁS LARGOS (ocupan espacio de tarjeta) */
+    .valvula-card .btn-encender,
+    .valvula-card .btn-apagar,
+    .valvula-card .btn-on,
+    .valvula-card .btn-off {
+        min-width: 140px;                  /* 🆕 Más largos (antes 120px) */
+        width: 45%;                        /* 🆕 Ocupan ~45% cada uno para estar lado a lado */
+        padding: 0.8rem 1rem;
         font-size: 1rem;
         border-radius: 10px;
+        flex: 1;                           /* 🆕 Se expanden para ocupar espacio */
+        max-width: 200px;                  /* 🆕 Límite máximo */
+    }
+    
+    /* 🆕 CONTENEDOR DE BOTONES PRINCIPALES */
+    .valvula-card .btn-group {
+        display: flex;
+        justify-content: center;           /* 🆕 Centra los botones */
+        gap: 0.8rem;                       /* Espacio entre encender/apagar */
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+    
+    /* 🆕 BOTONES DE PROGRAMAR - MÁS PEQUEÑOS (no sobresalgan) */
+    .valvula-card .btn-programar,
+    .valvula-card .btn-schedule,
+    .valvula-card .btn-config {
+        min-width: 80px;                   /* 🆕 Más pequeños (antes 120px) */
+        width: auto;                       /* 🆕 Ancho automático */
+        padding: 0.4rem 0.8rem;            /* 🆕 Menos relleno */
+        font-size: 0.75rem;                /* 🆕 Texto más pequeño */
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+    
+    /* 🆕 CONTENEDOR DE BOTONES SECUNDARIOS (PROGRAMAR) */
+    .valvula-card .btn-group-secundario {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        margin-top: 0.5rem;
     }
     
     /* ✅ BOTONES GENERALES - SIN CAMBIOS */
@@ -1326,37 +1383,51 @@
         padding: 1rem;
     }
     
-    /* 🆕 VÁLVULAS - 1 POR FILA (GRANDE PERO SIN SOBREPASAR) */
+    /* ✅ VÁLVULAS - 1 POR FILA - TAMAÑO SIN CAMBIOS */
     .valvulas-grid {
         gap: 1rem;
-        padding: 0 0.4rem;              /* 🆕 Espacio lateral mínimo */
+        padding: 0 0.4rem;
     }
     
     .valvula-card {
         padding: 1.2rem;
-        max-width: 100%;                 /* 🆕 Casi todo el ancho */
+        max-width: 100%;
         aspect-ratio: 1 / 1;
         border-radius: 12px;
     }
     
     /* 🆕 CONTENIDO AJUSTADO PARA MÓVILES PEQUEÑOS */
     .valvula-card .icono {
-        font-size: 3rem;                /* 🆕 Icono grande */
+        font-size: 3rem;
     }
     
     .valvula-card .nombre {
-        font-size: 1.15rem;             /* 🆕 Texto legible */
+        font-size: 1.15rem;
     }
     
     .valvula-card .estado {
         font-size: 0.9rem;
-        padding: 0.4rem 0.8rem;
+        padding: 0.4rem 1rem;
     }
     
-    .valvula-card .btn {
-        min-width: 100px;
-        padding: 0.6rem 1.2rem;
+    /* 🆕 BOTONES ENCENDER/APAGAR - MÁS LARGOS */
+    .valvula-card .btn-encender,
+    .valvula-card .btn-apagar,
+    .valvula-card .btn-on,
+    .valvula-card .btn-off {
+        min-width: 120px;
+        width: 45%;
+        padding: 0.7rem 0.9rem;
         font-size: 0.9rem;
+    }
+    
+    /* 🆕 BOTONES DE PROGRAMAR - AÚN MÁS PEQUEÑOS */
+    .valvula-card .btn-programar,
+    .valvula-card .btn-schedule,
+    .valvula-card .btn-config {
+        min-width: 70px;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.7rem;
     }
     
     /* ✅ BOTONES GENÉRICOS - SIN CAMBIOS */
@@ -2685,6 +2756,7 @@
 
 
 </html>
+
 
 
 
