@@ -1210,7 +1210,7 @@
             padding: 0.6rem;
             border-radius: 6px;
         }
-/* ============================================ */
+         /* ============================================ */
 /* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
 /* ============================================ */
 @media (max-width: 768px) {
@@ -1222,28 +1222,56 @@
         font-size: 2.4em;
     }
     
-    /* 🆕 GRID - 2 TARJETAS POR FILA */
+    /* 🆕 BLOQUES - 1 COLUMNA (uno encima del otro) */
     .bloques-grid {
-        grid-template-columns: repeat(2, 1fr);  /* 2 columnas */
-        gap: 0.8rem;
-    }
-    
-    .valvulas-grid {
-        grid-template-columns: repeat(2, 1fr);  /* 2 columnas (era 1fr) */
-        gap: 0.8rem;
-    }
-    
-    /* 🆕 TARJETAS MÁS PEQUEÑAS */
-    .valvula-card {
-        padding: 1rem;
-        min-width: 0;
+        grid-template-columns: 1fr;  /* 1 sola columna */
+        gap: 1rem;
     }
     
     .bloque-card {
-        padding: 1rem;
+        padding: 1.2rem;
         min-width: 0;
     }
     
+    /* 🆕 VÁLVULAS - 2 POR FILA (contenido más pequeño para forma cuadrada) */
+    .valvulas-grid {
+        grid-template-columns: repeat(2, 1fr);  /* 2 columnas */
+        gap: 0.6rem;
+    }
+    
+    .valvula-card {
+        padding: 0.6rem;           /* Relleno reducido */
+        min-width: 0;
+        aspect-ratio: 1 / 1;       /* 🆕 Fuerza forma cuadrada */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* 🆕 CONTENIDO DE VÁLVULAS MÁS PEQUEÑO */
+    .valvula-card .icono {
+        font-size: 1.8rem;         /* Icono más pequeño */
+        margin-bottom: 0.3rem;
+    }
+    
+    .valvula-card .nombre {
+        font-size: 0.75rem;        /* Texto más pequeño */
+        font-weight: 600;
+    }
+    
+    .valvula-card .estado {
+        font-size: 0.65rem;        /* Estado más pequeño */
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .valvula-card .btn {
+        min-width: 60px;           /* Botón más pequeño */
+        padding: 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    /* ✅ BOTONES GENERALES - SIN CAMBIOS */
     .btn-group-general {
         flex-direction: column;
     }
@@ -1252,12 +1280,13 @@
         width: 100%;
     }
     
+    /* ✅ LOGIN - SIN CAMBIOS (igual que antes) */
     .login-container {
         padding: 1.8rem;
         width: 95%;
     }
     
-    /* 🆕 BOTÓN CERRAR SESIÓN CENTRADO */
+    /* ✅ BOTÓN CERRAR SESIÓN - SIN CAMBIOS (está bien) */
     .logout-btn {
         left: 50% !important;
         transform: translateX(-50%);
@@ -1276,24 +1305,53 @@
     .panel-header {
         padding: 1rem;
     }
-    .valvula-card {
-        padding: 0.8rem;      /* Aún más pequeño en móviles pequeños */
+    
+    /* 🆕 BLOQUES - MANTIENE 1 COLUMNA */
+    .bloques-grid {
+        gap: 0.8rem;
     }
+    
+    .bloque-card {
+        padding: 1rem;
+    }
+    
+    /* 🆕 VÁLVULAS - 2 POR FILA (aún más compacto) */
+    .valvulas-grid {
+        gap: 0.4rem;               /* Espacio mínimo entre tarjetas */
+    }
+    
+    .valvula-card {
+        padding: 0.4rem;           /* Relleno mínimo */
+        aspect-ratio: 1 / 1;       /* Mantiene forma cuadrada */
+    }
+    
+    /* 🆕 CONTENIDO AÚN MÁS PEQUEÑO EN MÓVILES */
+    .valvula-card .icono {
+        font-size: 1.5rem;
+    }
+    
+    .valvula-card .nombre {
+        font-size: 0.65rem;
+    }
+    
+    .valvula-card .estado {
+        font-size: 0.55rem;
+        padding: 0.15rem 0.3rem;
+    }
+    
+    .valvula-card .btn {
+        min-width: 50px;
+        padding: 0.3rem;
+        font-size: 0.6rem;
+    }
+    
+    /* ✅ BOTONES GENÉRICOS - SIN CAMBIOS */
     .btn {
         min-width: 90px;
         padding: 0.6rem;
         font-size: 0.85rem;
     }
-    
-    /* 🆕 En móviles muy pequeños, mantener 2 columnas pero más compacto */
-    .bloques-grid {
-        gap: 0.5rem;
-    }
-    
-    .valvulas-grid {
-        gap: 0.5rem;
-    }
-}
+} 
         /* ============================================ */
         /* ✨ EFECTOS VISUALES ADICIONALES */
         /* ============================================ */
@@ -2613,6 +2671,7 @@
 
 
 </html>
+
 
 
 
