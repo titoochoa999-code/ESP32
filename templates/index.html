@@ -1244,13 +1244,14 @@
         padding: 1.5rem;                   /* 🆕 Más espacio interior */
         min-width: 0;
         width: 100%;
-        max-width: 98%;                    /* 🆕 Casi todo el ancho (antes 90%) */
+        max-width: 100%;                    /* 🆕 Casi todo el ancho (antes 90%) */
         margin: 0 auto;                    /* Centra la tarjeta */
         aspect-ratio: 1 / 1;               /* Mantiene forma cuadrada */
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;      /* ← CAMBIO: texto a la izquierda */
+    padding-left: 1.5rem;         /* ← Opcional: margen izquierdo */
         box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 🆕 Sombra más notable */
         border-radius: 15px;               /* 🆕 Bordes más redondeados */
     }
@@ -1276,7 +1277,7 @@
     
     .valvula-card .btn {
         min-width: 120px;                  /* 🆕 Botón más ancho */
-        padding: 0.7rem 1.5rem;
+        padding: 1.5rem 1.5rem;
         font-size: 1rem;
         border-radius: 10px;
     }
@@ -1333,7 +1334,7 @@
     
     .valvula-card {
         padding: 1.2rem;
-        max-width: 97%;                 /* 🆕 Casi todo el ancho */
+        max-width: 100%;                 /* 🆕 Casi todo el ancho */
         aspect-ratio: 1 / 1;
         border-radius: 12px;
     }
@@ -2684,6 +2685,7 @@
 
 
 </html>
+
 
 
 
