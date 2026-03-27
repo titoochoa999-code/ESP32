@@ -610,6 +610,119 @@
             transform: translateX(-3px);
             /* Flecha se mueve izquierda */
         }
+         /* ============================================ */
+        /* 💧 GOTAS INDICADORAS DE ESTADO DE VÁLVULAS */
+        /* ============================================ */
+        .gotas-indicadoras {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 1rem 0;
+            padding: 0.5rem;
+            min-height: 35px;
+        }
+
+        .gota {
+            width: 26px;
+            height: 26px;
+            clip-path: path('M12 2.5C12 2.5 5 9.5 5 14.5C5 18.6421 8.35786 22 12 22C15.6421 22 19 18.6421 19 14.5C19 9.5 12 2.5 12 2.5Z');
+            background: #666666;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            cursor: default;
+            display: inline-block;
+        }
+
+        /* ✅ Gota ACTIVA (válvula encendida) */
+        .gota.activa {
+            background: var(--accent-cyan, #0cccee);
+            opacity: 1;
+            animation: palpitar 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(12, 204, 238, 0.8));
+        }
+
+        /* 🎬 ANIMACIÓN: Palpitar */
+        @keyframes palpitar {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.25);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .gota:hover {
+            transform: scale(1.15);
+            cursor: help;
+        }
+
+        /* Colores diferentes por bloque */
+        .bloque-1 .gota.activa {
+            background: #007bff;
+            filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.8));
+        }
+
+        .bloque-2 .gota.activa {
+            background: #007bff;
+            filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.8));
+        }
+
+        .bloque-3 .gota.activa {
+            background: #007bff;
+            filter: drop-shadow(0 0 8px rgba(0, 123, 255, 0.8));
+        }
+        /* ============================================ */
+        /* ⏱️ CRONÓMETRO - TIEMPO ENCENDIDO 🆕 */
+        /* ============================================ */
+        .cronometro-section {
+            margin: 1rem 0;
+            text-align: center;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(12, 204, 238, 0.3);
+        }
+
+        .cronometro-section h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .cronometro-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(12, 204, 238, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .cronometro-display.parpadeo {
+            animation: parpadeo-segundo 1s infinite;
+        }
+
+        @keyframes parpadeo-segundo {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
 
         /* ============================================ */
         /* 🧱 GRID DE BLOQUES - TARJETAS DE ZONAS */
@@ -1210,233 +1323,259 @@
             padding: 0.6rem;
             border-radius: 6px;
         }
-        /* ============================================ */
-/* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
-/* ============================================ */
-@media (max-width: 768px) {
-    /* Tablets y móviles grandes */
-    .panel-title {
-        font-size: 1.6rem;
-    }
-    .reloj {
-        font-size: 2.4em;
-    }
-    
-    /* ✅ BLOQUES - 1 COLUMNA (uno encima del otro) - SIN CAMBIOS */
-    .bloques-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .bloque-card {
-        padding: 1.2rem;
-        min-width: 0;
-    }
-    
-    /* ✅ VÁLVULAS - 1 POR FILA (TARJETAS) - TAMAÑO SIN CAMBIOS */
-    .valvulas-grid {
-        grid-template-columns: 1fr;        /* 1 sola columna */
-        gap: 1.2rem;
-        padding: 0 0.5rem;                 /* Espacio lateral mínimo */
-    }
-    
-    .valvula-card {
-        padding: 1.5rem;
-        min-width: 0;
-        width: 100%;
-        max-width: 100%;                   /* ✅ Tamaño de tarjeta SIN CAMBIOS */
-        margin: 0 auto;
-        aspect-ratio: 1 / 1;               /* ✅ Forma cuadrada SIN CAMBIOS */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;    /* 🆕 Distribuye el contenido verticalmente */
-        align-items: center;               /* 🆕 TODO centrado horizontalmente */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        border-radius: 15px;
-    }
-    
-    /* 🆕 CONTENEDOR SUPERIOR (NOMBRE + INDICADOR SEPARADOS) */
-    .valvula-header {
-        display: flex;
-        justify-content: space-between;    /* 🆕 Nombre a la izquierda, indicador a la derecha */
-        align-items: center;
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    
-    /* ✅ NOMBRE DE VÁLVULA - SIN CAMBIOS */
-    .valvula-card .nombre {
-        font-size: 1.3rem;
-        font-weight: 700;
-    }
-    
-    /* 🆕 INDICADOR/LUZ - SEPARADO DEL NOMBRE (lado derecho) */
-    .valvula-card .indicador,
-    .valvula-card .foco {
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        margin-left: auto;                 /* 🆕 Empuja el indicador a la derecha */
-    }
-    
-    /* 🆕 ESTADO ACTUAL - CENTRADO */
-    .valvula-card .estado {
-        font-size: 1rem;
-        padding: 0.5rem 1.5rem;
-        border-radius: 25px;
-        margin: 0.5rem auto;               /* 🆕 Centrado con margin auto */
-        text-align: center;
-    }
-    
-    /* 🆕 ICONO - CENTRADO */
-    .valvula-card .icono {
-        font-size: 3.5rem;
-        margin: 0.5rem auto;               /* 🆕 Centrado */
-        display: block;
-    }
-    
-    /* 🆕 BOTONES ENCENDER/APAGAR - MÁS LARGOS (ocupan espacio de tarjeta) */
-    .valvula-card .btn-encender,
-    .valvula-card .btn-apagar,
-    .valvula-card .btn-on,
-    .valvula-card .btn-off {
-        min-width: 140px;                  /* 🆕 Más largos (antes 120px) */
-        width: 45%;                        /* 🆕 Ocupan ~45% cada uno para estar lado a lado */
-        padding: 0.8rem 1rem;
-        font-size: 1rem;
-        border-radius: 10px;
-        flex: 1;                           /* 🆕 Se expanden para ocupar espacio */
-        max-width: 200px;                  /* 🆕 Límite máximo */
-    }
-    
-    /* 🆕 CONTENEDOR DE BOTONES PRINCIPALES */
-    .valvula-card .btn-group {
-        display: flex;
-        justify-content: center;           /* 🆕 Centra los botones */
-        gap: 0.8rem;                       /* Espacio entre encender/apagar */
-        width: 100%;
-        margin: 0.5rem 0;
-    }
-    
-    /* 🆕 BOTONES DE PROGRAMAR - MÁS PEQUEÑOS (no sobresalgan) */
-    .valvula-card .btn-programar,
-    .valvula-card .btn-schedule,
-    .valvula-card .btn-config {
-        min-width: 80px;                   /* 🆕 Más pequeños (antes 120px) */
-        width: auto;                       /* 🆕 Ancho automático */
-        padding: 0.4rem 0.8rem;            /* 🆕 Menos relleno */
-        font-size: 0.75rem;                /* 🆕 Texto más pequeño */
-        border-radius: 8px;
-        margin-top: 0.5rem;
-    }
-    
-    /* 🆕 CONTENEDOR DE BOTONES SECUNDARIOS (PROGRAMAR) */
-    .valvula-card .btn-group-secundario {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-    
-    /* ✅ BOTONES GENERALES - SIN CAMBIOS */
-    .btn-group-general {
-        flex-direction: column;
-    }
-    
-    .btn-general {
-        width: 100%;
-    }
-    
-    /* ✅ LOGIN - SIN CAMBIOS */
-    .login-container {
-        padding: 1.8rem;
-        width: 95%;
-    }
-    
-    /* ✅ BOTÓN CERRAR SESIÓN - SIN CAMBIOS (perfecto) */
-    .logout-btn {
-        left: 50% !important;
-        transform: translateX(-50%);
-        top: 1rem;
-        padding: 0.5rem 1rem;
-        font-size: 0.75rem;
-        min-width: 150px;
-    }
-}
 
-@media (max-width: 480px) {
-    /* Móviles pequeños */
-    .reloj {
-        font-size: 2em;
-    }
-    .panel-header {
-        padding: 1rem;
-    }
-    
-    /* ✅ BLOQUES - MANTIENE 1 COLUMNA */
-    .bloques-grid {
-        gap: 0.8rem;
-    }
-    
-    .bloque-card {
-        padding: 1rem;
-    }
-    
-    /* ✅ VÁLVULAS - 1 POR FILA - TAMAÑO SIN CAMBIOS */
-    .valvulas-grid {
-        gap: 1rem;
-        padding: 0 0.4rem;
-    }
-    
-    .valvula-card {
-        padding: 1.2rem;
-        max-width: 100%;
-        aspect-ratio: 1 / 1;
-        border-radius: 12px;
-    }
-    
-    /* 🆕 CONTENIDO AJUSTADO PARA MÓVILES PEQUEÑOS */
-    .valvula-card .icono {
-        font-size: 3rem;
-    }
-    
-    .valvula-card .nombre {
-        font-size: 1.15rem;
-    }
-    
-    .valvula-card .estado {
-        font-size: 0.9rem;
-        padding: 0.4rem 1rem;
-    }
-    
-    /* 🆕 BOTONES ENCENDER/APAGAR - MÁS LARGOS */
-    .valvula-card .btn-encender,
-    .valvula-card .btn-apagar,
-    .valvula-card .btn-on,
-    .valvula-card .btn-off {
-        min-width: 120px;
-        width: 45%;
-        padding: 0.7rem 0.9rem;
-        font-size: 0.9rem;
-    }
-    
-    /* 🆕 BOTONES DE PROGRAMAR - AÚN MÁS PEQUEÑOS */
-    .valvula-card .btn-programar,
-    .valvula-card .btn-schedule,
-    .valvula-card .btn-config {
-        min-width: 70px;
-        padding: 0.35rem 0.6rem;
-        font-size: 0.7rem;
-    }
-    
-    /* ✅ BOTONES GENÉRICOS - SIN CAMBIOS */
-    .btn {
-        min-width: 90px;
-        padding: 0.6rem;
-        font-size: 0.85rem;
-    }
-}
+        /* ============================================ */
+        /* 📱 RESPONSIVE - ADAPTACIÓN MÓVIL */
+        /* ============================================ */
+        @media (max-width: 768px) {
+
+            /* Tablets y móviles grandes */
+            .panel-title {
+                font-size: 1.6rem;
+            }
+
+            .reloj {
+                font-size: 2.4em;
+            }
+
+            /* ✅ BLOQUES - 1 COLUMNA (uno encima del otro) - SIN CAMBIOS */
+            .bloques-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .bloque-card {
+                padding: 1.2rem;
+                min-width: 0;
+            }
+
+            /* ✅ VÁLVULAS - 1 POR FILA (TARJETAS) - TAMAÑO SIN CAMBIOS */
+            .valvulas-grid {
+                grid-template-columns: 1fr;
+                /* 1 sola columna */
+                gap: 1.2rem;
+                padding: 0 0.5rem;
+                /* Espacio lateral mínimo */
+            }
+
+            .valvula-card {
+                padding: 1.5rem;
+                min-width: 0;
+                width: 100%;
+                max-width: 100%;
+                /* ✅ Tamaño de tarjeta SIN CAMBIOS */
+                margin: 0 auto;
+                aspect-ratio: 1 / 1;
+                /* ✅ Forma cuadrada SIN CAMBIOS */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                /* 🆕 Distribuye el contenido verticalmente */
+                align-items: center;
+                /* 🆕 TODO centrado horizontalmente */
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                border-radius: 15px;
+            }
+
+            /* 🆕 CONTENEDOR SUPERIOR (NOMBRE + INDICADOR SEPARADOS) */
+            .valvula-header {
+                display: flex;
+                justify-content: space-between;
+                /* 🆕 Nombre a la izquierda, indicador a la derecha */
+                align-items: center;
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            /* ✅ NOMBRE DE VÁLVULA - SIN CAMBIOS */
+            .valvula-card .nombre {
+                font-size: 1.3rem;
+                font-weight: 700;
+            }
+
+            /* 🆕 INDICADOR/LUZ - SEPARADO DEL NOMBRE (lado derecho) */
+            .valvula-card .indicador,
+            .valvula-card .foco {
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                margin-left: auto;
+                /* 🆕 Empuja el indicador a la derecha */
+            }
+
+            /* 🆕 ESTADO ACTUAL - CENTRADO */
+            .valvula-card .estado {
+                font-size: 1rem;
+                padding: 0.5rem 1.5rem;
+                border-radius: 25px;
+                margin: 0.5rem auto;
+                /* 🆕 Centrado con margin auto */
+                text-align: center;
+            }
+
+            /* 🆕 ICONO - CENTRADO */
+            .valvula-card .icono {
+                font-size: 3.5rem;
+                margin: 0.5rem auto;
+                /* 🆕 Centrado */
+                display: block;
+            }
+
+            /* 🆕 BOTONES ENCENDER/APAGAR - MÁS LARGOS (ocupan espacio de tarjeta) */
+            .valvula-card .btn-encender,
+            .valvula-card .btn-apagar,
+            .valvula-card .btn-on,
+            .valvula-card .btn-off {
+                min-width: 140px;
+                /* 🆕 Más largos (antes 120px) */
+                width: 45%;
+                /* 🆕 Ocupan ~45% cada uno para estar lado a lado */
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+                border-radius: 10px;
+                flex: 1;
+                /* 🆕 Se expanden para ocupar espacio */
+                max-width: 200px;
+                /* 🆕 Límite máximo */
+            }
+
+            /* 🆕 CONTENEDOR DE BOTONES PRINCIPALES */
+            .valvula-card .btn-group {
+                display: flex;
+                justify-content: center;
+                /* 🆕 Centra los botones */
+                gap: 0.8rem;
+                /* Espacio entre encender/apagar */
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+
+            /* 🆕 BOTONES DE PROGRAMAR - MÁS PEQUEÑOS (no sobresalgan) */
+            .valvula-card .btn-programar,
+            .valvula-card .btn-schedule,
+            .valvula-card .btn-config {
+                min-width: 80px;
+                /* 🆕 Más pequeños (antes 120px) */
+                width: auto;
+                /* 🆕 Ancho automático */
+                padding: 0.4rem 0.8rem;
+                /* 🆕 Menos relleno */
+                font-size: 0.75rem;
+                /* 🆕 Texto más pequeño */
+                border-radius: 8px;
+                margin-top: 0.5rem;
+            }
+
+            /* 🆕 CONTENEDOR DE BOTONES SECUNDARIOS (PROGRAMAR) */
+            .valvula-card .btn-group-secundario {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            /* ✅ BOTONES GENERALES - SIN CAMBIOS */
+            .btn-group-general {
+                flex-direction: column;
+            }
+
+            .btn-general {
+                width: 100%;
+            }
+
+            /* ✅ LOGIN - SIN CAMBIOS */
+            .login-container {
+                padding: 1.8rem;
+                width: 95%;
+            }
+
+            /* ✅ BOTÓN CERRAR SESIÓN - SIN CAMBIOS (perfecto) */
+            .logout-btn {
+                left: 50% !important;
+                transform: translateX(-50%);
+                top: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+                min-width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* Móviles pequeños */
+            .reloj {
+                font-size: 2em;
+            }
+
+            .panel-header {
+                padding: 1rem;
+            }
+
+            /* ✅ BLOQUES - MANTIENE 1 COLUMNA */
+            .bloques-grid {
+                gap: 0.8rem;
+            }
+
+            .bloque-card {
+                padding: 1rem;
+            }
+
+            /* ✅ VÁLVULAS - 1 POR FILA - TAMAÑO SIN CAMBIOS */
+            .valvulas-grid {
+                gap: 1rem;
+                padding: 0 0.4rem;
+            }
+
+            .valvula-card {
+                padding: 1.2rem;
+                max-width: 100%;
+                aspect-ratio: 1 / 1;
+                border-radius: 12px;
+            }
+
+            /* 🆕 CONTENIDO AJUSTADO PARA MÓVILES PEQUEÑOS */
+            .valvula-card .icono {
+                font-size: 3rem;
+            }
+
+            .valvula-card .nombre {
+                font-size: 1.15rem;
+            }
+
+            .valvula-card .estado {
+                font-size: 0.9rem;
+                padding: 0.4rem 1rem;
+            }
+
+            /* 🆕 BOTONES ENCENDER/APAGAR - MÁS LARGOS */
+            .valvula-card .btn-encender,
+            .valvula-card .btn-apagar,
+            .valvula-card .btn-on,
+            .valvula-card .btn-off {
+                min-width: 120px;
+                width: 45%;
+                padding: 0.7rem 0.9rem;
+                font-size: 0.9rem;
+            }
+
+            /* 🆕 BOTONES DE PROGRAMAR - AÚN MÁS PEQUEÑOS */
+            .valvula-card .btn-programar,
+            .valvula-card .btn-schedule,
+            .valvula-card .btn-config {
+                min-width: 70px;
+                padding: 0.35rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            /* ✅ BOTONES GENÉRICOS - SIN CAMBIOS */
+            .btn {
+                min-width: 90px;
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+        }
+
         /* ============================================ */
         /* ✨ EFECTOS VISUALES ADICIONALES */
         /* ============================================ */
@@ -1485,1143 +1624,1459 @@
             /* Barra cyan al hover */
         }
     </style>
-</head>
-
-<body>
-    <!-- ============================================ -->
-    <!-- 🔐 PANEL DE LOGIN - AUTENTICACIÓN DE USUARIO -->
-    <!-- ============================================ -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-container">
-            <div class="login-header">
-                <span class="login-icon">🔐</span>
-                <div class="login-logo">Latina Farms 3</div>
-                <div class="login-subtitle">Sistema de Control de Riego</div>
-            </div>
-
-            <!-- Mensaje de error (oculto por defecto) -->
-            <div class="login-error" id="loginError">⚠️ Usuario o contraseña incorrectos</div>
-
-            <!-- Formulario de login -->
-            <form class="login-form" id="loginForm" onsubmit="iniciarSesion(event)">
-                <div class="input-group">
-                    <label for="username">👤 Usuario</label>
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="username" placeholder="Ingresa tu usuario" required autocomplete="username">
-                </div>
-                <div class="input-group">
-                    <label for="password">🔑 Contraseña</label>
-                    <span class="input-icon">🔑</span>
-                    <input type="password" id="password" placeholder="Ingresa tu contraseña" required
-                        autocomplete="current-password">
-                </div>
-                <button type="submit" class="login-btn">🚀 INGRESAR AL SISTEMA</button>
-            </form>
-
-            <div class="login-footer">
-                <p>© 2025 CocosLokos Technology - Todos los derechos reservados</p>
-                <p style="margin-top: 8px; font-size: 0.75em; opacity: 0.5;">Demo: admin | 1234</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- 🚪 BOTÓN CERRAR SESIÓN -->
-    <!-- ============================================ -->
-    <button class="logout-btn" id="logoutBtn" onclick="cerrarSesion()">🔓 Cerrar Sesión</button>
-
-    <!-- ============================================ -->
-    <!-- 📦 CONTENEDOR PRINCIPAL DE PANELES -->
-    <!-- ============================================ -->
-    <div class="panel-container">
-
+    </head>
+    
+    <body>
         <!-- ============================================ -->
-        <!-- 🏠 PANEL PRINCIPAL - MENÚ DE BLOQUES -->
+        <!-- 🔐 PANEL DE LOGIN - AUTENTICACIÓN DE USUARIO -->
         <!-- ============================================ -->
-        <div class="panel main-panel active">
-            <div class="panel-header">
-                <div class="subtitle">LATINA FARMS 3</div>
-                <h1 class="panel-title">HIDROCONTROL</h1>
-                <h1 class="login-subtitle" style="color: var(--accent-cyan);">💧 Sistema de Control de Riego 💧</h1>
-                <div class="reloj-container">
-                    <div class="reloj">--:--:--</div>
-                    <div class="fecha">Cargando fecha...</div>
+        <div class="login-overlay" id="loginOverlay">
+            <div class="login-container">
+                <div class="login-header">
+                    <span class="login-icon">🔐</span>
+                    <div class="login-logo">Latina Farms 3</div>
+                    <div class="login-subtitle">Sistema de Control de Riego</div>
                 </div>
-                <div class="conexion" id="conexion">🔄 Conectando al servidor...</div>
-                <div class="server-info">🌐 Servidor: <span id="server-url-display">cargando...</span></div>
-                <div class="timezone-hint" id="timezone-hint">⏳ Sincronizando zona horaria...</div>
-            </div>
-
-            <!-- Grid con los 3 bloques accesibles -->
-            <div class="bloques-grid">
-                <div class="bloque-card bloque-1" onclick="showBlockPanel('block1')">
-                    <h2>BLOQUE 10</h2>
-                    <p>Sistema de riego automatizado</p>
-                    <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
-                </div>
-                <div class="bloque-card bloque-2" onclick="showBlockPanel('block2')">
-                    <h2>BLOQUE 11</h2>
-                    <p>Sistema de riego automatizado</p>
-                    <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
-                </div>
-                <div class="bloque-card bloque-3" onclick="showBlockPanel('block3')">
-                    <h2>BLOQUE 12</h2>
-                    <p>Sistema de riego automatizado</p>
-                    <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
-                </div>
-            </div>
-        </div>
-
-<!-- ============================================ -->
-<!-- 💧 PANEL BLOQUE 1 (5 VÁLVULAS) -->
-<!-- ============================================ -->
-<div class="panel block-panel" id="block1-panel">
-    <!-- Botón único, fuera de los paneles (al inicio del body) -->
-    <button class="back-btn" id="backBtn" onclick="showMainPanel()">
-    </button>
-    <div class="panel-header">
-        <div class="subtitle">LATINA FARMS 3 </div>
-        <h1 class="panel-title">BLOQUE 10</h1>
-        <div class="reloj-container">
-            <div class="reloj">--:--:--</div>
-            <div class="fecha">Cargando fecha...</div>
-        </div>
-    </div>
-    <div class="block-content">
-        <!-- Mensaje de notificación del bloque -->
-        <div class="mensaje" id="mensaje-block1"></div>
-        <div class="valvulas-grid">
-            <!-- Generar 5 válvulas para Block 1 -->
-            <!-- VÁLVULA 1 -->
-            <div class="valvula-card valvula-1">
-                <div class="valvula-header">
-                    <div class="valvula-title">💧 Válvula 1</div>
-                    <div class="estado-indicator" id="b1-estado-ind-1"></div>
-                </div>
-                <div class="estado-section">
-                    <h3>Estado Actual:</h3>
-                    <div class="estado-texto" id="b1-estado-txt-1">🚫 APAGADA</div>
-                </div>
-                <div class="manual-control">
-                    <h3>Control Manual:</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-on" onclick="controlManual('block1', 1, 'on')">💧
-                            Encender</button>
-                        <button class="btn btn-off" onclick="controlManual('block1', 1, 'off')">🚫
-                            Apagar</button>
+    
+                <!-- Mensaje de error (oculto por defecto) -->
+                <div class="login-error" id="loginError">⚠️ Usuario o contraseña incorrectos</div>
+    
+                <!-- Formulario de login -->
+                <form class="login-form" id="loginForm" onsubmit="iniciarSesion(event)">
+                    <div class="input-group">
+                        <label for="username">👤 Usuario</label>
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="username" placeholder="Ingresa tu usuario" required autocomplete="username">
                     </div>
-                </div>
-                <div class="programacion-section">
-                    <h3>⏰ Programación:</h3>
-                    <div class="programacion-form">
-                        <input type="time" class="time-input" id="b1-hora-on-1" placeholder="Encendido">
-                        <input type="time" class="time-input" id="b1-hora-off-1" placeholder="Apagado">
+                    <div class="input-group">
+                        <label for="password">🔑 Contraseña</label>
+                        <span class="input-icon">🔑</span>
+                        <input type="password" id="password" placeholder="Ingresa tu contraseña" required
+                            autocomplete="current-password">
                     </div>
-                    <button class="btn-programar" onclick="programarValvula('block1', 1)">💾 Programar</button>
-                    <div class="programacion-activa" id="b1-prog-1">
-                        <div class="programacion-info"> Encendido: <span id="b1-prog-on-1">--:--</span></div>
-                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-1">--:--</span></div>
-                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 1)">❌
-                            Desactivar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- VÁLVULA 2 -->
-            <div class="valvula-card valvula-2">
-                <div class="valvula-header">
-                    <div class="valvula-title">💧 Válvula 2</div>
-                    <div class="estado-indicator" id="b1-estado-ind-2"></div>
-                </div>
-                <div class="estado-section">
-                    <h3>Estado Actual:</h3>
-                    <div class="estado-texto" id="b1-estado-txt-2">🚫 APAGADA</div>
-                </div>
-                <div class="manual-control">
-                    <h3>Control Manual:</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-on" onclick="controlManual('block1', 2, 'on')">💧
-                            Encender</button>
-                        <button class="btn btn-off" onclick="controlManual('block1', 2, 'off')">🚫
-                            Apagar</button>
-                    </div>
-                </div>
-                <div class="programacion-section">
-                    <h3>⏰ Programación:</h3>
-                    <div class="programacion-form">
-                        <input type="time" class="time-input" id="b1-hora-on-2">
-                        <input type="time" class="time-input" id="b1-hora-off-2">
-                    </div>
-                    <button class="btn-programar" onclick="programarValvula('block1', 2)">💾 Programar</button>
-                    <div class="programacion-activa" id="b1-prog-2">
-                        <div class="programacion-info">Encendido: <span id="b1-prog-on-2">--:--</span></div>
-                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-2">--:--</span></div>
-                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 2)">❌
-                            Desactivar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- VÁLVULA 3 -->
-            <div class="valvula-card valvula-3">
-                <div class="valvula-header">
-                    <div class="valvula-title">💧 Válvula 3</div>
-                    <div class="estado-indicator" id="b1-estado-ind-3"></div>
-                </div>
-                <div class="estado-section">
-                    <h3>Estado Actual:</h3>
-                    <div class="estado-texto" id="b1-estado-txt-3">🚫 APAGADA</div>
-                </div>
-                <div class="manual-control">
-                    <h3>Control Manual:</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-on" onclick="controlManual('block1', 3, 'on')">💧
-                            Encender</button>
-                        <button class="btn btn-off" onclick="controlManual('block1', 3, 'off')">🚫
-                            Apagar</button>
-                    </div>
-                </div>
-                <div class="programacion-section">
-                    <h3>⏰ Programación:</h3>
-                    <div class="programacion-form">
-                        <input type="time" class="time-input" id="b1-hora-on-3">
-                        <input type="time" class="time-input" id="b1-hora-off-3">
-                    </div>
-                    <button class="btn-programar" onclick="programarValvula('block1', 3)">💾 Programar</button>
-                    <div class="programacion-activa" id="b1-prog-3">
-                        <div class="programacion-info"> Encendido: <span id="b1-prog-on-3">--:--</span></div>
-                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-3">--:--</span></div>
-                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 3)">❌
-                            Desactivar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- VÁLVULA 4 -->
-            <div class="valvula-card valvula-4">
-                <div class="valvula-header">
-                    <div class="valvula-title">💧 Válvula 4</div>
-                    <div class="estado-indicator" id="b1-estado-ind-4"></div>
-                </div>
-                <div class="estado-section">
-                    <h3>Estado Actual:</h3>
-                    <div class="estado-texto" id="b1-estado-txt-4">🚫 APAGADA</div>
-                </div>
-                <div class="manual-control">
-                    <h3>Control Manual:</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-on" onclick="controlManual('block1', 4, 'on')">💧
-                            Encender</button>
-                        <button class="btn btn-off" onclick="controlManual('block1', 4, 'off')">🚫
-                            Apagar</button>
-                    </div>
-                </div>
-                <div class="programacion-section">
-                    <h3>⏰ Programación:</h3>
-                    <div class="programacion-form">
-                        <input type="time" class="time-input" id="b1-hora-on-4">
-                        <input type="time" class="time-input" id="b1-hora-off-4">
-                    </div>
-                    <button class="btn-programar" onclick="programarValvula('block1', 4)"> 💾 Programar</button>
-                    <div class="programacion-activa" id="b1-prog-4">
-                        <div class="programacion-info">🕐 Encendido: <span id="b1-prog-on-4">--:--</span></div>
-                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-4">--:--</span></div>
-                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 4)">❌
-                            Desactivar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- VÁLVULA 5 -->
-            <div class="valvula-card valvula-5">
-                <div class="valvula-header">
-                    <div class="valvula-title">💧 Válvula 5</div>
-                    <div class="estado-indicator" id="b1-estado-ind-5"></div>
-                </div>
-                <div class="estado-section">
-                    <h3>Estado Actual:</h3>
-                    <div class="estado-texto" id="b1-estado-txt-5">🚫 APAGADA</div>
-                </div>
-                <div class="manual-control">
-                    <h3>Control Manual:</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-on" onclick="controlManual('block1', 5, 'on')">💧
-                            Encender</button>
-                        <button class="btn btn-off" onclick="controlManual('block1', 5, 'off')">🚫
-                            Apagar</button>
-                    </div>
-                </div>
-                <div class="programacion-section">
-                    <h3>⏰ Programación:</h3>
-                    <div class="programacion-form">
-                        <input type="time" class="time-input" id="b1-hora-on-5">
-                        <input type="time" class="time-input" id="b1-hora-off-5">
-                    </div>
-                    <button class="btn-programar" onclick="programarValvula('block1', 5)">💾 Programar</button>
-                    <div class="programacion-activa" id="b1-prog-5">
-                        <div class="programacion-info"> Encendido: <span id="b1-prog-on-5">--:--</span></div>
-                        <div class="programacion-info"> Apagado: <span id="b1-prog-off-5">--:--</span></div>
-                        <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 5)">❌
-                            Desactivar</button>
-                    </div>
+                    <button type="submit" class="login-btn">🚀 INGRESAR AL SISTEMA</button>
+                </form>
+    
+                <div class="login-footer">
+                    <p>© 2025 CocosLokos Technology - Todos los derechos reservados</p>
+                    <p style="margin-top: 8px; font-size: 0.75em; opacity: 0.5;">Demo: admin | 1234</p>
                 </div>
             </div>
         </div>
-        <!-- Control general del bloque -->
-        <div class="control-general">
-            <h2>🎛️ Control General Bloque 10</h2>
-            <div class="btn-group-general">
-                <button class="btn-general btn-todas-on" onclick="controlTodas('block1', 'on')">💧 Encender
-                    Todas</button>
-                <button class="btn-general btn-todas-off" onclick="controlTodas('block1', 'off')">🚫 Apagar
-                    Todas</button>
-                <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block1')">💾 Guardar
-                    Config</button>
-                <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block1')">📂 Cargar
-                    Config</button>
-            </div>
-        </div>
-    </div>
-</div>
+    
         <!-- ============================================ -->
-        <!-- 💧 PANEL BLOQUE 2 (5 VÁLVULAS) -->
+        <!-- 🚪 BOTÓN CERRAR SESIÓN -->
         <!-- ============================================ -->
-        <div class="panel block-panel" id="block2-panel">
-            <!-- Botón único, fuera de los paneles (al inicio del body) -->
-            <button class="back-btn" id="backBtn" onclick="showMainPanel()">
-            </button>
-            <div class="panel-header">
-                <div class="subtitle">LATINA FARMS 3 </div>
-                <h1 class="panel-title">BLOQUE 11</h1>
-                <div class="reloj-container">
-                    <div class="reloj">--:--:--</div>
-                    <div class="fecha">Cargando fecha...</div>
-                </div>
-            </div>
-            <div class="block-content">
-                <div class="mensaje" id="mensaje-block2"></div>
-                <div class="valvulas-grid">
-                    <!-- VÁLVULAS 1-5 para Block 2 (IDs con prefijo b2-) -->
-                    <!-- VÁLVULA 1 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 1</div>
-                            <div class="estado-indicator" id="b2-estado-ind-1"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b2-estado-txt-1">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block2', 1, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block2', 1, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b2-hora-on-1">
-                                <input type="time" class="time-input" id="b2-hora-off-1">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block2', 1)">💾 Programar</button>
-                            <div class="programacion-activa" id="b2-prog-1">
-                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-1">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-1">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 1)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- VÁLVULA 2 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 2</div>
-                            <div class="estado-indicator" id="b2-estado-ind-2"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b2-estado-txt-2">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block2', 2, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block2', 2, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b2-hora-on-2">
-                                <input type="time" class="time-input" id="b2-hora-off-2">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block2', 2)">💾 Programar</button>
-                            <div class="programacion-activa" id="b2-prog-2">
-                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-2">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-2">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 2)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- VÁLVULA 3 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 3</div>
-                            <div class="estado-indicator" id="b2-estado-ind-3"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b2-estado-txt-3">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block2', 3, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block2', 3, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b2-hora-on-3">
-                                <input type="time" class="time-input" id="b2-hora-off-3">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block2', 3)">💾 Programar</button>
-                            <div class="programacion-activa" id="b2-prog-3">
-                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-3">--:--</span></div>
-                                <div class="programacion-info">💾 Apagado: <span id="b2-prog-off-3">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 3)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- VÁLVULA 4 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 4</div>
-                            <div class="estado-indicator" id="b2-estado-ind-4"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b2-estado-txt-4">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block2', 4, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block2', 4, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b2-hora-on-4">
-                                <input type="time" class="time-input" id="b2-hora-off-4">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block2', 4)">💾 Programar</button>
-                            <div class="programacion-activa" id="b2-prog-4">
-                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-4">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-4">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 4)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- VÁLVULA 5 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 5</div>
-                            <div class="estado-indicator" id="b2-estado-ind-5"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b2-estado-txt-5">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block2', 5, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block2', 5, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b2-hora-on-5">
-                                <input type="time" class="time-input" id="b2-hora-off-5">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block2', 5)">💾 Programar</button>
-                            <div class="programacion-activa" id="b2-prog-5">
-                                <div class="programacion-info"> Encendido: <span id="b2-prog-on-5">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b2-prog-off-5">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 5)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-general">
-                    <h2>🎛️ Control General Bloque 11</h2>
-                    <div class="btn-group-general">
-                        <button class="btn-general btn-todas-on" onclick="controlTodas('block2', 'on')">💧 Encender
-                            Todas</button>
-                        <button class="btn-general btn-todas-off" onclick="controlTodas('block2', 'off')">🚫 Apagar
-                            Todas</button>
-                        <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block2')">💾 Guardar
-                            Config</button>
-                        <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block2')">📂 Cargar
-                            Config</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <button class="logout-btn" id="logoutBtn" onclick="cerrarSesion()">🔓 Cerrar Sesión</button>
+    
         <!-- ============================================ -->
-        <!-- 💧 PANEL BLOQUE 3 (5 VÁLVULAS) -->
+        <!-- 📦 CONTENEDOR PRINCIPAL DE PANELES -->
         <!-- ============================================ -->
-        <div class="panel block-panel" id="block3-panel">
-            <!-- Botón único, fuera de los paneles (al inicio del body) -->
-            <button class="back-btn" id="backBtn" onclick="showMainPanel()">
-            </button>
-            <div class="panel-header">
-                <div class="subtitle">LATINA FARMS 3 </div>
-                <h1 class="panel-title">BLOQUE 12</h1>
-                <div class="reloj-container">
-                    <div class="reloj">--:--:--</div>
-                    <div class="fecha">Cargando fecha...</div>
+        <div class="panel-container">
+    
+            <!-- ============================================ -->
+            <!-- 🏠 PANEL PRINCIPAL - MENÚ DE BLOQUES -->
+            <!-- ============================================ -->
+            <div class="panel main-panel active">
+                <div class="panel-header">
+                    <div class="subtitle">LATINA FARMS 3</div>
+                    <h1 class="panel-title">HIDROCONTROL</h1>
+                    <h1 class="login-subtitle" style="color: var(--accent-cyan);">💧 Sistema Control de Riego 💧</h1>
+                    <div class="reloj-container">
+                        <div class="reloj">--:--:--</div>
+                        <div class="fecha">Cargando fecha...</div>
+                    </div>
+                    <div class="conexion" id="conexion">🔄 Conectando al servidor...</div>
+                    <div class="server-info">🌐 Servidor: <span id="server-url-display">cargando...</span></div>
+                    <div class="timezone-hint" id="timezone-hint">⏳ Sincronizando zona horaria...</div>
                 </div>
-            </div>
-            <div class="block-content">
-                <div class="mensaje" id="mensaje-block3"></div>
-                <div class="valvulas-grid">
-                    <!-- VÁLVULAS 1-5 para Block 3 (IDs con prefijo b3-) -->
-                    <!-- VÁLVULA 1 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 1</div>
-                            <div class="estado-indicator" id="b3-estado-ind-1"></div>
+    
+                <!-- Grid con los 3 bloques accesibles -->
+                <div class="bloques-grid">
+                    <div class="bloque-card bloque-1" onclick="showBlockPanel('block1')">
+                        <h2>BLOQUE 10</h2>
+                        <!-- 👇 GOTAS INDICADORAS -->
+                        <div class="gotas-indicadoras" id="gotas-block1">
+                            <span class="gota" data-valvula="1" title="Válvula 1"></span>
+                            <span class="gota" data-valvula="2" title="Válvula 2"></span>
+                            <span class="gota" data-valvula="3" title="Válvula 3"></span>
+                            <span class="gota" data-valvula="4" title="Válvula 4"></span>
+                            <span class="gota" data-valvula="5" title="Válvula 5"></span>
                         </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b3-estado-txt-1">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block3', 1, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block3', 1, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b3-hora-on-1">
-                                <input type="time" class="time-input" id="b3-hora-off-1">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block3', 1)"> Programar</button>
-                            <div class="programacion-activa" id="b3-prog-1">
-                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-1">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-1">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 1)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
+                        <!-- 👆 FIN GOTAS -->
+                        <p>Sistema de riego automatizado</p>
+                        <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
                     </div>
-                    <!-- VÁLVULA 2 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 2</div>
-                            <div class="estado-indicator" id="b3-estado-ind-2"></div>
+    
+                    <div class="bloque-card bloque-2" onclick="showBlockPanel('block2')">
+                        <h2>BLOQUE 11</h2>
+                        <!-- 👇 GOTAS INDICADORAS -->
+                        <div class="gotas-indicadoras" id="gotas-block2">
+                            <span class="gota" data-valvula="1" title="Válvula 1"></span>
+                            <span class="gota" data-valvula="2" title="Válvula 2"></span>
+                            <span class="gota" data-valvula="3" title="Válvula 3"></span>
+                            <span class="gota" data-valvula="4" title="Válvula 4"></span>
+                            <span class="gota" data-valvula="5" title="Válvula 5"></span>
                         </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b3-estado-txt-2">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block3', 2, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block3', 2, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b3-hora-on-2">
-                                <input type="time" class="time-input" id="b3-hora-off-2">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block3', 2)">💾 Programar</button>
-                            <div class="programacion-activa" id="b3-prog-2">
-                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-2">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-2">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 2)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
+                        <!-- 👆 FIN GOTAS -->
+                        <p>Sistema de riego automatizado</p>
+                        <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
                     </div>
-                    <!-- VÁLVULA 3 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 3</div>
-                            <div class="estado-indicator" id="b3-estado-ind-3"></div>
+    
+                    <div class="bloque-card bloque-3" onclick="showBlockPanel('block3')">
+                        <h2>BLOQUE 12</h2>
+                        <!-- 👇 GOTAS INDICADORAS -->
+                        <div class="gotas-indicadoras" id="gotas-block3">
+                            <span class="gota" data-valvula="1" title="Válvula 1"></span>
+                            <span class="gota" data-valvula="2" title="Válvula 2"></span>
+                            <span class="gota" data-valvula="3" title="Válvula 3"></span>
+                            <span class="gota" data-valvula="4" title="Válvula 4"></span>
+                            <span class="gota" data-valvula="5" title="Válvula 5"></span>
                         </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b3-estado-txt-3">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block3', 3, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block3', 3, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b3-hora-on-3">
-                                <input type="time" class="time-input" id="b3-hora-off-3">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block3', 3)">💾 Programar</button>
-                            <div class="programacion-activa" id="b3-prog-3">
-                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-3">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-3">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 3)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- VÁLVULA 4 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 4</div>
-                            <div class="estado-indicator" id="b3-estado-ind-4"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b3-estado-txt-4">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block3', 4, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block3', 4, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b3-hora-on-4">
-                                <input type="time" class="time-input" id="b3-hora-off-4">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block3', 4)">💾 Programar</button>
-                            <div class="programacion-activa" id="b3-prog-4">
-                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-4">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-4">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 4)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- VÁLVULA 5 -->
-                    <div class="valvula-card">
-                        <div class="valvula-header">
-                            <div class="valvula-title">💧 Válvula 5</div>
-                            <div class="estado-indicator" id="b3-estado-ind-5"></div>
-                        </div>
-                        <div class="estado-section">
-                            <h3>Estado Actual:</h3>
-                            <div class="estado-texto" id="b3-estado-txt-5">🚫 APAGADA</div>
-                        </div>
-                        <div class="manual-control">
-                            <h3>Control Manual:</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-on" onclick="controlManual('block3', 5, 'on')">💧
-                                    Encender</button>
-                                <button class="btn btn-off" onclick="controlManual('block3', 5, 'off')">🚫
-                                    Apagar</button>
-                            </div>
-                        </div>
-                        <div class="programacion-section">
-                            <h3>⏰ Programación:</h3>
-                            <div class="programacion-form">
-                                <input type="time" class="time-input" id="b3-hora-on-5">
-                                <input type="time" class="time-input" id="b3-hora-off-5">
-                            </div>
-                            <button class="btn-programar" onclick="programarValvula('block3', 5)">💾 Programar</button>
-                            <div class="programacion-activa" id="b3-prog-5">
-                                <div class="programacion-info"> Encendido: <span id="b3-prog-on-5">--:--</span></div>
-                                <div class="programacion-info"> Apagado: <span id="b3-prog-off-5">--:--</span></div>
-                                <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 5)">❌
-                                    Desactivar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-general">
-                    <h2>🎛️ Control General Bloque 12</h2>
-                    <div class="btn-group-general">
-                        <button class="btn-general btn-todas-on" onclick="controlTodas('block3', 'on')">💧 Encender
-                            Todas</button>
-                        <button class="btn-general btn-todas-off" onclick="controlTodas('block3', 'off')">🚫 Apagar
-                            Todas</button>
-                        <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block3')">💾 Guardar
-                            Config</button>
-                        <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block3')">📂 Cargar
-                            Config</button>
+                        <!-- 👆 FIN GOTAS -->
+                        <p>Sistema de riego automatizado</p>
+                        <p style="margin-top: 0.5rem; color: var(--accent-blue);">5 válvulas disponibles</p>
                     </div>
                 </div>
             </div>
-        </div>
+    
+            <!-- ============================================ -->
+            <!-- 💧 PANEL BLOQUE 1 (5 VÁLVULAS) -->
+            <!-- ============================================ -->
+            <div class="panel block-panel" id="block1-panel">
+                <!-- Botón único, fuera de los paneles (al inicio del body) -->
+                <!-- Panel Bloque 1 -->
+                <button class="back-btn" id="backBtn-block1" onclick="showMainPanel()"></button>
+                <div class="panel-header">
+                    <div class="subtitle">LATINA FARMS 3 </div>
+                    <h1 class="panel-title">BLOQUE 10</h1>
+                    <div class="reloj-container">
+                        <div class="reloj">--:--:--</div>
+                        <div class="fecha">Cargando fecha...</div>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <!-- Mensaje de notificación del bloque -->
+                    <div class="mensaje" id="mensaje-block1"></div>
+                    <div class="valvulas-grid">
+                        <!-- Generar 5 válvulas para Block 1 -->
+                        <!-- VÁLVULA 1 -->
+                        <div class="valvula-card valvula-1">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 1</div>
+                                <div class="estado-indicator" id="b1-estado-ind-1"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b1-cronometro-section-1" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b1-cronometro-1">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b1-estado-txt-1">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block1', 1, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block1', 1, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b1-hora-on-1" placeholder="Encendido">
+                                    <input type="time" class="time-input" id="b1-hora-off-1" placeholder="Apagado">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block1', 1)">💾 Programar</button>
+                                <div class="programacion-activa" id="b1-prog-1">
+                                    <div class="programacion-info"> Encendido: <span id="b1-prog-on-1">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b1-prog-off-1">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 1)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 2 -->
+                        <div class="valvula-card valvula-2">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 2</div>
+                                <div class="estado-indicator" id="b1-estado-ind-2"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b1-cronometro-section-2" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b1-cronometro-2">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b1-estado-txt-2">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block1', 2, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block1', 2, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b1-hora-on-2">
+                                    <input type="time" class="time-input" id="b1-hora-off-2">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block1', 2)">💾 Programar</button>
+                                <div class="programacion-activa" id="b1-prog-2">
+                                    <div class="programacion-info">Encendido: <span id="b1-prog-on-2">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b1-prog-off-2">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 2)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 3 -->
+                        <div class="valvula-card valvula-3">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 3</div>
+                                <div class="estado-indicator" id="b1-estado-ind-3"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b1-cronometro-section-3" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b1-cronometro-3">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b1-estado-txt-3">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block1', 3, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block1', 3, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b1-hora-on-3">
+                                    <input type="time" class="time-input" id="b1-hora-off-3">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block1', 3)">💾 Programar</button>
+                                <div class="programacion-activa" id="b1-prog-3">
+                                    <div class="programacion-info"> Encendido: <span id="b1-prog-on-3">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b1-prog-off-3">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 3)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 4 -->
+                        <div class="valvula-card valvula-4">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 4</div>
+                                <div class="estado-indicator" id="b1-estado-ind-4"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b1-cronometro-section-4" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b1-cronometro-4">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b1-estado-txt-4">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block1', 4, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block1', 4, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b1-hora-on-4">
+                                    <input type="time" class="time-input" id="b1-hora-off-4">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block1', 4)">💾 Programar</button>
+                                <div class="programacion-activa" id="b1-prog-4">
+                                    <div class="programacion-info">🕐 Encendido: <span id="b1-prog-on-4">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b1-prog-off-4">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 4)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 5 -->
+                        <div class="valvula-card valvula-5">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 5</div>
+                                <div class="estado-indicator" id="b1-estado-ind-5"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b1-cronometro-section-5" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b1-cronometro-5">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b1-estado-txt-5">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block1', 5, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block1', 5, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b1-hora-on-5">
+                                    <input type="time" class="time-input" id="b1-hora-off-5">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block1', 5)">💾 Programar</button>
+                                <div class="programacion-activa" id="b1-prog-5">
+                                    <div class="programacion-info"> Encendido: <span id="b1-prog-on-5">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b1-prog-off-5">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block1', 5)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Control general del bloque -->
+                    <div class="control-general">
+                        <h2>🎛️ Control General Bloque 10</h2>
+                        <div class="btn-group-general">
+                            <button class="btn-general btn-todas-on" onclick="controlTodas('block1', 'on')">💧 Encender
+                                Todas</button>
+                            <button class="btn-general btn-todas-off" onclick="controlTodas('block1', 'off')">🚫 Apagar
+                                Todas</button>
+                            <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block1')">💾 Guardar
+                                Config</button>
+                            <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block1')">📂 Cargar
+                                Config</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================ -->
+            <!-- 💧 PANEL BLOQUE 2 (5 VÁLVULAS) -->
+            <!-- ============================================ -->
+            <div class="panel block-panel" id="block2-panel">
+                <!-- Botón único, fuera de los paneles (al inicio del body) -->
+                <!-- Panel Bloque 2 -->
+                <button class="back-btn" id="backBtn-block2" onclick="showMainPanel()"></button>
+                <div class="panel-header">
+                    <div class="subtitle">LATINA FARMS 3 </div>
+                    <h1 class="panel-title">BLOQUE 11</h1>
+                    <div class="reloj-container">
+                        <div class="reloj">--:--:--</div>
+                        <div class="fecha">Cargando fecha...</div>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <div class="mensaje" id="mensaje-block2"></div>
+                    <div class="valvulas-grid">
+                        <!-- VÁLVULAS 1-5 para Block 2 (IDs con prefijo b2-) -->
+                        <!-- VÁLVULA 1 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 1</div>
+                                <div class="estado-indicator" id="b2-estado-ind-1"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b2-cronometro-section-1" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b2-cronometro-1">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b2-estado-txt-1">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block2', 1, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block2', 1, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b2-hora-on-1">
+                                    <input type="time" class="time-input" id="b2-hora-off-1">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block2', 1)">💾 Programar</button>
+                                <div class="programacion-activa" id="b2-prog-1">
+                                    <div class="programacion-info"> Encendido: <span id="b2-prog-on-1">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b2-prog-off-1">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 1)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 2 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 2</div>
+                                <div class="estado-indicator" id="b2-estado-ind-2"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b2-cronometro-section-2" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b2-cronometro-2">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b2-estado-txt-2">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block2', 2, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block2', 2, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b2-hora-on-2">
+                                    <input type="time" class="time-input" id="b2-hora-off-2">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block2', 2)">💾 Programar</button>
+                                <div class="programacion-activa" id="b2-prog-2">
+                                    <div class="programacion-info"> Encendido: <span id="b2-prog-on-2">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b2-prog-off-2">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 2)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 3 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 3</div>
+                                <div class="estado-indicator" id="b2-estado-ind-3"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b2-cronometro-section-3" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b2-cronometro-3">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b2-estado-txt-3">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block2', 3, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block2', 3, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b2-hora-on-3">
+                                    <input type="time" class="time-input" id="b2-hora-off-3">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block2', 3)">💾 Programar</button>
+                                <div class="programacion-activa" id="b2-prog-3">
+                                    <div class="programacion-info"> Encendido: <span id="b2-prog-on-3">--:--</span></div>
+                                    <div class="programacion-info">💾 Apagado: <span id="b2-prog-off-3">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 3)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 4 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 4</div>
+                                <div class="estado-indicator" id="b2-estado-ind-4"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b2-cronometro-section-4" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b2-cronometro-4">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b2-estado-txt-4">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block2', 4, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block2', 4, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b2-hora-on-4">
+                                    <input type="time" class="time-input" id="b2-hora-off-4">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block2', 4)">💾 Programar</button>
+                                <div class="programacion-activa" id="b2-prog-4">
+                                    <div class="programacion-info"> Encendido: <span id="b2-prog-on-4">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b2-prog-off-4">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 4)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 5 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 5</div>
+                                <div class="estado-indicator" id="b2-estado-ind-5"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b2-cronometro-section-5" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b2-cronometro-5">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b2-estado-txt-5">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block2', 5, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block2', 5, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b2-hora-on-5">
+                                    <input type="time" class="time-input" id="b2-hora-off-5">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block2', 5)">💾 Programar</button>
+                                <div class="programacion-activa" id="b2-prog-5">
+                                    <div class="programacion-info"> Encendido: <span id="b2-prog-on-5">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b2-prog-off-5">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block2', 5)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-general">
+                        <h2>🎛️ Control General Bloque 11</h2>
+                        <div class="btn-group-general">
+                            <button class="btn-general btn-todas-on" onclick="controlTodas('block2', 'on')">💧 Encender
+                                Todas</button>
+                            <button class="btn-general btn-todas-off" onclick="controlTodas('block2', 'off')">🚫 Apagar
+                                Todas</button>
+                            <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block2')">💾 Guardar
+                                Config</button>
+                            <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block2')">📂 Cargar
+                                Config</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- ============================================ -->
+            <!-- 💧 PANEL BLOQUE 3 (5 VÁLVULAS) -->
+            <!-- ============================================ -->
+            <div class="panel block-panel" id="block3-panel">
+                <!-- Botón único, fuera de los paneles (al inicio del body) -->
+                <!-- Panel Bloque 3 -->
+                <button class="back-btn" id="backBtn-block3" onclick="showMainPanel()"></button>
+                <div class="panel-header">
+                    <div class="subtitle">LATINA FARMS 3 </div>
+                    <h1 class="panel-title">BLOQUE 12</h1>
+                    <div class="reloj-container">
+                        <div class="reloj">--:--:--</div>
+                        <div class="fecha">Cargando fecha...</div>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <div class="mensaje" id="mensaje-block3"></div>
+                    <div class="valvulas-grid">
+                        <!-- VÁLVULAS 1-5 para Block 3 (IDs con prefijo b3-) -->
+                        <!-- VÁLVULA 1 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 1</div>
+                                <div class="estado-indicator" id="b3-estado-ind-1"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b3-cronometro-section-1" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b3-cronometro-1">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b3-estado-txt-1">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block3', 1, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block3', 1, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b3-hora-on-1">
+                                    <input type="time" class="time-input" id="b3-hora-off-1">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block3', 1)">💾 Programar</button>
+                                <div class="programacion-activa" id="b3-prog-1">
+                                    <div class="programacion-info"> Encendido: <span id="b3-prog-on-1">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b3-prog-off-1">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 1)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 2 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 2</div>
+                                <div class="estado-indicator" id="b3-estado-ind-2"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b3-cronometro-section-2" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b3-cronometro-2">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b3-estado-txt-2">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block3', 2, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block3', 2, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b3-hora-on-2">
+                                    <input type="time" class="time-input" id="b3-hora-off-2">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block3', 2)">💾 Programar</button>
+                                <div class="programacion-activa" id="b3-prog-2">
+                                    <div class="programacion-info"> Encendido: <span id="b3-prog-on-2">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b3-prog-off-2">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 2)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 3 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 3</div>
+                                <div class="estado-indicator" id="b3-estado-ind-3"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b3-cronometro-section-3" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b3-cronometro-3">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b3-estado-txt-3">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block3', 3, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block3', 3, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b3-hora-on-3">
+                                    <input type="time" class="time-input" id="b3-hora-off-3">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block3', 3)">💾 Programar</button>
+                                <div class="programacion-activa" id="b3-prog-3">
+                                    <div class="programacion-info"> Encendido: <span id="b3-prog-on-3">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b3-prog-off-3">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 3)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 4 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 4</div>
+                                <div class="estado-indicator" id="b3-estado-ind-4"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b3-cronometro-section-4" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b3-cronometro-4">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b3-estado-txt-4">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block3', 4, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block3', 4, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b3-hora-on-4">
+                                    <input type="time" class="time-input" id="b3-hora-off-4">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block3', 4)">💾 Programar</button>
+                                <div class="programacion-activa" id="b3-prog-4">
+                                    <div class="programacion-info"> Encendido: <span id="b3-prog-on-4">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b3-prog-off-4">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 4)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VÁLVULA 5 -->
+                        <div class="valvula-card">
+                            <div class="valvula-header">
+                                <div class="valvula-title">💧 Válvula 5</div>
+                                <div class="estado-indicator" id="b3-estado-ind-5"></div>
+                            </div>
+                            <div class="estado-section">
+                                <!-- 🆕 CRONÓMETRO -->
+                                <div class="cronometro-section" id="b3-cronometro-section-5" style="display: none;">
+                                    <h3>⏱️ Tiempo Encendida:</h3>
+                                    <div class="cronometro-display" id="b3-cronometro-5">00:00:00</div>
+                                </div>
+                                <!-- 🆕 FIN CRONÓMETRO -->
+                                <h3>Estado Actual:</h3>
+                                <div class="estado-texto" id="b3-estado-txt-5">🚫 APAGADA</div>
+                            </div>
+                            <div class="manual-control">
+                                <h3>Control Manual:</h3>
+                                <div class="btn-group">
+                                    <button class="btn btn-on" onclick="controlManual('block3', 5, 'on')">💧
+                                        Encender</button>
+                                    <button class="btn btn-off" onclick="controlManual('block3', 5, 'off')">🚫
+                                        Apagar</button>
+                                </div>
+                            </div>
+                            <div class="programacion-section">
+                                <h3>⏰ Programación:</h3>
+                                <div class="programacion-form">
+                                    <input type="time" class="time-input" id="b3-hora-on-5">
+                                    <input type="time" class="time-input" id="b3-hora-off-5">
+                                </div>
+                                <button class="btn-programar" onclick="programarValvula('block3', 5)">💾 Programar</button>
+                                <div class="programacion-activa" id="b3-prog-5">
+                                    <div class="programacion-info"> Encendido: <span id="b3-prog-on-5">--:--</span></div>
+                                    <div class="programacion-info"> Apagado: <span id="b3-prog-off-5">--:--</span></div>
+                                    <button class="btn-desactivar" onclick="desactivarProgramacion('block3', 5)">❌
+                                        Desactivar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-general">
+                        <h2>🎛️ Control General Bloque 12</h2>
+                        <div class="btn-group-general">
+                            <button class="btn-general btn-todas-on" onclick="controlTodas('block3', 'on')">💧 Encender
+                                Todas</button>
+                            <button class="btn-general btn-todas-off" onclick="controlTodas('block3', 'off')">🚫 Apagar
+                                Todas</button>
+                            <button class="btn-general btn-guardar" onclick="guardarConfiguracion('block3')">💾 Guardar
+                                Config</button>
+                            <button class="btn-general btn-cargar" onclick="cargarConfiguracion('block3')">📂 Cargar
+                                Config</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div> <!-- Fin panel-container -->
+    
+        <!-- ============================================ -->
+        <!-- 📡 JAVASCRIPT - LÓGICA DEL SISTEMA -->
+        <!-- ============================================ -->
+        <script>
+            // ============================================
+            // ⚙️ CONFIGURACIÓN GLOBAL - VARIABLES PRINCIPALES
+            // ============================================
+            const SERVER_URL = "https://esp32-yxto.onrender.com".trim();  // URL del servidor ESP32 (.trim() elimina espacios)
+            const API_BASE = "/api";  // Ruta base para todos los endpoints de la API
+            const POLLING_INTERVAL = 5000;  // Consulta al servidor cada 5 segundos
 
-    <!-- ============================================ -->
-    <!-- 📡 JAVASCRIPT - LÓGICA DEL SISTEMA -->
-    <!-- ============================================ -->
-    <script>
-        // ============================================
-        // ⚙️ CONFIGURACIÓN GLOBAL - VARIABLES PRINCIPALES
-        // ============================================
-        const SERVER_URL = "https://esp32-yxto.onrender.com".trim();  // URL del servidor ESP32 (.trim() elimina espacios)
-        const API_BASE = "/api";  // Ruta base para todos los endpoints de la API
-        const POLLING_INTERVAL = 5000;  // Consulta al servidor cada 5 segundos
+            // Variables de control de peticiones (por bloque para evitar conflictos)
+            let peticionEnCurso = { block1: false, block2: false, block3: false };  // Evitar peticiones duplicadas
+            let servidorConectado = false;  // Estado de conexión global
+            let ultimoComando = {};  // { "block1-1": "on", "block2-3": "off", ... } para debounce
+            // ============================================
+            // ⏱️ CRONÓMETROS - TIEMPO ENCENDIDO 🆕 PERSISTENTE
+            // ============================================
+            let cronometros = {
+                block1: { 1: null, 2: null, 3: null, 4: null, 5: null },
+                block2: { 1: null, 2: null, 3: null, 4: null, 5: null },
+                block3: { 1: null, 2: null, 3: null, 4: null, 5: null }
+            };
 
-        // Variables de control de peticiones (por bloque para evitar conflictos)
-        let peticionEnCurso = { block1: false, block2: false, block3: false };  // Evitar peticiones duplicadas
-        let servidorConectado = false;  // Estado de conexión global
-        let ultimoComando = {};  // { "block1-1": "on", "block2-3": "off", ... } para debounce
+            let tiemposEncendido = {
+                block1: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+                block2: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+                block3: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+            };
 
-        // ============================================
-        // 🧠 ESTADO DEL SISTEMA - MEMORIA LOCAL
-        // ============================================
-        let sistema = {
-            block1: {
-                1: { estado: 'off', programacion: null },
-                2: { estado: 'off', programacion: null },
-                3: { estado: 'off', programacion: null },
-                4: { estado: 'off', programacion: null },
-                5: { estado: 'off', programacion: null }
-            },
-            block2: {
-                1: { estado: 'off', programacion: null },
-                2: { estado: 'off', programacion: null },
-                3: { estado: 'off', programacion: null },
-                4: { estado: 'off', programacion: null },
-                5: { estado: 'off', programacion: null }
-            },
-            block3: {
-                1: { estado: 'off', programacion: null },
-                2: { estado: 'off', programacion: null },
-                3: { estado: 'off', programacion: null },
-                4: { estado: 'off', programacion: null },
-                5: { estado: 'off', programacion: null }
-            }
-        };
+            // 🆕 NUEVO: Timestamps de inicio de encendido (para persistencia)
+            let timestampsInicio = {
+                block1: { 1: null, 2: null, 3: null, 4: null, 5: null },
+                block2: { 1: null, 2: null, 3: null, 4: null, 5: null },
+                block3: { 1: null, 2: null, 3: null, 4: null, 5: null }
+            };
 
-        // ============================================
-        // 🔐 AUTENTICACIÓN - ESTADO DE SESIÓN
-        // ============================================
-        let usuarioAutenticado = false;  // Estado de sesión del usuario
-          // Credenciales demo
-
-        // ============================================
-        // 🚀 INICIALIZACIÓN - AL CARGAR LA PÁGINA
-        // ============================================
-        window.onload = function () {
-            console.log('🚀 HIDROCONTROL - Iniciando con API REST');
-
-            // Mostrar URL del servidor (sin https://)
-            const serverDisplay = document.getElementById('server-url-display');
-            if (serverDisplay) serverDisplay.textContent = SERVER_URL.replace('https://', '');
-
-            // Verificar sesión guardada en localStorage
-            const sesionGuardada = localStorage.getItem('hidrocontrol-sesion');
-            if (sesionGuardada === 'activa') {
-                usuarioAutenticado = true;
-                ocultarLogin();
+            // 🆕 NUEVO: Guardar timestamp en localStorage
+            function guardarTimestampInicio(blockId, num) {
+                const key = `cronometro-timestamp-${blockId}-${num}`;
+                const timestamp = Date.now();
+                timestampsInicio[blockId][num] = timestamp;
+                localStorage.setItem(key, timestamp.toString());
             }
 
-            // Iniciar reloj local
-            actualizarReloj();
-            setInterval(actualizarReloj, 1000);  // Actualizar cada segundo
+            // 🆕 NUEVO: Cargar timestamp desde localStorage
+            function cargarTimestampInicio(blockId, num) {
+                const key = `cronometro-timestamp-${blockId}-${num}`;
+                const guardado = localStorage.getItem(key);
+                if (guardado) {
+                    timestampsInicio[blockId][num] = parseInt(guardado);
+                    return parseInt(guardado);
+                }
+                return null;
+            }
 
-            // 🔄 Primera consulta al servidor + polling automático
-            consultarEstadoTodosLosBloques();
-            setInterval(consultarEstadoTodosLosBloques, POLLING_INTERVAL);  // Cada 5 segundos
+            // 🆕 NUEVO: Eliminar timestamp de localStorage
+            function eliminarTimestampInicio(blockId, num) {
+                const key = `cronometro-timestamp-${blockId}-${num}`;
+                localStorage.removeItem(key);
+                timestampsInicio[blockId][num] = null;
+            }
 
-            // Verificar programaciones automáticas cada minuto
-            setInterval(verificarProgramaciones, 60000);
-            verificarProgramaciones();  // Verificación inicial
+            // 🆕 NUEVO: Calcular tiempo transcurrido desde el timestamp
+            function calcularTiempoTranscurrido(blockId, num) {
+                const timestampInicio = timestampsInicio[blockId][num];
+                if (!timestampInicio) return 0;
+                const ahora = Date.now();
+                const segundosTranscurridos = Math.floor((ahora - timestampInicio) / 1000);
+                return Math.max(0, segundosTranscurridos);
+            }
 
-            // Cargar configuraciones guardadas de cada bloque
-            ['block1', 'block2', 'block3'].forEach(blockId => {
-                cargarConfiguracionGuardada(blockId);
-            });
-        };
-
-        // ============================================
-        // 🕐 FUNCIONES DE RELOJ - HORA Y FECHA
-        // ============================================
-        function actualizarReloj() {
-            const ahora = new Date();
-            const horas = String(ahora.getHours()).padStart(2, '0'),
-                minutos = String(ahora.getMinutes()).padStart(2, '0'),
-                segundos = String(ahora.getSeconds()).padStart(2, '0');
-
-            // Actualizar todos los relojes en pantalla
-            document.querySelectorAll('.reloj').forEach(el => {
-                el.textContent = `${horas}:${minutos}:${segundos}`;
-            });
-
-            // Formato de fecha en español
-            const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
-            document.querySelectorAll('.fecha').forEach(el => {
-                el.textContent = fechaStr;
-            });
-
-            window.horaActual = `${horas}:${minutos}`;  // Guardar hora para programaciones
-        }
-
-        // ============================================
-        // 📡 COMUNICACIÓN CON SERVIDOR - API REST
-        // ============================================
-
-        // 🔄 Consulta estado de TODAS las válvulas de un bloque
-        async function consultarEstadoBloque(blockId) {
-            if (peticionEnCurso[blockId]) return;  // Evitar peticiones duplicadas
-            peticionEnCurso[blockId] = true;
-
-            try {
-                // GET /api/bloque/block1 → devuelve estado de las 5 válvulas
-                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/bloque/${blockId}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    signal: AbortSignal.timeout(8000)  // ⏱️ Timeout de 8 segundos
-                });
-
-                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-                const datos = await respuesta.json();
-
-                // Actualizar estado local de cada válvula del bloque
-                for (let num = 1; num <= 5; num++) {
-                    if (datos.valvulas && datos.valvulas[num]) {
-                        sistema[blockId][num].estado = datos.valvulas[num].estado || 'off';
-                        sistema[blockId][num].programacion = datos.valvulas[num].programacion || null;
-                        actualizarEstadoValvula(blockId, num);
-                        actualizarInfoProgramacion(blockId, num);
+            // 🆕 NUEVO: Cargar todos los cronómetros guardados al iniciar
+            function cargarTiemposCronometrosGuardados() {
+                ['block1', 'block2', 'block3'].forEach(blockId => {
+                    for (let num = 1; num <= 5; num++) {
+                        cargarTimestampInicio(blockId, num);
                     }
+                });
+            }
+
+            // 🆕 NUEVO: Iniciar cronómetros para válvulas que están ON al cargar
+            function iniciarCronometrosAlCargar() {
+                ['block1', 'block2', 'block3'].forEach(blockId => {
+                    for (let num = 1; num <= 5; num++) {
+                        if (sistema[blockId][num].estado === 'on') {
+                            // Calcular tiempo desde que se encendió
+                            const tiempoGuardado = calcularTiempoTranscurrido(blockId, num);
+                            tiemposEncendido[blockId][num] = tiempoGuardado;
+
+                            // Mostrar sección y actualizar display
+                            const prefix = blockId[0] + blockId[5];
+                            const display = document.getElementById(`${prefix}-cronometro-${num}`);
+                            const section = document.getElementById(`${prefix}-cronometro-section-${num}`);
+                            if (display && section) {
+                                section.style.display = 'block';
+                                display.classList.add('parpadeo-segundo');
+                                display.textContent = formatearTiempo(tiempoGuardado);
+                            }
+
+                            // Iniciar intervalo si no existe
+                            if (!cronometros[blockId][num]) {
+                                cronometros[blockId][num] = setInterval(() => {
+                                    tiemposEncendido[blockId][num]++;
+                                    if (display) display.textContent = formatearTiempo(tiemposEncendido[blockId][num]);
+                                }, 1000);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 🆕 MEJORADO: Iniciar cronómetro sin resetear si ya está corriendo
+            function iniciarCronometro(blockId, num) {
+                // ✅ Verificar si ya está corriendo
+                if (cronometros[blockId][num]) {
+                    return;  // Salir sin resetear
                 }
 
-                // Primera conexión exitosa: actualizar indicador global
-                if (!servidorConectado) {
-                    servidorConectado = true;
-                    console.log('✅ Conectado al servidor');
-                }
-            } catch (error) {
-                console.error(`❌ Error consultando ${blockId}:`, error);
-                servidorConectado = false;
-                // No revertir UI: mantenemos último estado conocido
-            } finally {
-                peticionEnCurso[blockId] = false;  // Liberar bloqueo
-            }
-        }
-
-        // 🔄 Consulta todos los bloques (para polling general)
-        async function consultarEstadoTodosLosBloques() {
-            for (const blockId of ['block1', 'block2', 'block3']) {
-                await consultarEstadoBloque(blockId);
-            }
-        }
-
-        // 📤 Envía comando manual para UNA válvula específica
-        async function controlManual(blockId, num, accion) {
-            const clave = `${blockId}-${num}`;
-            const valvula = sistema[blockId][num];
-            const estadoAnterior = valvula.estado;  // Para revertir si falla
-
-            // 🎨 Actualización optimista: UI responde inmediatamente
-            valvula.estado = accion;
-            actualizarEstadoValvula(blockId, num);
-            mostrarMensaje(blockId, `📤 Enviando: ${accion === 'on' ? 'ENCENDER' : 'APAGAR'} Válvula ${num}...`, 'info');
-
-            try {
-                // POST /api/valvula/block1/1 { estado: "on" }
-                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ estado: accion, timestamp: new Date().toISOString() }),
-                    signal: AbortSignal.timeout(8000)
-                });
-
-                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-
-                // ✅ Confirmado por servidor: actualizar variables
-                valvula.estado = accion;
-                ultimoComando[clave] = accion;
-                actualizarEstadoValvula(blockId, num);
-                const accionTexto = accion === 'on' ? 'ENCENDIDA' : 'APAGADA';
-                mostrarMensaje(blockId, `✅ Válvula ${num} ${accionTexto}`, 'exito');
-            } catch (error) {
-                console.error(`❌ Error con ${blockId}-${num}:`, error);
-                // 🔙 Revertir al estado anterior confirmado
-                valvula.estado = estadoAnterior;
-                actualizarEstadoValvula(blockId, num);
-                mostrarMensaje(blockId, `❌ Error: Válvula ${num} no cambiada`, 'error');
-            }
-        }
-
-        // ⏰ Guarda programación automática para UNA válvula
-        async function programarValvula(blockId, num) {
-            const prefix = blockId[0] + blockId[5];  // 'b1', 'b2', 'b3'
-            const horaOn = document.getElementById(`${prefix}-hora-on-${num}`).value,
-                horaOff = document.getElementById(`${prefix}-hora-off-${num}`).value;
-
-            if (!horaOn || !horaOff) {
-                mostrarMensaje(blockId, '⚠️ Selecciona ambas horas', 'error');
-                return;
-            }
-            if (horaOn === horaOff) {
-                mostrarMensaje(blockId, '⚠️ Horas deben ser diferentes', 'error');
-                return;
-            }
-
-            mostrarMensaje(blockId, '📤 Guardando programación...', 'info');
-
-            try {
-                // POST /api/valvula/block1/1/programacion { on: "08:00", off: "18:00" }
-                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}/programacion`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ on: horaOn, off: horaOff }),
-                    signal: AbortSignal.timeout(8000)
-                });
-
-                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-
-                // Actualizar estado local
-                sistema[blockId][num].programacion = { on: horaOn, off: horaOff };
-                sistema[blockId][num].estado = 'auto';
-
-                // Actualizar UI
-                document.getElementById(`${prefix}-prog-${num}`).classList.add('show');
-                document.getElementById(`${prefix}-prog-on-${num}`).textContent = horaOn;
-                document.getElementById(`${prefix}-prog-off-${num}`).textContent = horaOff;
-                actualizarEstadoValvula(blockId, num);
-                mostrarMensaje(blockId, `⏰ Válvula ${num} programada: ${horaOn} → ${horaOff}`, 'exito');
-            } catch (error) {
-                console.error(`❌ Error programando ${blockId}-${num}:`, error);
-                mostrarMensaje(blockId, '❌ Error al guardar programación', 'error');
-            }
-        }
-
-        // ❌ Elimina programación de una válvula
-        async function desactivarProgramacion(blockId, num) {
-            if (!confirm(`¿Desactivar programación de Válvula ${num}?`)) return;
-
-            try {
-                // DELETE /api/valvula/block1/1/programacion
-                const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}/programacion`, {
-                    method: 'DELETE',
-                    signal: AbortSignal.timeout(8000)
-                });
-
-                if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-
-                // Limpiar estado local
-                sistema[blockId][num].programacion = null;
-                sistema[blockId][num].estado = 'off';
                 const prefix = blockId[0] + blockId[5];
-                document.getElementById(`${prefix}-prog-${num}`).classList.remove('show');
-                actualizarEstadoValvula(blockId, num);
-                mostrarMensaje(blockId, `❌ Programación Válvula ${num} desactivada`, 'exito');
-            } catch (error) {
-                console.error(`❌ Error desactivando programación:`, error);
-                mostrarMensaje(blockId, '❌ Error al desactivar', 'error');
+                const display = document.getElementById(`${prefix}-cronometro-${num}`);
+                const section = document.getElementById(`${prefix}-cronometro-section-${num}`);
+                if (!display || !section) return;
+
+                section.style.display = 'block';
+                display.classList.add('parpadeo-segundo');
+
+                // ✅ Guardar timestamp para persistencia
+                guardarTimestampInicio(blockId, num);
+
+                // ✅ Solo iniciar intervalo si no existe
+                cronometros[blockId][num] = setInterval(() => {
+                    tiemposEncendido[blockId][num]++;
+                    display.textContent = formatearTiempo(tiemposEncendido[blockId][num]);
+                }, 1000);
             }
-        }
 
-        // 🎛️ Controlar TODAS las válvulas de un bloque
-        async function controlTodas(blockId, accion) {
-            mostrarMensaje(blockId, `📤 Enviando comando a todas las válvulas...`, 'info');
-            const resultados = [];
+            // 🆕 MEJORADO: Detener cronómetro y limpiar localStorage
+            function detenerCronometro(blockId, num) {
+                const prefix = blockId[0] + blockId[5];
+                const display = document.getElementById(`${prefix}-cronometro-${num}`);
+                const section = document.getElementById(`${prefix}-cronometro-section-${num}`);
+                if (!display || !section) return;
 
-            for (let num = 1; num <= 5; num++) {
-                try {
-                    await controlManual(blockId, num, accion);  // Reusa función individual
-                    resultados.push(true);
-                } catch (e) {
-                    resultados.push(false);
-                    console.warn(`⚠️ Falló válvula ${num}`);
+                if (cronometros[blockId][num]) {
+                    clearInterval(cronometros[blockId][num]);
+                    cronometros[blockId][num] = null;
                 }
+
+                section.style.display = 'none';
+                display.classList.remove('parpadeo-segundo');
+                display.textContent = '00:00:00';
+
+                // 🆕 NUEVO: Resetear tiempo y eliminar timestamp
+                tiemposEncendido[blockId][num] = 0;
+                eliminarTimestampInicio(blockId, num);
             }
 
-            const exitosas = resultados.filter(r => r).length;
-            if (exitosas === 5) {
-                mostrarMensaje(blockId, `✅ Todas las válvulas ${accion === 'on' ? 'ENCENDIDAS' : 'APAGADAS'}`, 'exito');
-            } else {
-                mostrarMensaje(blockId, `⚠️ ${exitosas}/5 válvulas actualizadas`, 'error');
+            function formatearTiempo(segundos) {
+                const hrs = Math.floor(segundos / 3600);
+                const mins = Math.floor((segundos % 3600) / 60);
+                const secs = segundos % 60;
+                return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             }
-        }
+            // ============================================
+            // 🧠 ESTADO DEL SISTEMA - MEMORIA LOCAL
+            // ============================================
+            let sistema = {
+                block1: {
+                    1: { estado: 'off', programacion: null },
+                    2: { estado: 'off', programacion: null },
+                    3: { estado: 'off', programacion: null },
+                    4: { estado: 'off', programacion: null },
+                    5: { estado: 'off', programacion: null }
+                },
+                block2: {
+                    1: { estado: 'off', programacion: null },
+                    2: { estado: 'off', programacion: null },
+                    3: { estado: 'off', programacion: null },
+                    4: { estado: 'off', programacion: null },
+                    5: { estado: 'off', programacion: null }
+                },
+                block3: {
+                    1: { estado: 'off', programacion: null },
+                    2: { estado: 'off', programacion: null },
+                    3: { estado: 'off', programacion: null },
+                    4: { estado: 'off', programacion: null },
+                    5: { estado: 'off', programacion: null }
+                }
+            };
 
-        // ============================================
-        // ⏰ LÓGICA DE PROGRAMACIÓN AUTOMÁTICA
-        // ============================================
-        function verificarProgramaciones() {
-            if (!window.horaActual) return;
+            // ============================================
+            // 🔐 AUTENTICACIÓN - ESTADO DE SESIÓN
+            // ============================================
+            let usuarioAutenticado = false;  // Estado de sesión del usuario
+            // Credenciales demo
 
-            ['block1', 'block2', 'block3'].forEach(blockId => {
-                for (let num = 1; num <= 5; num++) {  // ✅ Revisa las 5 válvulas
-                    const valvula = sistema[blockId][num],
-                        clave = `${blockId}-${num}`;
+            // ============================================
+            // 🚀 INICIALIZACIÓN - AL CARGAR LA PÁGINA
+            // ============================================
+            window.onload = function () {
+                console.log('🚀 HIDROCONTROL - Iniciando con API REST');
 
-                    if (valvula.programacion && valvula.estado === 'auto') {
-                        const { on, off } = valvula.programacion,
-                            horaActual = window.horaActual;
+                // Mostrar URL del servidor (sin https://)
+                const serverDisplay = document.getElementById('server-url-display');
+                if (serverDisplay) serverDisplay.textContent = SERVER_URL.replace('https://', '');
 
-                        // Caso normal: on < off (ej: 08:00 → 18:00)
-                        if (on < off) {
-                            if (horaActual === on && ultimoComando[clave] !== 'on') {
-                                console.log(`⏰ AUTO-ON: ${blockId}-${num} a las ${horaActual}`);
-                                controlManual(blockId, num, 'on');
-                                continue;  // ✅ Seguir con otras válvulas
+                // Verificar sesión guardada en localStorage
+                const sesionGuardada = localStorage.getItem('hidrocontrol-sesion');
+                if (sesionGuardada === 'activa') {
+                    usuarioAutenticado = true;
+                    ocultarLogin();
+                }
+
+                // Iniciar reloj local
+                actualizarReloj();
+                setInterval(actualizarReloj, 1000);  // Actualizar cada segundo
+
+                // 🔄 Primera consulta al servidor + polling automático
+                consultarEstadoTodosLosBloques();
+                setInterval(consultarEstadoTodosLosBloques, POLLING_INTERVAL);  // Cada 5 segundos
+
+                // Verificar programaciones automáticas cada minuto
+                setInterval(verificarProgramaciones, 60000);
+                verificarProgramaciones();  // Verificación inicial
+
+                // Cargar configuraciones guardadas de cada bloque
+                ['block1', 'block2', 'block3'].forEach(blockId => {
+                    cargarConfiguracionGuardada(blockId);
+                });
+            };
+
+            // ============================================
+            // 🕐 FUNCIONES DE RELOJ - HORA Y FECHA
+            // ============================================
+            function actualizarReloj() {
+                const ahora = new Date();
+                const horas = String(ahora.getHours()).padStart(2, '0'),
+                    minutos = String(ahora.getMinutes()).padStart(2, '0'),
+                    segundos = String(ahora.getSeconds()).padStart(2, '0');
+
+                // Actualizar todos los relojes en pantalla
+                document.querySelectorAll('.reloj').forEach(el => {
+                    el.textContent = `${horas}:${minutos}:${segundos}`;
+                });
+
+                // Formato de fecha en español
+                const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+                document.querySelectorAll('.fecha').forEach(el => {
+                    el.textContent = fechaStr;
+                });
+
+                window.horaActual = `${horas}:${minutos}`;  // Guardar hora para programaciones
+            }
+
+            // ============================================
+            // 📡 COMUNICACIÓN CON SERVIDOR - API REST
+            // ============================================
+
+            // 🔄 Consulta estado de TODAS las válvulas de un bloque
+            async function consultarEstadoBloque(blockId) {
+                if (peticionEnCurso[blockId]) return;  // Evitar peticiones duplicadas
+                peticionEnCurso[blockId] = true;
+
+                try {
+                    // GET /api/bloque/block1 → devuelve estado de las 5 válvulas
+                    const respuesta = await fetch(`${SERVER_URL}${API_BASE}/bloque/${blockId}`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: AbortSignal.timeout(8000)  // ⏱️ Timeout de 8 segundos
+                    });
+
+                    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+                    const datos = await respuesta.json();
+
+                    // Actualizar estado local de cada válvula del bloque
+                    for (let num = 1; num <= 5; num++) {
+                        if (datos.valvulas && datos.valvulas[num]) {
+                            const estadoAnterior = sistema[blockId][num].estado;
+                            sistema[blockId][num].estado = datos.valvulas[num].estado || 'off';
+                            sistema[blockId][num].programacion = datos.valvulas[num].programacion || null;
+                            actualizarEstadoValvula(blockId, num);
+                            actualizarInfoProgramacion(blockId, num);
+
+                            // 🆕 MEJORADO: Solo sincronizar cronómetro si el estado CAMBIÓ
+                            if (sistema[blockId][num].estado === 'on' && estadoAnterior !== 'on') {
+                                // Válvula se encendió, iniciar cronómetro (sin resetear si ya corría)
+                                iniciarCronometro(blockId, num);
+                            } else if (sistema[blockId][num].estado === 'off' && estadoAnterior !== 'off') {
+                                // Válvula se apagó, detener y resetear cronómetro
+                                detenerCronometro(blockId, num);
                             }
-                            if (horaActual === off && ultimoComando[clave] !== 'off') {
-                                console.log(`⏰ AUTO-OFF: ${blockId}-${num} a las ${horaActual}`);
-                                controlManual(blockId, num, 'off');
-                                continue;
-                            }
-                        }
-                        // Caso nocturno: on > off (ej: 20:00 → 06:00)
-                        else {
-                            const esNoche = (horaActual >= on) || (horaActual < off);
-                            if (esNoche && horaActual === on && ultimoComando[clave] !== 'on') {
-                                console.log(`⏰ AUTO-ON (nocturno): ${blockId}-${num}`);
-                                controlManual(blockId, num, 'on');
-                            }
-                            if (!esNoche && horaActual === off && ultimoComando[clave] !== 'off') {
-                                console.log(`⏰ AUTO-OFF (nocturno): ${blockId}-${num}`);
-                                controlManual(blockId, num, 'off');
-                            }
+                            // Si el estado no cambió, NO tocar el cronómetro (deja que siga corriendo)
                         }
                     }
-                }  // ✅ Fin del bucle for
-            });
-        }
 
-        // ============================================
-        // 🎨 ACTUALIZACIÓN DE INTERFAZ - UI
-        // ============================================
-        function actualizarEstadoValvula(blockId, num) {
-            const prefix = blockId[0] + blockId[5],
-                valvula = sistema[blockId][num];
-            const estadoTxt = document.getElementById(`${prefix}-estado-txt-${num}`),
-                estadoInd = document.getElementById(`${prefix}-estado-ind-${num}`);
-
-            if (!estadoTxt) return;  // Seguridad por si el elemento no existe
-
-            if (valvula.estado === 'on') {
-                estadoTxt.textContent = '💧 ENCENDIDA';
-                estadoTxt.className = 'estado-texto on';
-                if (estadoInd) estadoInd.className = 'estado-indicator on';
-            } else if (valvula.estado === 'off') {
-                estadoTxt.textContent = '🚫 APAGADA';
-                estadoTxt.className = 'estado-texto off';
-                if (estadoInd) estadoInd.className = 'estado-indicator';
-            } else if (valvula.estado === 'auto') {
-                estadoTxt.textContent = '⏰ PROGRAMADA';
-                estadoTxt.className = 'estado-texto auto';
-                if (estadoInd) estadoInd.className = 'estado-indicator';
-            }
-        }
-
-        function actualizarInfoProgramacion(blockId, num) {
-            const prefix = blockId[0] + blockId[5],
-                valvula = sistema[blockId][num],
-                progEl = document.getElementById(`${prefix}-prog-${num}`);
-
-            if (!progEl) return;
-
-            if (valvula.programacion && valvula.programacion.on && valvula.programacion.off) {
-                progEl.classList.add('show');
-                document.getElementById(`${prefix}-prog-on-${num}`).textContent = valvula.programacion.on;
-                document.getElementById(`${prefix}-prog-off-${num}`).textContent = valvula.programacion.off;
-            } else {
-                progEl.classList.remove('show');
-            }
-        }
-
-        function mostrarMensaje(blockId, texto, tipo) {
-            const mensaje = document.getElementById(`mensaje-${blockId}`);
-            if (!mensaje) return;
-
-            mensaje.textContent = texto;
-            mensaje.className = `mensaje ${tipo}`;
-            setTimeout(() => {
-                if (mensaje.textContent === texto) {
-                    mensaje.className = 'mensaje';  // Ocultar si no fue reemplazado
+                    // 🆕 ACTUALIZAR GOTAS AL CARGAR ESTADO
+                    refrescarTodasLasGotas(blockId);
+                    // Primera conexión exitosa: actualizar indicador global
+                    if (!servidorConectado) {
+                        servidorConectado = true;
+                        console.log('✅ Conectado al servidor');
+                    }
+                } catch (error) {
+                    console.error(`❌ Error consultando ${blockId}:`, error);
+                    servidorConectado = false;
+                    // No revertir UI: mantenemos último estado conocido
+                } finally {
+                    peticionEnCurso[blockId] = false;  // Liberar bloqueo
                 }
-            }, 5000);  // 5 segundos visible
-        }
-
-        // ============================================
-        // 💾 LOCALSTORAGE - PERSISTENCIA LOCAL
-        // ============================================
-        function guardarConfiguracion(blockId) {
-            localStorage.setItem(`hidrocontrol-${blockId}`, JSON.stringify(sistema[blockId]));
-            mostrarMensaje(blockId, '💾 Configuración guardada (local + servidor)', 'exito');
-        }
-
-        function cargarConfiguracion(blockId) {
-            if (confirm(`¿Cargar configuración guardada para ${blockId.toUpperCase()}?`)) {
-                cargarConfiguracionGuardada(blockId);
-                mostrarMensaje(blockId, '📂 Configuración cargada', 'exito');
             }
-        }
 
-        function cargarConfiguracionGuardada(blockId) {
-            const guardado = localStorage.getItem(`hidrocontrol-${blockId}`);
-            if (!guardado) return;
+            // 🔄 Consulta todos los bloques (para polling general)
+            async function consultarEstadoTodosLosBloques() {
+                for (const blockId of ['block1', 'block2', 'block3']) {
+                    await consultarEstadoBloque(blockId);
+                }
+                // 🆕 NUEVO: Después de consultar, iniciar cronómetros para válvulas ON
+                iniciarCronometrosAlCargar();
+            }
 
-            sistema[blockId] = JSON.parse(guardado);
-            const prefix = blockId[0] + blockId[5];
-
-            for (let num = 1; num <= 5; num++) {
+            // 📤 Envía comando manual para UNA válvula específica
+            async function controlManual(blockId, num, accion) {
+                const clave = `${blockId}-${num}`;
                 const valvula = sistema[blockId][num];
-                if (valvula.programacion) {
-                    const onEl = document.getElementById(`${prefix}-hora-on-${num}`),
-                        offEl = document.getElementById(`${prefix}-hora-off-${num}`);
-                    if (onEl) onEl.value = valvula.programacion.on;
-                    if (offEl) offEl.value = valvula.programacion.off;
+                const estadoAnterior = valvula.estado;  // Para revertir si falla
+
+                // 🎨 Actualización optimista: UI responde inmediatamente
+                valvula.estado = accion;
+                actualizarEstadoValvula(blockId, num);
+                mostrarMensaje(blockId, `📤 Enviando: ${accion === 'on' ? 'ENCENDER' : 'APAGAR'} Válvula ${num}...`, 'info');
+
+                try {
+                    // POST /api/valvula/block1/1 { estado: "on" }
+                    const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ estado: accion, timestamp: new Date().toISOString() }),
+                        signal: AbortSignal.timeout(8000)
+                    });
+
+                    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+
+                    // ✅ Confirmado por servidor: actualizar variables
+                    valvula.estado = accion;
+                    ultimoComando[clave] = accion;
+                    actualizarEstadoValvula(blockId, num);
+                    // 🆕 MEJORADO: Iniciar/detener cronómetro solo si cambió el estado
+                    if (accion === 'on' && estadoAnterior !== 'on') {
+                        iniciarCronometro(blockId, num);
+                    } else if (accion === 'off') {
+                        detenerCronometro(blockId, num);
+                    }
+                    // 🆕 ACTUALIZAR GOTA INDIVIDUAL
+                    actualizarGota(blockId, num, accion);
+
+                    const accionTexto = accion === 'on' ? 'ENCENDIDA' : 'APAGADA';
+                    mostrarMensaje(blockId, `✅ Válvula ${num} ${accionTexto}`, 'exito');
+                } catch (error) {
+                    console.error(`❌ Error con ${blockId}-${num}:`, error);
+                    // 🔙 Revertir al estado anterior confirmado
+                    valvula.estado = estadoAnterior;
+                    actualizarEstadoValvula(blockId, num);
+                    mostrarMensaje(blockId, `❌ Error: Válvula ${num} no cambiada`, 'error');
+                }
+            }
+
+            // ⏰ Guarda programación automática para UNA válvula
+            async function programarValvula(blockId, num) {
+                const prefix = blockId[0] + blockId[5];  // 'b1', 'b2', 'b3'
+                const horaOn = document.getElementById(`${prefix}-hora-on-${num}`).value,
+                    horaOff = document.getElementById(`${prefix}-hora-off-${num}`).value;
+
+                if (!horaOn || !horaOff) {
+                    mostrarMensaje(blockId, '⚠️ Selecciona ambas horas', 'error');
+                    return;
+                }
+                if (horaOn === horaOff) {
+                    mostrarMensaje(blockId, '⚠️ Horas deben ser diferentes', 'error');
+                    return;
+                }
+
+                mostrarMensaje(blockId, '📤 Guardando programación...', 'info');
+
+                try {
+                    // POST /api/valvula/block1/1/programacion { on: "08:00", off: "18:00" }
+                    const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}/programacion`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ on: horaOn, off: horaOff }),
+                        signal: AbortSignal.timeout(8000)
+                    });
+
+                    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+
+                    // Actualizar estado local
+                    sistema[blockId][num].programacion = { on: horaOn, off: horaOff };
+                    sistema[blockId][num].estado = 'auto';
+
+                    // Actualizar UI
                     document.getElementById(`${prefix}-prog-${num}`).classList.add('show');
+                    document.getElementById(`${prefix}-prog-on-${num}`).textContent = horaOn;
+                    document.getElementById(`${prefix}-prog-off-${num}`).textContent = horaOff;
+                    actualizarEstadoValvula(blockId, num);
+                    mostrarMensaje(blockId, `⏰ Válvula ${num} programada: ${horaOn} → ${horaOff}`, 'exito');
+                } catch (error) {
+                    console.error(`❌ Error programando ${blockId}-${num}:`, error);
+                    mostrarMensaje(blockId, '❌ Error al guardar programación', 'error');
+                }
+            }
+
+            // ❌ Elimina programación de una válvula
+            async function desactivarProgramacion(blockId, num) {
+                if (!confirm(`¿Desactivar programación de Válvula ${num}?`)) return;
+
+                try {
+                    // DELETE /api/valvula/block1/1/programacion
+                    const respuesta = await fetch(`${SERVER_URL}${API_BASE}/valvula/${blockId}/${num}/programacion`, {
+                        method: 'DELETE',
+                        signal: AbortSignal.timeout(8000)
+                    });
+
+                    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+
+                    // Limpiar estado local
+                    sistema[blockId][num].programacion = null;
+                    sistema[blockId][num].estado = 'off';
+                    const prefix = blockId[0] + blockId[5];
+                    document.getElementById(`${prefix}-prog-${num}`).classList.remove('show');
+                    actualizarEstadoValvula(blockId, num);
+                    mostrarMensaje(blockId, `❌ Programación Válvula ${num} desactivada`, 'exito');
+                } catch (error) {
+                    console.error(`❌ Error desactivando programación:`, error);
+                    mostrarMensaje(blockId, '❌ Error al desactivar', 'error');
+                }
+            }
+
+            // 🎛️ Controlar TODAS las válvulas de un bloque
+            async function controlTodas(blockId, accion) {
+                mostrarMensaje(blockId, `📤 Enviando comando a todas las válvulas...`, 'info');
+                const resultados = [];
+
+                for (let num = 1; num <= 5; num++) {
+                    try {
+                        await controlManual(blockId, num, accion);  // Reusa función individual
+                        resultados.push(true);
+                    } catch (e) {
+                        resultados.push(false);
+                        console.warn(`⚠️ Falló válvula ${num}`);
+                    }
+                }
+
+                const exitosas = resultados.filter(r => r).length;
+                if (exitosas === 5) {
+                    mostrarMensaje(blockId, `✅ Todas las válvulas ${accion === 'on' ? 'ENCENDIDAS' : 'APAGADAS'}`, 'exito');
+                } else {
+                    mostrarMensaje(blockId, `⚠️ ${exitosas}/5 válvulas actualizadas`, 'error');
+                }
+                // 🆕 ACTUALIZAR TODAS LAS GOTAS DEL BLOQUE
+                refrescarTodasLasGotas(blockId);
+            }
+
+            // ============================================
+            // ⏰ LÓGICA DE PROGRAMACIÓN AUTOMÁTICA
+            // ============================================
+            function verificarProgramaciones() {
+                if (!window.horaActual) return;
+
+                ['block1', 'block2', 'block3'].forEach(blockId => {
+                    for (let num = 1; num <= 5; num++) {  // ✅ Revisa las 5 válvulas
+                        const valvula = sistema[blockId][num],
+                            clave = `${blockId}-${num}`;
+
+                        if (valvula.programacion && valvula.estado === 'auto') {
+                            const { on, off } = valvula.programacion,
+                                horaActual = window.horaActual;
+
+                            // Caso normal: on < off (ej: 08:00 → 18:00)
+                            if (on < off) {
+                                if (horaActual === on && ultimoComando[clave] !== 'on') {
+                                    console.log(`⏰ AUTO-ON: ${blockId}-${num} a las ${horaActual}`);
+                                    controlManual(blockId, num, 'on');
+                                    continue;  // ✅ Seguir con otras válvulas
+                                }
+                                if (horaActual === off && ultimoComando[clave] !== 'off') {
+                                    console.log(`⏰ AUTO-OFF: ${blockId}-${num} a las ${horaActual}`);
+                                    controlManual(blockId, num, 'off');
+                                    continue;
+                                }
+                            }
+                            // Caso nocturno: on > off (ej: 20:00 → 06:00)
+                            else {
+                                const esNoche = (horaActual >= on) || (horaActual < off);
+                                if (esNoche && horaActual === on && ultimoComando[clave] !== 'on') {
+                                    console.log(`⏰ AUTO-ON (nocturno): ${blockId}-${num}`);
+                                    controlManual(blockId, num, 'on');
+                                }
+                                if (!esNoche && horaActual === off && ultimoComando[clave] !== 'off') {
+                                    console.log(`⏰ AUTO-OFF (nocturno): ${blockId}-${num}`);
+                                    controlManual(blockId, num, 'off');
+                                }
+                            }
+                        }
+                    }  // ✅ Fin del bucle for
+                });
+            }
+
+            // ============================================
+            // 🎨 ACTUALIZACIÓN DE INTERFAZ - UI
+            // ============================================
+            function actualizarEstadoValvula(blockId, num) {
+                const prefix = blockId[0] + blockId[5],
+                    valvula = sistema[blockId][num];
+                const estadoTxt = document.getElementById(`${prefix}-estado-txt-${num}`),
+                    estadoInd = document.getElementById(`${prefix}-estado-ind-${num}`);
+
+                if (!estadoTxt) return;  // Seguridad por si el elemento no existe
+
+                if (valvula.estado === 'on') {
+                    estadoTxt.textContent = '💧 ENCENDIDA';
+                    estadoTxt.className = 'estado-texto on';
+                    if (estadoInd) estadoInd.className = 'estado-indicator on';
+                } else if (valvula.estado === 'off') {
+                    estadoTxt.textContent = '🚫 APAGADA';
+                    estadoTxt.className = 'estado-texto off';
+                    if (estadoInd) estadoInd.className = 'estado-indicator';
+                } else if (valvula.estado === 'auto') {
+                    estadoTxt.textContent = '⏰ PROGRAMADA';
+                    estadoTxt.className = 'estado-texto auto';
+                    if (estadoInd) estadoInd.className = 'estado-indicator';
+                }
+            }
+
+            function actualizarInfoProgramacion(blockId, num) {
+                const prefix = blockId[0] + blockId[5],
+                    valvula = sistema[blockId][num],
+                    progEl = document.getElementById(`${prefix}-prog-${num}`);
+
+                if (!progEl) return;
+
+                if (valvula.programacion && valvula.programacion.on && valvula.programacion.off) {
+                    progEl.classList.add('show');
                     document.getElementById(`${prefix}-prog-on-${num}`).textContent = valvula.programacion.on;
                     document.getElementById(`${prefix}-prog-off-${num}`).textContent = valvula.programacion.off;
+                } else {
+                    progEl.classList.remove('show');
                 }
-                actualizarEstadoValvula(blockId, num);
             }
-        }
 
-        // ============================================
-        // 🔐 SISTEMA DE AUTENTICACIÓN
-        // ============================================
-        async function iniciarSesion(event) {
+            function mostrarMensaje(blockId, texto, tipo) {
+                const mensaje = document.getElementById(`mensaje-${blockId}`);
+                if (!mensaje) return;
+
+                mensaje.textContent = texto;
+                mensaje.className = `mensaje ${tipo}`;
+                setTimeout(() => {
+                    if (mensaje.textContent === texto) {
+                        mensaje.className = 'mensaje';  // Ocultar si no fue reemplazado
+                    }
+                }, 5000);  // 5 segundos visible
+            }
+            // ============================================
+            // 💧 FUNCIONES PARA ACTUALIZAR LAS GOTAS 🆕
+            // ============================================
+            function actualizarGota(bloque, valvula, estado) {
+                const contenedorGotas = document.getElementById(`gotas-${bloque}`);
+                if (contenedorGotas) {
+                    const gota = contenedorGotas.querySelector(`.gota[data-valvula="${valvula}"]`);
+                    if (gota) {
+                        if (estado === 'on' || estado === true) {
+                            gota.classList.add('activa');
+                        } else {
+                            gota.classList.remove('activa');
+                        }
+                    }
+                }
+            }
+
+            function refrescarTodasLasGotas(bloque) {
+                for (let i = 1; i <= 5; i++) {
+                    const valvula = sistema[bloque][i];
+                    actualizarGota(bloque, i, valvula.estado);
+                }
+            }
+
+            // ============================================
+            // 💾 LOCALSTORAGE - PERSISTENCIA LOCAL
+            // ============================================
+            function guardarConfiguracion(blockId) {
+                localStorage.setItem(`hidrocontrol-${blockId}`, JSON.stringify(sistema[blockId]));
+                mostrarMensaje(blockId, '💾 Configuración guardada (local + servidor)', 'exito');
+            }
+
+            function cargarConfiguracion(blockId) {
+                if (confirm(`¿Cargar configuración guardada para ${blockId.toUpperCase()}?`)) {
+                    cargarConfiguracionGuardada(blockId);
+                    mostrarMensaje(blockId, '📂 Configuración cargada', 'exito');
+                }
+            }
+
+            function cargarConfiguracionGuardada(blockId) {
+                const guardado = localStorage.getItem(`hidrocontrol-${blockId}`);
+                if (!guardado) return;
+
+                sistema[blockId] = JSON.parse(guardado);
+                const prefix = blockId[0] + blockId[5];
+
+                for (let num = 1; num <= 5; num++) {
+                    const valvula = sistema[blockId][num];
+                    if (valvula.programacion) {
+                        const onEl = document.getElementById(`${prefix}-hora-on-${num}`),
+                            offEl = document.getElementById(`${prefix}-hora-off-${num}`);
+                        if (onEl) onEl.value = valvula.programacion.on;
+                        if (offEl) offEl.value = valvula.programacion.off;
+                        document.getElementById(`${prefix}-prog-${num}`).classList.add('show');
+                        document.getElementById(`${prefix}-prog-on-${num}`).textContent = valvula.programacion.on;
+                        document.getElementById(`${prefix}-prog-off-${num}`).textContent = valvula.programacion.off;
+                    }
+                    actualizarEstadoValvula(blockId, num);
+                }
+            }
+
+            // ============================================
+            // 🔐 SISTEMA DE AUTENTICACIÓN
+            // ============================================
+            async function iniciarSesion(event) {
                 event.preventDefault();
                 const usuario = document.getElementById('username').value.trim();
                 const contrasena = document.getElementById('password').value.trim();
@@ -2660,102 +3115,103 @@
                     setTimeout(() => errorDiv.classList.remove('show'), 3000);
                 }
             }
-        function ocultarLogin() {
-            document.getElementById('loginOverlay').classList.add('hidden');
-            document.getElementById('logoutBtn').style.display = 'block';
-        }
-
-        function cerrarSesion() {
-            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                usuarioAutenticado = false;
-                localStorage.removeItem('hidrocontrol-sesion');
-                document.getElementById('loginOverlay').classList.remove('hidden');
-                document.getElementById('logoutBtn').style.display = 'none';
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                showMainPanel();
+            function ocultarLogin() {
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('logoutBtn').style.display = 'block';
             }
-        }
 
-        function mostrarNotificacion(texto, tipo) {
-            const loginError = document.getElementById('loginError');
-            loginError.textContent = texto;
-            loginError.className = `login-error show ${tipo}`;
-            loginError.style.background = tipo === 'exito' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(231, 76, 60, 0.15)';
-            loginError.style.borderLeftColor = tipo === 'exito' ? '#2ecc71' : '#e74c3c';
-            loginError.style.color = tipo === 'exito' ? '#a8f5c6' : '#ffc5c5';
-            setTimeout(() => loginError.classList.remove('show'), 3000);
-        }
-
-        // ============================================
-        // 🧭 NAVEGACIÓN ENTRE PANELES
-        // ============================================
-        function showMainPanel() {
-            document.querySelectorAll('.block-panel').forEach(panel => {
-                panel.classList.remove('active');
-                panel.classList.add('inactive');
-            });
-            document.querySelector('.main-panel').classList.add('active');
-            document.querySelector('.main-panel').classList.remove('inactive');
-            document.querySelectorAll('.back-btn').forEach(btn => {
-                btn.style.display = 'none';
-            });  // ✅ Ocultar todos los botones volver
-        }
-
-        function showBlockPanel(blockId) {
-            document.querySelector('.main-panel').classList.remove('active');
-            document.querySelector('.main-panel').classList.add('inactive');
-            document.querySelectorAll('.block-panel').forEach(panel => {
-                panel.classList.remove('active');
-                panel.classList.add('inactive');
-            });
-            document.getElementById(`${blockId}-panel`).classList.add('active');
-            document.getElementById(`${blockId}-panel`).classList.remove('inactive');
-            document.querySelectorAll('.back-btn').forEach(btn => {
-                btn.style.display = 'flex';
-            });  // ✅ Mostrar todos los botones volver
-            consultarEstadoBloque(blockId);
-        }
-
-        // ============================================
-        // ⌨️ ATAJOS DE TECLADO
-        // ============================================
-        document.addEventListener('keydown', (e) => {
-            const tag = e.target.tagName.toLowerCase();
-            if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;  // Ignorar inputs
-
-            if (typeof usuarioAutenticado !== 'undefined' && !usuarioAutenticado) return;  // Validar sesión
-            if (!servidorConectado) {
-                console.warn('⚠️ Sin conexión');
-                return;
-            }  // Validar conexión
-
-            const panelActivo = document.querySelector('.panel.active');
-            if (!panelActivo) return;  // Panel activo
-
-            const blockId = panelActivo.id.replace('-panel', '');
-            if (!['block1', 'block2', 'block3'].includes(blockId)) return;  // Validar blockId
-
-            // Ctrl+1-5 = Encender válvula 1-5
-            if (e.ctrlKey && e.key >= '1' && e.key <= '5') {
-                const num = parseInt(e.key);
-                e.preventDefault();
-                controlManual(blockId, num, 'on');
-            }
-            // Ctrl+6-0 = Apagar válvula 1-5
-            else if (e.ctrlKey && e.key >= '6' && e.key <= '0') {
-                const num = e.key === '0' ? 5 : parseInt(e.key) - 5;
-                if (num >= 1 && num <= 5) {
-                    e.preventDefault();
-                    controlManual(blockId, num, 'off');
+            function cerrarSesion() {
+                if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                    usuarioAutenticado = false;
+                    sessionStorage.removeItem('hidrocontrol-token');
+                    localStorage.removeItem('hidrocontrol-sesion');
+                    document.getElementById('loginOverlay').classList.remove('hidden');
+                    document.getElementById('logoutBtn').style.display = 'none';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    showMainPanel();
                 }
             }
-        });
-    </script>
-</body>
 
+            function mostrarNotificacion(texto, tipo) {
+                const loginError = document.getElementById('loginError');
+                loginError.textContent = texto;
+                loginError.className = `login-error show ${tipo}`;
+                loginError.style.background = tipo === 'exito' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(231, 76, 60, 0.15)';
+                loginError.style.borderLeftColor = tipo === 'exito' ? '#2ecc71' : '#e74c3c';
+                loginError.style.color = tipo === 'exito' ? '#a8f5c6' : '#ffc5c5';
+                setTimeout(() => loginError.classList.remove('show'), 3000);
+            }
 
-</html>
+            // ============================================
+            // 🧭 NAVEGACIÓN ENTRE PANELES
+            // ============================================
+            function showMainPanel() {
+                document.querySelectorAll('.block-panel').forEach(panel => {
+                    panel.classList.remove('active');
+                    panel.classList.add('inactive');
+                });
+                document.querySelector('.main-panel').classList.add('active');
+                document.querySelector('.main-panel').classList.remove('inactive');
+                document.querySelectorAll('.back-btn').forEach(btn => {
+                    btn.style.display = 'none';
+                });  // ✅ Ocultar todos los botones volver
+            }
+
+            function showBlockPanel(blockId) {
+                document.querySelector('.main-panel').classList.remove('active');
+                document.querySelector('.main-panel').classList.add('inactive');
+                document.querySelectorAll('.block-panel').forEach(panel => {
+                    panel.classList.remove('active');
+                    panel.classList.add('inactive');
+                });
+                document.getElementById(`${blockId}-panel`).classList.add('active');
+                document.getElementById(`${blockId}-panel`).classList.remove('inactive');
+                document.querySelectorAll('.back-btn').forEach(btn => {
+                    btn.style.display = 'flex';
+                });  // ✅ Mostrar todos los botones volver
+                consultarEstadoBloque(blockId);
+            }
+
+            // ============================================
+            // ⌨️ ATAJOS DE TECLADO
+            // ============================================
+            document.addEventListener('keydown', (e) => {
+                const tag = e.target.tagName.toLowerCase();
+                if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;  // Ignorar inputs
+
+                if (typeof usuarioAutenticado !== 'undefined' && !usuarioAutenticado) return;  // Validar sesión
+                if (!servidorConectado) {
+                    console.warn('⚠️ Sin conexión');
+                    return;
+                }  // Validar conexión
+
+                const panelActivo = document.querySelector('.panel.active');
+                if (!panelActivo) return;  // Panel activo
+
+                const blockId = panelActivo.id.replace('-panel', '');
+                if (!['block1', 'block2', 'block3'].includes(blockId)) return;  // Validar blockId
+
+                // Ctrl+1-5 = Encender válvula 1-5
+                if (e.ctrlKey && e.key >= '1' && e.key <= '5') {
+                    const num = parseInt(e.key);
+                    e.preventDefault();
+                    controlManual(blockId, num, 'on');
+                }
+                // Ctrl+6-0 = Apagar válvula 1-5
+                else if (e.ctrlKey && e.key >= '6' && e.key <= '0') {
+                    const num = e.key === '0' ? 5 : parseInt(e.key) - 5;
+                    if (num >= 1 && num <= 5) {
+                        e.preventDefault();
+                        controlManual(blockId, num, 'off');
+                    }
+                }
+            });
+        </script>
+    </body>
+    
+    
+    </html>
 
 
 
